@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Shell
-    x:Class="Jindal.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Jindal"
-    Title="Jindal">
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:Jindal.Views"
+       x:Class="Jindal.AppShell"
+       FlyoutBehavior="Flyout">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <FlyoutItem Title="Location" Icon="location_icon.png">
+        <ShellContent ContentTemplate="{DataTemplate views:LocationPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Room" Icon="room_icon.png">
+        <ShellContent ContentTemplate="{DataTemplate views:RoomPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Check In/Out" Icon="check_icon.png">
+        <ShellContent ContentTemplate="{DataTemplate views:CheckInOutPage}" />
+    </FlyoutItem>
+    
+    <FlyoutItem Title="Logout" Icon="logout_icon.png">
+        <ShellContent ContentTemplate="{DataTemplate views:LogoutPage}" />
+    </FlyoutItem>
+
 
 </Shell>

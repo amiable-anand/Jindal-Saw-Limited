@@ -1,15 +1,15 @@
-﻿namespace Jindal
+﻿using Microsoft.Maui.Controls;
+
+namespace Jindal
 {
     public partial class App : Application
     {
         public App()
         {
             InitializeComponent();
+            MainPage = new NavigationPage(new Views.MainPage());
         }
 
-        protected override Window CreateWindow(IActivationState? activationState)
-        {
-            return new Window(new AppShell());
-        }
     }
 }
+

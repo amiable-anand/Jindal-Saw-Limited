@@ -65,4 +65,34 @@
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="Views\LocationPage.xaml.cs">
+	    <DependentUpon>LocationPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\CheckInOutPage.xaml.cs">
+	    <DependentUpon>CheckInOutPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\LogoutPage.xaml.cs">
+	    <DependentUpon>LogoutPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\RoomPage.xaml.cs">
+	    <DependentUpon>RoomPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\LocationPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\CheckInOutPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\LogoutPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RoomPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>
