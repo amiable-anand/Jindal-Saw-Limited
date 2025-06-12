@@ -1,0 +1,59 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Jindal.Views.MainPage"
+             BackgroundColor="#f5f5f5"
+             Title="Login">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="25" VerticalOptions="Center">
+
+            <!-- 🔷 Company Banner -->
+            <Frame HasShadow="False" CornerRadius="10" Padding="0" HeightRequest="150">
+                <Image Source="jindal_banner.png"
+                       Aspect="AspectFill"
+                       HorizontalOptions="FillAndExpand"
+                       VerticalOptions="FillAndExpand" />
+            </Frame>
+
+            <!-- 🔷 Title -->
+            <Label Text="Welcome to Guesthouse"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="#2c3e50" />
+
+            <!-- 🔷 Employee Code -->
+            <Frame BackgroundColor="White" CornerRadius="12" HasShadow="True" Padding="10">
+                <Entry x:Name="UsernameEntry"
+                       Placeholder="Employee Code"
+                       TextColor="Black"
+                       PlaceholderColor="#888" />
+            </Frame>
+
+            <!-- 🔷 Password -->
+            <Frame BackgroundColor="White" CornerRadius="12" HasShadow="True" Padding="10">
+                <Entry x:Name="PasswordEntry"
+                       Placeholder="Password"
+                       IsPassword="True"
+                       TextColor="Black"
+                       PlaceholderColor="#888" />
+            </Frame>
+
+            <!-- 🔷 Error Message -->
+            <Label x:Name="ErrorMessage"
+                   TextColor="Red"
+                   FontSize="14"
+                   IsVisible="False"
+                   HorizontalOptions="Center" />
+
+            <!-- 🔷 Login Button -->
+            <Button Text="Login"
+                    Clicked="OnLoginClicked"
+                    BackgroundColor="#0d6efd"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="25"
+                    HeightRequest="50" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
