@@ -1,0 +1,10 @@
+# Ignore build and VS-specific folders
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.DS_Store
+*.apk
+*.aab
+*.db
