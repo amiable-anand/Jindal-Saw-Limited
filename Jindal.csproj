@@ -75,6 +75,9 @@
 	  <Compile Update="Views\LogoutPage.xaml.cs">
 	    <DependentUpon>LogoutPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\AddEditRoomPage.xaml.cs">
+	    <DependentUpon>AddEditRoomPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\RoomPage.xaml.cs">
 	    <DependentUpon>RoomPage.xaml</DependentUpon>
 	  </Compile>
@@ -88,6 +91,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\LogoutPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\AddEditRoomPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\RoomPage.xaml">

@@ -1,4 +1,5 @@
 ﻿using Jindal.Services;
+using Microsoft.Maui.Controls;
 
 namespace Jindal.Views
 {
@@ -11,15 +12,15 @@ namespace Jindal.Views
 
         private async void OnLoginClicked(object sender, EventArgs e)
         {
-            var employee = await DatabaseService.GetEmployee(UsernameEntry.Text, PasswordEntry.Text);
-
-            if (employee != null)
+            var emp = await DatabaseService.GetEmployee(UsernameEntry.Text, PasswordEntry.Text);
+            if (emp != null)
             {
-                Application.Current.MainPage = new AppShell(); // Navigate to flyout UI
+                Application.Current.MainPage = new AppShell();
+                await Shell.Current.GoToAsync("//RoomPage");
             }
             else
             {
-                ErrorMessage.Text = "Invalid Employee Code or Password";
+                ErrorMessage.Text = "Invalid credentials.";
                 ErrorMessage.IsVisible = true;
             }
         }

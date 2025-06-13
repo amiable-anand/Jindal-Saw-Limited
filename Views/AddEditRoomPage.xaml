@@ -1,0 +1,26 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Jindal.Views.AddEditRoomPage"
+             Title="Add/Edit Room"
+             BackgroundColor="#121212">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <Label Text="Room Number" TextColor="#90CAF9" FontAttributes="Bold" FontSize="16"/>
+            <Entry x:Name="RoomNumberEntry" Placeholder="Enter room number" Keyboard="Numeric" BackgroundColor="#1E1E1E" TextColor="White" PlaceholderColor="#B0BEC5" HeightRequest="45"/>
+            <Label Text="Availability" TextColor="#90CAF9" FontAttributes="Bold" FontSize="16"/>
+            <Picker x:Name="AvailabilityPicker" Title="Select Availability" BackgroundColor="#1E1E1E" TextColor="White" TitleColor="#B0BEC5" HeightRequest="45">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Available</x:String>
+                        <x:String>Booked</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+            <Label Text="Location" TextColor="#90CAF9" FontAttributes="Bold" FontSize="16"/>
+            <Entry x:Name="LocationEntry" Placeholder="Enter location" BackgroundColor="#1E1E1E" TextColor="White" PlaceholderColor="#B0BEC5" HeightRequest="45"/>
+            <Label Text="Remark" TextColor="#90CAF9" FontAttributes="Bold" FontSize="16"/>
+            <Entry x:Name="RemarkEntry" Placeholder="Enter remarks" BackgroundColor="#1E1E1E" TextColor="White" PlaceholderColor="#B0BEC5" HeightRequest="45"/>
+            <Button Text="💾 Save" Clicked="OnSaveClicked" BackgroundColor="#1E88E5" TextColor="White" FontAttributes="Bold" HeightRequest="50"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,44 +1,67 @@
 ﻿using SQLite;
 using Jindal.Models;
-using System.IO;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Jindal.Services
 {
-    public class DatabaseService
+    public static class DatabaseService
     {
-        private static SQLiteAsyncConnection _database;
+        static SQLiteAsyncConnection _database;
 
         public static async Task Init()
         {
             if (_database != null)
                 return;
 
-            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "employees.db");
-            _database = new SQLiteAsyncConnection(dbPath);
+            var databasePath = Path.Combine(FileSystem.AppDataDirectory, "Jindal.db");
+            _database = new SQLiteAsyncConnection(databasePath);
+
             await _database.CreateTableAsync<Employee>();
+            await _database.CreateTableAsync<Room>();
+
+            // 🔐 Seed default employee if not exists
+            var existing = await _database.Table<Employee>().FirstOrDefaultAsync();
+            if (existing == null)
+            {
+                var defaultEmployee = new Employee
+                {
+                    EmployeeCode = "admin",
+                    Password = "admin123"
+                };
+                await _database.InsertAsync(defaultEmployee);
+            }
         }
 
-        public static async Task<Employee> GetEmployee(string code, string password)
+        public static async Task<Employee> GetEmployee(string username, string password)
         {
             await Init();
             return await _database.Table<Employee>()
-                .Where(emp => emp.EmployeeCode == code && emp.Password == password)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(e => e.EmployeeCode == username && e.Password == password);
         }
 
-        // Optional: Seed a test employee
-        public static async Task AddTestEmployee()
+        public static async Task<List<Room>> GetRooms()
         {
             await Init();
-            var existing = await _database.Table<Employee>().Where(e => e.EmployeeCode == "E123").FirstOrDefaultAsync();
-            if (existing == null)
-            {
-                await _database.InsertAsync(new Employee
-                {
-                    EmployeeCode = "E123",
-                    Password = "pass@123"
-                });
-            }
+            return await _database.Table<Room>().ToListAsync();
+        }
+
+        public static async Task AddRoom(Room room)
+        {
+            await Init();
+            await _database.InsertAsync(room);
+        }
+
+        public static async Task UpdateRoom(Room room)
+        {
+            await Init();
+            await _database.UpdateAsync(room);
+        }
+
+        public static async Task DeleteRoom(Room room)
+        {
+            await Init();
+            await _database.DeleteAsync(room);
         }
     }
 }

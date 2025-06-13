@@ -3,23 +3,28 @@
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:views="clr-namespace:Jindal.Views"
        x:Class="Jindal.AppShell"
-       FlyoutBehavior="Flyout">
+       FlyoutBehavior="Flyout"
+       Shell.FlyoutBackgroundColor="#121212"
+       Shell.TitleColor="White"
+       BackgroundColor="#121212"
+       NavBarHasShadow="False">
+
+    <Shell.FlyoutHeader>
+        <StackLayout Padding="20" BackgroundColor="#1E1E1E">
+            <Label Text="Guesthouse" TextColor="White" FontSize="20" FontAttributes="Bold" />
+        </StackLayout>
+    </Shell.FlyoutHeader>
 
     <FlyoutItem Title="Location" Icon="location_icon.png">
-        <ShellContent ContentTemplate="{DataTemplate views:LocationPage}" />
+        <ShellContent Title="Location" ContentTemplate="{DataTemplate views:LocationPage}" Route="LocationPage" />
     </FlyoutItem>
-
     <FlyoutItem Title="Room" Icon="room_icon.png">
-        <ShellContent ContentTemplate="{DataTemplate views:RoomPage}" />
+        <ShellContent Title="Room" ContentTemplate="{DataTemplate views:RoomPage}" Route="RoomPage" />
     </FlyoutItem>
-
     <FlyoutItem Title="Check In/Out" Icon="check_icon.png">
-        <ShellContent ContentTemplate="{DataTemplate views:CheckInOutPage}" />
+        <ShellContent Title="Check In/Out" ContentTemplate="{DataTemplate views:CheckInOutPage}" Route="CheckInOutPage" />
     </FlyoutItem>
-    
     <FlyoutItem Title="Logout" Icon="logout_icon.png">
-        <ShellContent ContentTemplate="{DataTemplate views:LogoutPage}" />
+        <ShellContent Title="Logout" ContentTemplate="{DataTemplate views:LogoutPage}" Route="LogoutPage" />
     </FlyoutItem>
-
-
 </Shell>
