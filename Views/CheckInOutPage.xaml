@@ -1,10 +1,90 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.CheckInOutPage"
-             Title="Check In/Out">
-    <VerticalStackLayout Padding="20">
-        <Label Text="🕒 Check In and Out Info"
-               FontSize="22"
-               HorizontalOptions="Center" />
+             Title="Check In/Out"
+             BackgroundColor="#F9FAFB">
+
+    <VerticalStackLayout Padding="20" Spacing="16">
+        <!-- Page Title -->
+        <Label Text="Check In/Outs"
+               FontSize="24"
+               FontAttributes="Bold"
+               TextColor="#1F2937" />
+
+        <!-- Top Controls -->
+        <Grid ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Text="+ Check In/Out"
+                    Clicked="OnAddClicked"
+                    BackgroundColor="#10B981"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="6"
+                    Padding="12,6"
+                    Grid.Column="0" />
+
+            <Picker x:Name="RoomFilterPicker"
+                    Grid.Column="1"
+                    Title="Room"
+                    BackgroundColor="White"
+                    TextColor="Black"
+                    HeightRequest="40"
+                    Margin="8,0" />
+
+            <Entry x:Name="SearchEntry"
+                   Placeholder="Search"
+                   Grid.Column="2"
+                   HeightRequest="40"
+                   BackgroundColor="White"
+                   TextColor="Black"
+                   Margin="8,0" />
+
+            <Button Text="Reload"
+                    Clicked="OnReloadClicked"
+                    BackgroundColor="#6B7280"
+                    TextColor="White"
+                    Padding="12,6"
+                    Grid.Column="3" />
+        </Grid>
+
+        <!-- Table Header -->
+        <ScrollView Orientation="Horizontal">
+            <Grid x:Name="CheckInOutTable" ColumnSpacing="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="150"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Text="Room No" FontAttributes="Bold" TextColor="#374151" />
+                <Label Text="Guest Name" Grid.Column="1" FontAttributes="Bold" TextColor="#374151"/>
+                <Label Text="Guest ID No" Grid.Column="2" FontAttributes="Bold" TextColor="#374151"/>
+                <Label Text="Check In Date" Grid.Column="3" FontAttributes="Bold" TextColor="#374151"/>
+                <Label Text="Check In Time" Grid.Column="4" FontAttributes="Bold" TextColor="#374151"/>
+                <Label Text="Check Out Date" Grid.Column="5" FontAttributes="Bold" TextColor="#374151"/>
+                <Label Text="Check Out Time" Grid.Column="6" FontAttributes="Bold" TextColor="#374151"/>
+                <Label Text="Dept" Grid.Column="7" FontAttributes="Bold" TextColor="#374151"/>
+                <Label Text="Purpose" Grid.Column="8" FontAttributes="Bold" TextColor="#374151"/>
+                <Label Text="Mail Received Date" Grid.Column="9" FontAttributes="Bold" TextColor="#374151"/>
+            </Grid>
+        </ScrollView>
+
+        <!-- Table rows will be dynamically added in the code-behind -->
     </VerticalStackLayout>
 </ContentPage>

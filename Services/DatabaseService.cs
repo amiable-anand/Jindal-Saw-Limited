@@ -19,6 +19,8 @@ namespace Jindal.Services
 
             await _database.CreateTableAsync<Employee>();
             await _database.CreateTableAsync<Room>();
+            await _database.CreateTableAsync<CheckInOut>();
+
 
             // 🔐 Seed default employee if not exists
             var existing = await _database.Table<Employee>().FirstOrDefaultAsync();
@@ -63,5 +65,30 @@ namespace Jindal.Services
             await Init();
             await _database.DeleteAsync(room);
         }
+
+        public static async Task<List<CheckInOut>> GetCheckInOuts()
+        {
+            await Init();
+            return await _database.Table<CheckInOut>().ToListAsync();
+        }
+
+        public static async Task AddCheckInOut(CheckInOut check)
+        {
+            await Init();
+            await _database.InsertAsync(check);
+        }
+
+        public static async Task UpdateCheckInOut(CheckInOut check)
+        {
+            await Init();
+            await _database.UpdateAsync(check);
+        }
+
+        public static async Task DeleteCheckInOut(CheckInOut check)
+        {
+            await Init();
+            await _database.DeleteAsync(check);
+        }
+
     }
 }

@@ -2,25 +2,38 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.AddEditRoomPage"
              Title="Add/Edit Room"
-             BackgroundColor="#121212">
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
-            <Label Text="Room Number" TextColor="#90CAF9" FontAttributes="Bold" FontSize="16"/>
-            <Entry x:Name="RoomNumberEntry" Placeholder="Enter room number" Keyboard="Numeric" BackgroundColor="#1E1E1E" TextColor="White" PlaceholderColor="#B0BEC5" HeightRequest="45"/>
-            <Label Text="Availability" TextColor="#90CAF9" FontAttributes="Bold" FontSize="16"/>
-            <Picker x:Name="AvailabilityPicker" Title="Select Availability" BackgroundColor="#1E1E1E" TextColor="White" TitleColor="#B0BEC5" HeightRequest="45">
-                <Picker.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>Available</x:String>
-                        <x:String>Booked</x:String>
-                    </x:Array>
-                </Picker.ItemsSource>
-            </Picker>
-            <Label Text="Location" TextColor="#90CAF9" FontAttributes="Bold" FontSize="16"/>
-            <Entry x:Name="LocationEntry" Placeholder="Enter location" BackgroundColor="#1E1E1E" TextColor="White" PlaceholderColor="#B0BEC5" HeightRequest="45"/>
-            <Label Text="Remark" TextColor="#90CAF9" FontAttributes="Bold" FontSize="16"/>
-            <Entry x:Name="RemarkEntry" Placeholder="Enter remarks" BackgroundColor="#1E1E1E" TextColor="White" PlaceholderColor="#B0BEC5" HeightRequest="45"/>
-            <Button Text="💾 Save" Clicked="OnSaveClicked" BackgroundColor="#1E88E5" TextColor="White" FontAttributes="Bold" HeightRequest="50"/>
-        </VerticalStackLayout>
-    </ScrollView>
+             BackgroundColor="#0D0D0D"
+             Padding="20">
+
+    <VerticalStackLayout Spacing="16">
+
+        <Label Text="Room Number" TextColor="White" FontSize="14" />
+        <Entry x:Name="RoomNumberEntry"
+               Placeholder="Enter Room Number"
+               Keyboard="Numeric"
+               BackgroundColor="#1E1E1E"
+               TextColor="White" />
+
+        <Label Text="Location" TextColor="White" FontSize="14" />
+        <Entry x:Name="LocationEntry"
+               Placeholder="Enter Location"
+               BackgroundColor="#1E1E1E"
+               TextColor="White" />
+
+        <Label Text="Remark" TextColor="White" FontSize="14" />
+        <Editor x:Name="RemarkEntry"
+                Placeholder="Optional"
+                AutoSize="TextChanges"
+                BackgroundColor="#1E1E1E"
+                TextColor="White" />
+
+        <Button Text="Save"
+                Clicked="OnSaveClicked"
+                BackgroundColor="#2563EB"
+                TextColor="White"
+                FontSize="14"
+                CornerRadius="6"
+                Padding="10"
+                HeightRequest="44" />
+    </VerticalStackLayout>
 </ContentPage>

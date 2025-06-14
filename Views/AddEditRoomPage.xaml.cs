@@ -15,7 +15,6 @@ namespace Jindal.Views
             if (_room != null)
             {
                 RoomNumberEntry.Text = _room.RoomNumber.ToString();
-                AvailabilityPicker.SelectedItem = _room.Availability;
                 LocationEntry.Text = _room.Location;
                 RemarkEntry.Text = _room.Remark;
             }
@@ -24,32 +23,39 @@ namespace Jindal.Views
         private async void OnSaveClicked(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(RoomNumberEntry.Text) ||
-                AvailabilityPicker.SelectedItem == null ||
                 string.IsNullOrWhiteSpace(LocationEntry.Text))
             {
                 await DisplayAlert("Validation Error", "Please fill all required fields.", "OK");
                 return;
             }
 
-            int roomNumber = int.Parse(RoomNumberEntry.Text);
-            var availability = AvailabilityPicker.SelectedItem.ToString();
+            if (!int.TryParse(RoomNumberEntry.Text, out int roomNumber))
+            {
+                await DisplayAlert("Input Error", "Room number must be a valid integer.", "OK");
+                return;
+            }
+
+            string availability = _room?.Availability ?? "Available";  // Keep previous or default
+            string location = LocationEntry.Text.Trim();
+            string remark = RemarkEntry.Text?.Trim() ?? string.Empty;
 
             if (_room == null)
             {
-                await DatabaseService.AddRoom(new Room
+                var newRoom = new Room
                 {
                     RoomNumber = roomNumber,
                     Availability = availability,
-                    Location = LocationEntry.Text,
-                    Remark = RemarkEntry.Text
-                });
+                    Location = location,
+                    Remark = remark
+                };
+
+                await DatabaseService.AddRoom(newRoom);
             }
             else
             {
                 _room.RoomNumber = roomNumber;
-                _room.Availability = availability;
-                _room.Location = LocationEntry.Text;
-                _room.Remark = RemarkEntry.Text;
+                _room.Location = location;
+                _room.Remark = remark;
 
                 await DatabaseService.UpdateRoom(_room);
             }
