@@ -89,6 +89,13 @@ namespace Jindal.Services
             await Init();
             await _database.DeleteAsync(check);
         }
-
+        public static async Task<List<Room>> GetAvailableRooms()
+        {
+            await Init();
+            return await _database.Table<Room>()
+                                  .Where(r => r.IsAvailable == true)
+                                  .ToListAsync();
+        }
+       
     }
 }

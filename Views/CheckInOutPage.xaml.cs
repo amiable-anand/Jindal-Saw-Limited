@@ -15,6 +15,7 @@ namespace Jindal.Views
         public CheckInOutPage()
         {
             InitializeComponent();
+            SearchEntry.TextChanged += OnSearchTextChanged; // ?? Hook event here
         }
 
         protected override async void OnAppearing()
@@ -31,7 +32,7 @@ namespace Jindal.Views
 
         private void PopulateTable(List<CheckInOut> records)
         {
-            // Clear previous rows (but keep header row)
+            // Clear old rows except header
             while (CheckInOutTable.RowDefinitions.Count > 1)
                 CheckInOutTable.RowDefinitions.RemoveAt(CheckInOutTable.RowDefinitions.Count - 1);
 
@@ -44,16 +45,16 @@ namespace Jindal.Views
             {
                 CheckInOutTable.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-                AddToGrid(new Label { Text = r.RoomNumber.ToString(), TextColor = Colors.Black }, 0, row);
-                AddToGrid(new Label { Text = r.GuestName, TextColor = Colors.Black }, 1, row);
-                AddToGrid(new Label { Text = r.GuestIdNumber, TextColor = Colors.Black }, 2, row);
-                AddToGrid(new Label { Text = r.CheckInDate.ToString("dd-MM-yyyy"), TextColor = Colors.Black }, 3, row);
-                AddToGrid(new Label { Text = r.CheckInTime.ToString(@"hh\:mm"), TextColor = Colors.Black }, 4, row);
-                AddToGrid(new Label { Text = r.CheckOutDate?.ToString("dd-MM-yyyy") ?? "-", TextColor = Colors.Black }, 5, row);
-                AddToGrid(new Label { Text = r.CheckOutTime?.ToString(@"hh\:mm") ?? "-", TextColor = Colors.Black }, 6, row);
-                AddToGrid(new Label { Text = r.Department, TextColor = Colors.Black }, 7, row);
-                AddToGrid(new Label { Text = r.Purpose, TextColor = Colors.Black }, 8, row);
-                AddToGrid(new Label { Text = r.MailReceivedDate.ToString("dd-MM-yyyy"), TextColor = Colors.Black }, 9, row);
+                AddToGrid(new Label { Text = r.RoomNumber?.ToString() ?? "-", TextColor = Colors.White }, 0, row);
+                AddToGrid(new Label { Text = r.GuestName, TextColor = Colors.White }, 1, row);
+                AddToGrid(new Label { Text = r.GuestIdNumber, TextColor = Colors.White }, 2, row);
+                AddToGrid(new Label { Text = r.CheckInDate.ToString("dd-MM-yyyy"), TextColor = Colors.White }, 3, row);
+                AddToGrid(new Label { Text = r.CheckInTime.ToString(@"hh\:mm"), TextColor = Colors.White }, 4, row);
+                AddToGrid(new Label { Text = r.CheckOutDate?.ToString("dd-MM-yyyy") ?? "-", TextColor = Colors.White }, 5, row);
+                AddToGrid(new Label { Text = r.CheckOutTime?.ToString(@"hh\:mm") ?? "-", TextColor = Colors.White }, 6, row);
+                AddToGrid(new Label { Text = r.Department, TextColor = Colors.White }, 7, row);
+                AddToGrid(new Label { Text = r.Purpose, TextColor = Colors.White }, 8, row);
+                AddToGrid(new Label { Text = r.MailReceivedDate.ToString("dd-MM-yyyy"), TextColor = Colors.White }, 9, row);
 
                 row++;
             }
@@ -75,7 +76,20 @@ namespace Jindal.Views
 
         private async void OnAddClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("Coming Soon", "Check-in/out form is not implemented yet.", "OK");
+            await Navigation.PushAsync(new AddCheckInOutPage());
+        }
+
+        // ? Search functionality by guest name
+        private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+        {
+            var searchText = e.NewTextValue?.ToLower() ?? "";
+
+            var filtered = allRecords
+                .Where(r => !string.IsNullOrEmpty(r.GuestName) &&
+                            r.GuestName.ToLower().Contains(searchText))
+                .ToList();
+
+            PopulateTable(filtered);
         }
     }
 }

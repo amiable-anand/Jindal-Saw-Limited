@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Anand\\source\\repos\\Jindal\\Jindal\\Jindal.csproj": {}
+    "C:\\Users\\Anand\\source\\repos\\Jindal\\Jindal\\Jindal\\Jindal\\Jindal.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Anand\\source\\repos\\Jindal\\Jindal\\Jindal.csproj": {
+    "C:\\Users\\Anand\\source\\repos\\Jindal\\Jindal\\Jindal\\Jindal\\Jindal.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Anand\\source\\repos\\Jindal\\Jindal\\Jindal.csproj",
+        "projectUniqueName": "C:\\Users\\Anand\\source\\repos\\Jindal\\Jindal\\Jindal\\Jindal\\Jindal.csproj",
         "projectName": "Jindal",
-        "projectPath": "C:\\Users\\Anand\\source\\repos\\Jindal\\Jindal\\Jindal.csproj",
+        "projectPath": "C:\\Users\\Anand\\source\\repos\\Jindal\\Jindal\\Jindal\\Jindal\\Jindal.csproj",
         "packagesPath": "C:\\Users\\Anand\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Anand\\source\\repos\\Jindal\\Jindal\\obj\\",
+        "outputPath": "C:\\Users\\Anand\\source\\repos\\Jindal\\Jindal\\Jindal\\Jindal\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [
