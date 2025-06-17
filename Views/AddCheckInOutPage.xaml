@@ -4,23 +4,25 @@
              Title="Add Check In/Out"
              BackgroundColor="#0D0D0D">
 
+    <!-- Enable vertical scrolling -->
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="24">
 
-            <!-- Page Title -->
+            <!-- 🏷️ Page Title -->
             <Label Text="Add Guest Check In / Out"
                    FontSize="28"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
                    TextColor="#E0E0E0" />
 
-            <!-- Guest Info Form -->
+            <!-- 👤 Guest Information Section -->
             <Frame BackgroundColor="#1A1A1A"
                    CornerRadius="20"
                    HasShadow="True"
                    Padding="20"
                    BorderColor="#2A2A2A">
 
+                <!-- Grid layout for guest input fields -->
                 <Grid RowSpacing="20" ColumnSpacing="14">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -34,7 +36,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Row 1 -->
+                    <!-- 🔢 Row 1: Room Picker & ID Type -->
                     <Picker x:Name="RoomPicker"
                             Title="Select Room"
                             Grid.Row="0" Grid.Column="0"
@@ -43,7 +45,9 @@
                             TitleColor="#888"
                             FontSize="14"
                             HeightRequest="48"
-                            HorizontalTextAlignment="Start"/>
+                            HorizontalTextAlignment="Start"
+                            ItemDisplayBinding="{Binding RoomNumber}"
+                            ZIndex="10"/>
 
                     <Picker x:Name="IdTypePicker"
                             Title="Select ID Type"
@@ -57,6 +61,7 @@
                             VerticalOptions="Center"
                             Margin="0,4,0,0">
                         <Picker.ItemsSource>
+                            <!-- Static list of ID types -->
                             <x:Array Type="{x:Type x:String}">
                                 <x:String>Aadhaar Card</x:String>
                                 <x:String>Driving License</x:String>
@@ -66,9 +71,7 @@
                         </Picker.ItemsSource>
                     </Picker>
 
-
-
-                    <!-- Row 2 -->
+                    <!-- 🆔 Row 2: ID Number & Guest Name -->
                     <Entry x:Name="IdNumberEntry"
                            Placeholder="ID Number"
                            Grid.Row="1" Grid.Column="0"
@@ -87,7 +90,7 @@
                            FontSize="14"
                            HeightRequest="48"/>
 
-                    <!-- Row 3 -->
+                    <!-- 🏢 Row 3: Company Name & Mobile -->
                     <Entry x:Name="CompanyEntry"
                            Placeholder="Company Name"
                            Grid.Row="2" Grid.Column="0"
@@ -106,7 +109,7 @@
                            FontSize="14"
                            HeightRequest="48"/>
 
-                    <!-- Row 4 -->
+                    <!-- 🌍 Row 4: Nationality & Address -->
                     <Entry x:Name="NationalityEntry"
                            Placeholder="Nationality"
                            Grid.Row="3" Grid.Column="0"
@@ -125,7 +128,7 @@
                            FontSize="14"
                            HeightRequest="48"/>
 
-                    <!-- Row 5 -->
+                    <!-- ⏱️ Row 5: Check-In Date & Time -->
                     <DatePicker x:Name="CheckInDatePicker"
                                 Grid.Row="4" Grid.Column="0"
                                 TextColor="#CCCCCC"
@@ -140,13 +143,14 @@
                 </Grid>
             </Frame>
 
-            <!-- Check Out Info -->
+            <!-- 🔚 Check-Out Information Section -->
             <Frame BackgroundColor="#1A1A1A"
                    CornerRadius="20"
                    HasShadow="True"
                    Padding="20"
                    BorderColor="#2A2A2A">
 
+                <!-- Grid layout for check-out fields -->
                 <Grid RowSpacing="20" ColumnSpacing="14">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -158,7 +162,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Check Out Date & Time -->
+                    <!-- 📅 Row 1: Check-Out Date & Time -->
                     <DatePicker x:Name="CheckOutDatePicker"
                                 Grid.Row="0" Grid.Column="0"
                                 TextColor="#CCCCCC"
@@ -171,7 +175,7 @@
                                 BackgroundColor="#222222"
                                 HeightRequest="48"/>
 
-                    <!-- Department & Purpose -->
+                    <!-- 🏛️ Row 2: Department & Purpose -->
                     <Entry x:Name="DepartmentEntry"
                            Placeholder="Department"
                            Grid.Row="1" Grid.Column="0"
@@ -190,7 +194,7 @@
                            FontSize="14"
                            HeightRequest="48"/>
 
-                    <!-- Mail Received -->
+                    <!-- 📧 Row 3: Mail Received Date -->
                     <DatePicker x:Name="MailReceivedDatePicker"
                                 Grid.Row="2" Grid.ColumnSpan="2"
                                 TextColor="#CCCCCC"
@@ -199,19 +203,22 @@
                 </Grid>
             </Frame>
 
-            <!-- Action Buttons -->
+            <!-- 🎯 Action Buttons -->
             <HorizontalStackLayout Spacing="16" HorizontalOptions="Center">
-                <!-- Add Guest Button -->
+
+                <!-- ➕ Add Another Guest (Same Room) -->
                 <Button Text="+ Add Guest"
-            BackgroundColor="#1F2937"
-            TextColor="#93C5FD"
-            FontSize="14"
-            CornerRadius="12"
-            Padding="16,8"
-            WidthRequest="130"
-            HeightRequest="46"
-            BorderColor="#3B82F6"
-            BorderWidth="1">
+                        Clicked="OnAddGuestClicked"
+                        BackgroundColor="#1F2937"
+                        TextColor="#93C5FD"
+                        FontSize="14"
+                        CornerRadius="12"
+                        Padding="16,8"
+                        WidthRequest="130"
+                        HeightRequest="46"
+                        BorderColor="#3B82F6"
+                        BorderWidth="1">
+                    <!-- Button visual state feedback -->
                     <VisualStateManager.VisualStateGroups>
                         <VisualStateGroup Name="CommonStates">
                             <VisualState Name="Pressed">
@@ -232,17 +239,19 @@
                     </VisualStateManager.VisualStateGroups>
                 </Button>
 
-                <!-- Check In Button -->
+                <!-- ✅ Finalize Check-In -->
                 <Button Text="✓ Check In"
-            BackgroundColor="#1F2937"
-            TextColor="#10B981"
-            FontSize="14"
-            CornerRadius="12"
-            Padding="20,8"
-            WidthRequest="130"
-            HeightRequest="46"
-            BorderColor="#10B981"
-            BorderWidth="1">
+                        Clicked="OnCheckInClicked"
+                        BackgroundColor="#1F2937"
+                        TextColor="#10B981"
+                        FontSize="14"
+                        CornerRadius="12"
+                        Padding="20,8"
+                        WidthRequest="130"
+                        HeightRequest="46"
+                        BorderColor="#10B981"
+                        BorderWidth="1">
+                    <!-- Button visual state feedback -->
                     <VisualStateManager.VisualStateGroups>
                         <VisualStateGroup Name="CommonStates">
                             <VisualState Name="Pressed">
@@ -262,6 +271,7 @@
                         </VisualStateGroup>
                     </VisualStateManager.VisualStateGroups>
                 </Button>
+
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

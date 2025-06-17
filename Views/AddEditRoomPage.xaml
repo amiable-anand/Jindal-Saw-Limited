@@ -5,28 +5,42 @@
              BackgroundColor="#0D0D0D"
              Padding="20">
 
+    <!-- Main Layout -->
     <VerticalStackLayout Spacing="16">
 
-        <Label Text="Room Number" TextColor="White" FontSize="14" />
+        <!-- Room Number Label and Entry -->
+        <Label Text="Room Number"
+               TextColor="White"
+               FontSize="14" />
+
         <Entry x:Name="RoomNumberEntry"
                Placeholder="Enter Room Number"
                Keyboard="Numeric"
                BackgroundColor="#1E1E1E"
                TextColor="White" />
 
-        <Label Text="Location" TextColor="White" FontSize="14" />
+        <!-- Location Label and Entry -->
+        <Label Text="Location"
+               TextColor="White"
+               FontSize="14" />
+
         <Entry x:Name="LocationEntry"
                Placeholder="Enter Location"
                BackgroundColor="#1E1E1E"
                TextColor="White" />
 
-        <Label Text="Remark" TextColor="White" FontSize="14" />
+        <!-- Remark Label and Editor -->
+        <Label Text="Remark"
+               TextColor="White"
+               FontSize="14" />
+
         <Editor x:Name="RemarkEntry"
                 Placeholder="Optional"
                 AutoSize="TextChanges"
                 BackgroundColor="#1E1E1E"
                 TextColor="White" />
 
+        <!-- Save Button -->
         <Button Text="Save"
                 Clicked="OnSaveClicked"
                 BackgroundColor="#2563EB"
@@ -35,5 +49,6 @@
                 CornerRadius="6"
                 Padding="10"
                 HeightRequest="44" />
+
     </VerticalStackLayout>
 </ContentPage>

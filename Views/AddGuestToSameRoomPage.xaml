@@ -1,0 +1,94 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Jindal.Views.AddGuestToSameRoomPage"
+             Title="Add Guest to Same Room"
+             BackgroundColor="#0D0D0D">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="20">
+
+            <!-- Page Header -->
+            <Label Text="Add Additional Guest"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center" />
+
+            <!-- Display Selected Room Number (Read-only for reference) -->
+            <Label x:Name="RoomNumberLabel"
+                   Text="Room: "
+                   FontSize="18"
+                   TextColor="#CCCCCC"
+                   Margin="0,0,0,10" />
+
+            <!-- Guest Name -->
+            <Entry x:Name="GuestNameEntry"
+                   Placeholder="Guest Name"
+                   BackgroundColor="#1E1E1E"
+                   TextColor="White" />
+
+            <!-- Guest ID Number -->
+            <Entry x:Name="GuestIdEntry"
+                   Placeholder="Guest ID Number"
+                   BackgroundColor="#1E1E1E"
+                   TextColor="White" />
+
+            <!-- ID Type Picker -->
+            <Picker x:Name="IdTypePicker"
+                    Title="Select ID Type"
+                    BackgroundColor="#1E1E1E"
+                    TextColor="White">
+                <Picker.Items>
+                    <x:String>Aadhaar Card</x:String>
+                    <x:String>Driving License</x:String>
+                    <x:String>Passport</x:String>
+                    <x:String>PAN Card</x:String>
+                </Picker.Items>
+            </Picker>
+
+            <!-- Company Name -->
+            <Entry x:Name="CompanyEntry"
+                   Placeholder="Company Name"
+                   BackgroundColor="#1E1E1E"
+                   TextColor="White" />
+
+            <!-- Mobile Number -->
+            <Entry x:Name="MobileEntry"
+                   Placeholder="Mobile"
+                   Keyboard="Telephone"
+                   BackgroundColor="#1E1E1E"
+                   TextColor="White" />
+
+            <!-- Nationality -->
+            <Entry x:Name="NationalityEntry"
+                   Placeholder="Nationality"
+                   BackgroundColor="#1E1E1E"
+                   TextColor="White" />
+
+            <!-- Address -->
+            <Entry x:Name="AddressEntry"
+                   Placeholder="Address"
+                   BackgroundColor="#1E1E1E"
+                   TextColor="White" />
+
+            <!-- Optional Check-in Date -->
+            <DatePicker x:Name="CheckInDatePicker"
+                        BackgroundColor="#1E1E1E"
+                        TextColor="White" />
+
+            <!-- Optional Check-in Time -->
+            <TimePicker x:Name="CheckInTimePicker"
+                        BackgroundColor="#1E1E1E"
+                        TextColor="White" />
+
+            <!-- Save Button -->
+            <Button Text="Save Guest"
+                    Clicked="OnSaveClicked"
+                    BackgroundColor="#10B981"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="6"
+                    HeightRequest="44" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

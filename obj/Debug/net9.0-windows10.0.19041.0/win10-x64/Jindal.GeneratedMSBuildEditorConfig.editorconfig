@@ -58,6 +58,12 @@ build_metadata.AdditionalFiles.ManifestResourceName = Jindal.Views.AddEditRoomPa
 build_metadata.AdditionalFiles.TargetPath = Views\AddEditRoomPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\AddEditRoomPage.xaml
 
+[C:/Users/Anand/source/repos/Jindal/Jindal/Jindal/Jindal/Views/AddGuestToSameRoomPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = Jindal.Views.AddGuestToSameRoomPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\AddGuestToSameRoomPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\AddGuestToSameRoomPage.xaml
+
 [C:/Users/Anand/source/repos/Jindal/Jindal/Jindal/Jindal/Views/CheckInOutPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = Jindal.Views.CheckInOutPage.xaml

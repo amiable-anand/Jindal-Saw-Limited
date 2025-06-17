@@ -15,6 +15,10 @@
         </StackLayout>
     </Shell.FlyoutHeader>
 
+    <!-- Hidden Login Page Route -->
+    <ShellContent Route="MainPage" ContentTemplate="{DataTemplate views:MainPage}" />
+
+    <!-- Main Navigation Items -->
     <FlyoutItem Title="Location" Icon="location_icon.png">
         <ShellContent Title="Location" ContentTemplate="{DataTemplate views:LocationPage}" Route="LocationPage" />
     </FlyoutItem>

@@ -10,5 +10,10 @@
         public string Location { get; set; }
         public string Remark { get; set; }
             public bool IsAvailable { get; set; }
+        public override string ToString()
+        {
+            return RoomNumber.ToString();
+        }
+
     }
 }

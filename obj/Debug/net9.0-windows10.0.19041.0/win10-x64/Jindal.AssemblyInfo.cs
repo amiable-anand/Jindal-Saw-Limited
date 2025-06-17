@@ -18,7 +18,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Jindal")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+d4bea13add889f74b1b4af73675b4bfb7e23f1ad")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+a09c1f831e6541ca5b436612d4c7ccb80cbc94c7")]
 [assembly: System.Reflection.AssemblyProductAttribute("Jindal")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Jindal")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

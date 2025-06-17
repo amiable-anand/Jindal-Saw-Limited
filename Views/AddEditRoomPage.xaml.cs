@@ -5,13 +5,14 @@ namespace Jindal.Views
 {
     public partial class AddEditRoomPage : ContentPage
     {
-        private Room _room;
+        private Room _room; // Holds the room being edited (null if adding a new one)
 
         public AddEditRoomPage(Room room = null)
         {
             InitializeComponent();
             _room = room;
 
+            // If editing an existing room, populate the fields
             if (_room != null)
             {
                 RoomNumberEntry.Text = _room.RoomNumber.ToString();
@@ -20,8 +21,12 @@ namespace Jindal.Views
             }
         }
 
+        /// <summary>
+        /// Handles Save button click. Validates input and either adds or updates the room in the database.
+        /// </summary>
         private async void OnSaveClicked(object sender, EventArgs e)
         {
+            // Validate required fields
             if (string.IsNullOrWhiteSpace(RoomNumberEntry.Text) ||
                 string.IsNullOrWhiteSpace(LocationEntry.Text))
             {
@@ -29,16 +34,19 @@ namespace Jindal.Views
                 return;
             }
 
+            // Validate Room Number input
             if (!int.TryParse(RoomNumberEntry.Text, out int roomNumber))
             {
                 await DisplayAlert("Input Error", "Room number must be a valid integer.", "OK");
                 return;
             }
 
-            string availability = _room?.Availability ?? "Available";  // Keep previous or default
+            // Set default or retain existing availability
+            string availability = _room?.Availability ?? "Available";
             string location = LocationEntry.Text.Trim();
             string remark = RemarkEntry.Text?.Trim() ?? string.Empty;
 
+            // If adding a new room
             if (_room == null)
             {
                 var newRoom = new Room
@@ -51,7 +59,7 @@ namespace Jindal.Views
 
                 await DatabaseService.AddRoom(newRoom);
             }
-            else
+            else // If editing existing room
             {
                 _room.RoomNumber = roomNumber;
                 _room.Location = location;
@@ -60,6 +68,7 @@ namespace Jindal.Views
                 await DatabaseService.UpdateRoom(_room);
             }
 
+            // Navigate back after save
             await Navigation.PopAsync();
         }
     }
