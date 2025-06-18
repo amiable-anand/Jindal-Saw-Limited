@@ -33,22 +33,14 @@
             </Picker.ItemsSource>
         </Picker>
 
-        <!-- Remark Picker (Floor) -->
-        <Label Text="Floor (Remark)"
+        <!-- Remark Text Entry -->
+        <Label Text="Remark"
                TextColor="White"
                FontSize="14" />
-        <Picker x:Name="RemarkPicker"
-                Title="Select Floor"
-                BackgroundColor="#1E1E1E"
-                TextColor="White">
-            <Picker.ItemsSource>
-                <x:Array Type="{x:Type x:String}">
-                    <x:String>Ground Floor</x:String>
-                    <x:String>First Floor</x:String>
-                    <x:String>Second Floor</x:String>
-                </x:Array>
-            </Picker.ItemsSource>
-        </Picker>
+        <Entry x:Name="RemarkEntry"
+               Placeholder="Enter Remark or Floor"
+               BackgroundColor="#1E1E1E"
+               TextColor="White" />
 
         <!-- Save Button -->
         <Button Text="Save"

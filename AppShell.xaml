@@ -31,4 +31,6 @@
     <FlyoutItem Title="Logout" Icon="logout_icon.png">
         <ShellContent Title="Logout" ContentTemplate="{DataTemplate views:LogoutPage}" Route="LogoutPage" />
     </FlyoutItem>
+    <ShellContent Route="EditGuestPage" ContentTemplate="{DataTemplate views:EditGuestPage}" />
+
 </Shell>

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Jindal.Views;
 
 namespace Jindal.Views
 {
@@ -50,13 +51,12 @@ namespace Jindal.Views
             while (CheckInOutTable.RowDefinitions.Count > 1)
                 CheckInOutTable.RowDefinitions.RemoveAt(CheckInOutTable.RowDefinitions.Count - 1);
 
-            var oldContent = CheckInOutTable.Children.Skip(10).ToList(); // Skip header columns
+            var oldContent = CheckInOutTable.Children.Skip(10).ToList(); // Skip headers
             foreach (var view in oldContent)
                 CheckInOutTable.Children.Remove(view);
 
             int row = 1;
 
-            // Group records by room number
             var groupedRecords = records
                 .Where(r => r.RoomNumber != null)
                 .GroupBy(r => r.RoomNumber)
@@ -64,7 +64,7 @@ namespace Jindal.Views
 
             foreach (var group in groupedRecords)
             {
-                // Row for Room Header
+                // Header Row
                 CheckInOutTable.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
                 var roomHeader = new Label
@@ -77,12 +77,11 @@ namespace Jindal.Views
                     Padding = new Thickness(8),
                 };
                 Grid.SetColumn(roomHeader, 0);
-                Grid.SetColumnSpan(roomHeader, 10); // span across all columns
+                Grid.SetColumnSpan(roomHeader, 11); // span all columns including action
                 Grid.SetRow(roomHeader, row);
                 CheckInOutTable.Children.Add(roomHeader);
                 row++;
 
-                // Rows for each guest
                 foreach (var r in group)
                 {
                     CheckInOutTable.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
@@ -98,14 +97,58 @@ namespace Jindal.Views
                     AddToGrid(new Label { Text = r.Purpose, TextColor = Colors.White }, 8, row);
                     AddToGrid(new Label { Text = r.MailReceivedDate.ToString("dd-MM-yyyy"), TextColor = Colors.White }, 9, row);
 
+                    // Right-aligned buttons
+                    var buttonStack = new HorizontalStackLayout
+                    {
+                        Spacing = 6,
+                        HorizontalOptions = LayoutOptions.End
+                    };
+
+                    var editButton = new Button
+                    {
+                        Text = "Edit",
+                        FontSize = 12,
+                        BackgroundColor = Color.FromArgb("#3B82F6"),
+                        TextColor = Colors.White,
+                        CornerRadius = 6,
+                        Padding = new Thickness(8, 4)
+                    };
+                    editButton.Clicked += async (s, e) =>
+                    {
+                        await Shell.Current.GoToAsync($"///EditGuestPage?guestId={r.Id}");
+                    };
+
+                    var checkOutButton = new Button
+                    {
+                        Text = "Check Out",
+                        FontSize = 12,
+                        BackgroundColor = Color.FromArgb("#EF4444"),
+                        TextColor = Colors.White,
+                        CornerRadius = 6,
+                        Padding = new Thickness(8, 4)
+                    };
+                    checkOutButton.Clicked += async (s, e) =>
+                    {
+                        r.CheckOutDate = DateTime.Now.Date;
+                        r.CheckOutTime = DateTime.Now.TimeOfDay;
+                        await DatabaseService.UpdateCheckInOut(r);
+                        await LoadData();
+                    };
+
+                    buttonStack.Children.Add(editButton);
+                    buttonStack.Children.Add(checkOutButton);
+
+                    AddToGrid(buttonStack, 10, row);
+
                     row++;
                 }
 
-                // Add blank spacer row
                 CheckInOutTable.RowDefinitions.Add(new RowDefinition { Height = new GridLength(10) });
                 row++;
             }
         }
+
+
 
 
 

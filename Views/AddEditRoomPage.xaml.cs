@@ -22,9 +22,9 @@ namespace Jindal.Views
                 if (!string.IsNullOrWhiteSpace(_room.Location))
                     LocationPicker.SelectedItem = _room.Location;
 
-                // Set selected item for RemarkPicker
+                // Set text for RemarkEntry instead of Picker
                 if (!string.IsNullOrWhiteSpace(_room.Remark))
-                    RemarkPicker.SelectedItem = _room.Remark;
+                    RemarkEntry.Text = _room.Remark;
             }
         }
 
@@ -45,7 +45,7 @@ namespace Jindal.Views
 
             string availability = _room?.Availability ?? "Available";
             string location = LocationPicker.SelectedItem.ToString();
-            string remark = RemarkPicker.SelectedItem?.ToString() ?? "";
+            string remark = RemarkEntry.Text?.Trim() ?? "";
 
             if (_room == null)
             {

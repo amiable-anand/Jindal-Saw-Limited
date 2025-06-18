@@ -8,7 +8,6 @@ namespace Jindal
         {
             InitializeComponent();
             MainPage = new NavigationPage(new Views.MainPage());
-
         }
 
     }

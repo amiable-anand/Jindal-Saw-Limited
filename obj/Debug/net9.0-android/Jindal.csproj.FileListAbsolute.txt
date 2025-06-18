@@ -1405,6 +1405,11 @@ C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\mauifont.stamp
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\f\OpenSans-Regular.ttf
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\f\OpenSans-Semibold.ttf
+C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\drawable-xxxhdpi\dotnet_bot.png
+C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\drawable-xxhdpi\dotnet_bot.png
+C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\drawable-xhdpi\dotnet_bot.png
+C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\drawable-hdpi\dotnet_bot.png
+C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\drawable-mdpi\dotnet_bot.png
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\mipmap-xxxhdpi\appicon_round.png
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\mipmap-xxhdpi\appicon_round.png
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\mipmap-xhdpi\appicon_round.png
@@ -1427,14 +1432,9 @@ C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\mipmap-xhdpi\appicon_background.png
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\mipmap-hdpi\appicon_background.png
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\mipmap-mdpi\appicon_background.png
+C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\drawable\user_icon.jpg
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\drawable\jindal_banner.png
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\drawable\lock_icon.jpg
-C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\drawable\user_icon.jpg
-C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\drawable-xxxhdpi\dotnet_bot.png
-C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\drawable-xxhdpi\dotnet_bot.png
-C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\drawable-xhdpi\dotnet_bot.png
-C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\drawable-hdpi\dotnet_bot.png
-C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\resizetizer\r\drawable-mdpi\dotnet_bot.png
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\mauiimage.stamp
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\mauiimage.outputs
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-android\libraryprojectimports.cache

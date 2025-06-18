@@ -1,117 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.CheckInOutPage"
              Title="Check In/Out"
              BackgroundColor="#121212">
 
-    <VerticalStackLayout Padding="20" Spacing="24">
+    <!-- ?? Unified scrolling both directions -->
+    <ScrollView Orientation="Both">
+        <Grid Padding="20" RowSpacing="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        
+            <!-- ? Control Panel -->
+            <Border Stroke="#2A2A2A"
+                    StrokeThickness="1"
+                    BackgroundColor="#1E1E1E"
+                    Padding="16"
+                    StrokeShape="RoundRectangle 18"
+                    Grid.Row="0"
+                    Margin="0,0,0,10">
 
-        <!-- Control Panel: Add, Filter, Search, Reset -->
-        <Frame BackgroundColor="#1E1E1E"
-               CornerRadius="18"
-               HasShadow="False"
-               Padding="16"
-               BorderColor="#2A2A2A"
-               Margin="0,0,0,10">
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-            <Grid ColumnSpacing="12">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+                    <Button Text="+ Check In/Out"
+                            Clicked="OnAddClicked"
+                            BackgroundColor="#1F2937"
+                            TextColor="#10B981"
+                            FontSize="13"
+                            CornerRadius="6"
+                            Padding="10,4"
+                            WidthRequest="110"
+                            HeightRequest="36"
+                            BorderColor="#10B981"
+                            BorderWidth="1" />
 
-                <!-- Add New Entry Button -->
-                <Button Text="+ Check In/Out"
-                        Clicked="OnAddClicked"
-                        BackgroundColor="#1F2937"
-                        TextColor="#10B981"
-                        FontSize="13"
-                        CornerRadius="6"
-                        Padding="10,4"
-                        WidthRequest="110"
-                        HeightRequest="36"
-                        BorderColor="#10B981"
-                        BorderWidth="1" />
+                    <Picker x:Name="RoomFilterPicker"
+                            Title="Filter by Room"
+                            BackgroundColor="#2F2F2F"
+                            TextColor="#DDDDDD"
+                            TitleColor="#888"
+                            Margin="4,0"
+                            HeightRequest="42"
+                            FontSize="13"
+                            Grid.Column="1"/>
 
-                <!-- Filter Picker by Room -->
-                <Picker x:Name="RoomFilterPicker"
-                        Title="Filter by Room"
-                        BackgroundColor="#2F2F2F"
-                        TextColor="#DDDDDD"
-                        TitleColor="#888"
-                        Margin="4,0"
-                        HeightRequest="42"
-                        FontSize="13"
-                        Grid.Column="1"/>
+                    <Entry x:Name="SearchEntry"
+                           Placeholder="Search guest name..."
+                           BackgroundColor="#2F2F2F"
+                           TextColor="#DDDDDD"
+                           PlaceholderColor="#888"
+                           Margin="4,0"
+                           HeightRequest="42"
+                           FontSize="13"
+                           Grid.Column="2"
+                           TextChanged="OnSearchTextChanged"/>
 
-                <!-- Search Guest by Name -->
-                <Entry x:Name="SearchEntry"
-                       Placeholder="Search guest name..."
-                       BackgroundColor="#2F2F2F"
-                       TextColor="#DDDDDD"
-                       PlaceholderColor="#888"
-                       Margin="4,0"
-                       HeightRequest="42"
-                       FontSize="13"
-                       Grid.Column="2"
-                       TextChanged="OnSearchTextChanged"/>
+                    <Button Text="Reset"
+                            Clicked="OnReloadClicked"
+                            BackgroundColor="#2F2F2F"
+                            TextColor="#58A6FF"
+                            FontAttributes="Bold"
+                            Padding="10,6"
+                            CornerRadius="10"
+                            FontSize="16"
+                            Grid.Column="3" />
+                </Grid>
+            </Border>
 
-                <!-- Reset Filters -->
-                <Button Text="Reset"
-                        Clicked="OnReloadClicked"
-                        BackgroundColor="#2F2F2F"
-                        TextColor="#58A6FF"
-                        FontAttributes="Bold"
-                        Padding="10,6"
-                        CornerRadius="10"
-                        FontSize="16"
-                        Grid.Column="3" />
-            </Grid>
-        </Frame>
-
-        <!-- Scrollable Table Header -->
-        <ScrollView Orientation="Horizontal">
-            <Frame BackgroundColor="#1E1E1E"
-                   CornerRadius="18"
-                   Padding="16"
-                   HasShadow="False"
-                   BorderColor="#2A2A2A">
+            <!-- ? Table with horizontal + vertical scroll -->
+            <Border Stroke="#2A2A2A"
+                    StrokeThickness="1"
+                    BackgroundColor="#1E1E1E"
+                    Padding="16"
+                    StrokeShape="RoundRectangle 18"
+                    Grid.Row="1">
 
                 <Grid x:Name="CheckInOutTable"
                       ColumnSpacing="16"
                       RowSpacing="12">
 
-                    <!-- Table Header Row Definition -->
+                    <!-- Table Header Row -->
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Define Columns for Each Field -->
+                    <!-- Table Columns -->
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="120"/>
-                        <!-- Room No -->
                         <ColumnDefinition Width="200"/>
-                        <!-- Guest Name -->
                         <ColumnDefinition Width="180"/>
-                        <!-- Guest ID No -->
                         <ColumnDefinition Width="140"/>
-                        <!-- Check In Date -->
                         <ColumnDefinition Width="120"/>
-                        <!-- Check In Time -->
                         <ColumnDefinition Width="140"/>
-                        <!-- Check Out Date -->
                         <ColumnDefinition Width="120"/>
-                        <!-- Check Out Time -->
                         <ColumnDefinition Width="120"/>
-                        <!-- Department -->
                         <ColumnDefinition Width="140"/>
-                        <!-- Purpose -->
                         <ColumnDefinition Width="160"/>
-                        <!-- Mail Received -->
+                        <ColumnDefinition Width="180"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- Column Headers -->
@@ -125,8 +118,10 @@
                     <Label Text="Dept" Grid.Column="7" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
                     <Label Text="Purpose" Grid.Column="8" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
                     <Label Text="Mail Received Date" Grid.Column="9" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
+                    <Label Text="Actions" Grid.Column="10" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
                 </Grid>
-            </Frame>
-        </ScrollView>
-    </VerticalStackLayout>
+            </Border>
+
+        </Grid>
+    </ScrollView>
 </ContentPage>
