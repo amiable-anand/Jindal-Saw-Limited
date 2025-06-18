@@ -8,37 +8,47 @@
     <!-- Main Layout -->
     <VerticalStackLayout Spacing="16">
 
-        <!-- Room Number Label and Entry -->
+        <!-- Room Number -->
         <Label Text="Room Number"
                TextColor="White"
                FontSize="14" />
-
         <Entry x:Name="RoomNumberEntry"
                Placeholder="Enter Room Number"
                Keyboard="Numeric"
                BackgroundColor="#1E1E1E"
                TextColor="White" />
 
-        <!-- Location Label and Entry -->
+        <!-- Location Picker -->
         <Label Text="Location"
                TextColor="White"
                FontSize="14" />
+        <Picker x:Name="LocationPicker"
+                Title="Select Location"
+                BackgroundColor="#1E1E1E"
+                TextColor="White">
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Jindal Saw Ltd Guest House - Samaghogha</x:String>
+                </x:Array>
+            </Picker.ItemsSource>
+        </Picker>
 
-        <Entry x:Name="LocationEntry"
-               Placeholder="Enter Location"
-               BackgroundColor="#1E1E1E"
-               TextColor="White" />
-
-        <!-- Remark Label and Editor -->
-        <Label Text="Remark"
+        <!-- Remark Picker (Floor) -->
+        <Label Text="Floor (Remark)"
                TextColor="White"
                FontSize="14" />
-
-        <Editor x:Name="RemarkEntry"
-                Placeholder="Optional"
-                AutoSize="TextChanges"
+        <Picker x:Name="RemarkPicker"
+                Title="Select Floor"
                 BackgroundColor="#1E1E1E"
-                TextColor="White" />
+                TextColor="White">
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Ground Floor</x:String>
+                    <x:String>First Floor</x:String>
+                    <x:String>Second Floor</x:String>
+                </x:Array>
+            </Picker.ItemsSource>
+        </Picker>
 
         <!-- Save Button -->
         <Button Text="Save"
@@ -49,6 +59,5 @@
                 CornerRadius="6"
                 Padding="10"
                 HeightRequest="44" />
-
     </VerticalStackLayout>
 </ContentPage>

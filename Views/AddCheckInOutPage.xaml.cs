@@ -46,7 +46,6 @@ namespace Jindal.Views
         /// </summary>
         private async void OnCheckInClicked(object sender, EventArgs e)
         {
-            // Basic validation
             if (RoomPicker.SelectedItem == null || string.IsNullOrWhiteSpace(GuestNameEntry.Text))
             {
                 await DisplayAlert("Missing Information", "Please select a room and enter guest name.", "OK");
@@ -60,7 +59,6 @@ namespace Jindal.Views
                 var newEntry = new CheckInOut
                 {
                     RoomNumber = selectedRoom?.RoomNumber.ToString() ?? "",
-
                     IdType = IdTypePicker.SelectedItem?.ToString(),
                     GuestName = GuestNameEntry.Text,
                     GuestIdNumber = IdNumberEntry.Text,
@@ -78,9 +76,16 @@ namespace Jindal.Views
                 };
 
                 await DatabaseService.AddCheckInOut(newEntry);
-                await DisplayAlert("Success", "Guest checked in successfully.", "OK");
 
-                await Navigation.PopAsync(); // Navigate back to list or dashboard
+                // ? Mark room as Booked
+                if (selectedRoom != null)
+                {
+                    selectedRoom.Availability = "Booked";
+                    await DatabaseService.UpdateRoom(selectedRoom);
+                }
+
+                await DisplayAlert("Success", "Guest checked in successfully.", "OK");
+                await Navigation.PopAsync(); // Navigate back to list
             }
             catch (Exception ex)
             {
@@ -88,6 +93,8 @@ namespace Jindal.Views
                 await DisplayAlert("Error", "Check-in failed. Please try again.", "OK");
             }
         }
+
+        
 
         /// <summary>
         /// Navigates to another page to add a second guest to the same room.
