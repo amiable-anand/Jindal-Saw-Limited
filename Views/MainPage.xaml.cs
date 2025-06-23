@@ -1,5 +1,4 @@
 ﻿using Jindal.Services;
-using Microsoft.Maui.Controls;
 
 namespace Jindal.Views
 {
@@ -12,10 +11,12 @@ namespace Jindal.Views
 
         private async void OnLoginClicked(object sender, EventArgs e)
         {
-            var emp = await DatabaseService.GetEmployee(UsernameEntry.Text, PasswordEntry.Text);
+            var emp = await DatabaseService.GetEmployee(EmployeeCode.Text, Password.Text);
             if (emp != null)
             {
-                Application.Current.MainPage = new AppShell();
+                // Application.Current.MainPage = new AppShell();
+                Application.Current.Windows[0].Page = new AppShell(); // ✅ after successful login
+
                 await Shell.Current.GoToAsync("//RoomPage");
             }
             else

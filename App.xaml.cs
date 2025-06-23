@@ -7,7 +7,13 @@ namespace Jindal
         public App()
         {
             InitializeComponent();
-            MainPage = new NavigationPage(new Views.MainPage());
+          //  MainPage = new NavigationPage(new Views.MainPage());
+        }
+
+        protected override Window CreateWindow(IActivationState activationState)
+        {
+            // ✅ Setting the initial page here
+            return new Window(new NavigationPage(new Views.MainPage()));
         }
 
     }

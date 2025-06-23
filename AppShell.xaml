@@ -16,21 +16,21 @@
     </Shell.FlyoutHeader>
 
     <!-- Hidden Login Page Route -->
-    <ShellContent Route="MainPage" ContentTemplate="{DataTemplate views:MainPage}" />
+    <!--  <ShellContent Route="MainPage" ContentTemplate="{DataTemplate views:MainPage}" /> -->
 
     <!-- Main Navigation Items -->
-    <FlyoutItem Title="Location" Icon="location_icon.png">
+    <FlyoutItem Title="Location">
         <ShellContent Title="Location" ContentTemplate="{DataTemplate views:LocationPage}" Route="LocationPage" />
     </FlyoutItem>
-    <FlyoutItem Title="Room" Icon="room_icon.png">
+    <FlyoutItem Title="Room">
         <ShellContent Title="Room" ContentTemplate="{DataTemplate views:RoomPage}" Route="RoomPage" />
     </FlyoutItem>
-    <FlyoutItem Title="Check In/Out" Icon="check_icon.png">
+    <FlyoutItem Title="Check In/Out">
         <ShellContent Title="Check In/Out" ContentTemplate="{DataTemplate views:CheckInOutPage}" Route="CheckInOutPage" />
     </FlyoutItem>
-    <FlyoutItem Title="Logout" Icon="logout_icon.png">
+    <FlyoutItem Title="Logout">
         <ShellContent Title="Logout" ContentTemplate="{DataTemplate views:LogoutPage}" Route="LogoutPage" />
     </FlyoutItem>
-    <ShellContent Route="EditGuestPage" ContentTemplate="{DataTemplate views:EditGuestPage}" />
+    
 
 </Shell>

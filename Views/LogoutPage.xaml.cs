@@ -5,12 +5,9 @@ namespace Jindal.Views
         public LogoutPage()
         {
             InitializeComponent();
-            Logout();
+             //= Logout(); // fire and forget
         }
 
-        private void Logout()
-        {
-            Application.Current.MainPage = new NavigationPage(new MainPage());
-        }
+       
     }
 }

@@ -84,9 +84,6 @@
 	  <Compile Update="Views\AddGuestToSameRoomPage.xaml.cs">
 	    <DependentUpon>AddGuestToSameRoomPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\EditGuestPage.xaml.cs">
-	    <DependentUpon>EditGuestPage.xaml</DependentUpon>
-	  </Compile>
 	  <Compile Update="Views\RoomPage.xaml.cs">
 	    <DependentUpon>RoomPage.xaml</DependentUpon>
 	  </Compile>
@@ -109,9 +106,6 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\AddGuestToSameRoomPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\EditGuestPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\RoomPage.xaml">

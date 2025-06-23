@@ -1,15 +1,15 @@
 ﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.MainPage"
-             BackgroundColor="#0E0E10"
+             BackgroundColor="White"
              Title="Login">
 
     <Grid>
         <!-- 🔹 Frosted Background Overlay (optional gradient) -->
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#111111" Offset="0.0" />
-                <GradientStop Color="#1A1A1D" Offset="1.0" />
+                <GradientStop Color="White" Offset="0.0" />
+                <GradientStop Color="White" Offset="1.0" />
             </LinearGradientBrush>
         </Grid.Background>
 
@@ -42,7 +42,7 @@
                                TextColor="#EAEAEA" />
 
                         <!-- Username Entry -->
-                        <Entry x:Name="UsernameEntry"
+                        <Entry x:Name="EmployeeCode"
                                Placeholder="Employee Code"
                                TextColor="#FFFFFF"
                                PlaceholderColor="#9E9E9E"
@@ -53,7 +53,7 @@
                                />
 
                         <!-- Password Entry -->
-                        <Entry x:Name="PasswordEntry"
+                        <Entry x:Name="Password"
                                Placeholder="Password"
                                IsPassword="True"
                                TextColor="#FFFFFF"
