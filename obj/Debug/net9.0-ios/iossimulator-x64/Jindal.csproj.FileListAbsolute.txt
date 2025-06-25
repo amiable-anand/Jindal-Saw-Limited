@@ -571,7 +571,6 @@ C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\bin\Debug\net9.0-ios\ios
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\bin\Debug\net9.0-ios\iossimulator-x64\libxamarin-dotnet-nativeaot.a
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\bin\Debug\net9.0-ios\iossimulator-x64\libxamarin-dotnet.a
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\bin\Debug\net9.0-ios\iossimulator-x64\libxamarin-dotnet.dylib
-C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-ios\iossimulator-x64\build-signature\signature
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-ios\iossimulator-x64\Jindal.csproj.AssemblyReference.cache
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-ios\iossimulator-x64\mauiimage.inputs
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-ios\iossimulator-x64\mauifont.inputs
@@ -630,3 +629,7 @@ C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-ios\ios
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-ios\iossimulator-x64\Jindal.pdb
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-ios\iossimulator-x64\Jindal.genruntimeconfig.cache
 C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\obj\Debug\net9.0-ios\iossimulator-x64\ref\Jindal.dll
+C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\bin\Debug\net9.0-ios\iossimulator-x64\Microsoft.Maui.Controls.HotReload.Forms.dll
+C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\bin\Debug\net9.0-ios\iossimulator-x64\Microsoft.VisualStudio.DesignTools.MobileTapContracts.dll
+C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\bin\Debug\net9.0-ios\iossimulator-x64\Microsoft.VisualStudio.DesignTools.TapContract.dll
+C:\Users\Anand\source\repos\Jindal\Jindal\Jindal\Jindal\bin\Debug\net9.0-ios\iossimulator-x64\Microsoft.VisualStudio.DesignTools.XamlTapContract.dll

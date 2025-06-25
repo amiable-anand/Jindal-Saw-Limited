@@ -11,19 +11,38 @@ namespace Jindal.Views
 
         private async void OnLoginClicked(object sender, EventArgs e)
         {
-            var emp = await DatabaseService.GetEmployee(EmployeeCode.Text, Password.Text);
-            if (emp != null)
+            try
             {
-                // Application.Current.MainPage = new AppShell();
-                Application.Current.Windows[0].Page = new AppShell(); // ✅ after successful login
+                await DatabaseService.Init();
 
-                await Shell.Current.GoToAsync("//RoomPage");
+                var username = EmployeeCode.Text?.Trim();
+                var password = Password.Text?.Trim();
+
+                if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+                {
+                    ErrorMessage.Text = "Please enter both username and password.";
+                    ErrorMessage.IsVisible = true;
+                    return;
+                }
+
+                var emp = await DatabaseService.GetEmployee(username, password);
+
+                if (emp != null)
+                {
+                    Application.Current.MainPage = new AppShell(); // ✅ Safe
+                }
+                else
+                {
+                    ErrorMessage.Text = "Invalid credentials.";
+                    ErrorMessage.IsVisible = true;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ErrorMessage.Text = "Invalid credentials.";
-                ErrorMessage.IsVisible = true;
+                System.Diagnostics.Debug.WriteLine($"Login error: {ex.Message}");
+                await DisplayAlert("Login Failed", "An error occurred. Please try again.", "OK");
             }
         }
+
     }
 }
