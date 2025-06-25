@@ -1,6 +1,6 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Jindal.Models"
+             xmlns:models="clr-namespace:Jindal.Models"
              x:Class="Jindal.Views.RoomPage"
              Title="Rooms"
              BackgroundColor="#0D0D0D">
@@ -42,7 +42,15 @@
             <Button Text="Reload"
                     Grid.Column="2"
                     Clicked="OnReloadClicked"
-                    Style="{StaticResource NeutralButtonStyle}" />
+                    BackgroundColor="#1F2937"
+                    TextColor="White"
+                    FontSize="13"
+                    CornerRadius="6"
+                    Padding="10,4"
+                    WidthRequest="80"
+                    HeightRequest="36"
+                    BorderColor="#D1D5DB"
+                    BorderWidth="0.8" />
         </Grid>
 
         <!-- Table Headers -->
@@ -65,7 +73,7 @@
         <!-- Room List -->
         <CollectionView x:Name="RoomCollection" SelectionMode="None">
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="local:Room">
+                <DataTemplate x:DataType="models:Room">
                     <Frame BackgroundColor="#212121" CornerRadius="6" Padding="10" Margin="0,5" HasShadow="False">
                         <Grid ColumnSpacing="8">
                             <Grid.ColumnDefinitions>
