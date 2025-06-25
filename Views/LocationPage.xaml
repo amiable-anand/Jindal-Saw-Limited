@@ -3,7 +3,7 @@
              x:Class="Jindal.Views.LocationPage"
              Title="Location">
     <VerticalStackLayout Padding="20">
-        <Label Text="📍 Welcome to Location Page"
+        <Label Text=" Welcome to Location Page"
                FontSize="22"
                HorizontalOptions="Center" />
     </VerticalStackLayout>
