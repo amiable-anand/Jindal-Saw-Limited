@@ -29,7 +29,7 @@ namespace Jindal.Views
 
                 if (emp != null)
                 {
-                    Application.Current.MainPage = new AppShell(); // ✅ Safe
+                    Application.Current.MainPage = new AppShell(); // ✅ Safe navigation to AppShell
                 }
                 else
                 {
@@ -44,5 +44,9 @@ namespace Jindal.Views
             }
         }
 
+        private void OnShowPasswordCheckedChanged(object sender, CheckedChangedEventArgs e)
+        {
+            Password.IsPassword = !e.Value;
+        }
     }
 }
