@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Jindal.Views;
 
 namespace Jindal.Views
 {
@@ -16,55 +15,56 @@ namespace Jindal.Views
         public CheckInOutPage()
         {
             InitializeComponent();
-
-            // Hook up filters
-            RoomFilterPicker.SelectedIndexChanged += OnRoomFilterChanged;
-            SearchEntry.TextChanged += OnSearchTextChanged;
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            await LoadData();
+
+            try
+            {
+                RoomFilterPicker.SelectedIndexChanged -= OnRoomFilterChanged;
+                RoomFilterPicker.SelectedIndexChanged += OnRoomFilterChanged;
+
+                SearchEntry.TextChanged -= OnSearchTextChanged;
+                SearchEntry.TextChanged += OnSearchTextChanged;
+
+                await LoadData();
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "OK");
+            }
         }
 
         private async Task LoadData()
         {
+            await DatabaseService.Init();
             allRecords = await DatabaseService.GetCheckInOuts();
-            PopulateTable(allRecords);
 
-            // Set up room filter picker (convert nullable int to string safely)
-            var roomNumbers = allRecords
-                .Where(r => r.RoomNumber != null)
-                .Select(r => r.RoomNumber.ToString()) // This is safe because RoomNumber is nullable
+            RoomFilterPicker.ItemsSource = allRecords
+                .Select(r => r.RoomNumber)
+                .Where(r => !string.IsNullOrWhiteSpace(r))
                 .Distinct()
-                .OrderBy(n => n)
+                .OrderBy(r => r)
                 .ToList();
 
-            RoomFilterPicker.ItemsSource = roomNumbers;
+            PopulateTable(allRecords);
         }
-
 
         private void PopulateTable(List<CheckInOut> records)
         {
-            // Clear previous rows except headers
             while (CheckInOutTable.RowDefinitions.Count > 1)
                 CheckInOutTable.RowDefinitions.RemoveAt(CheckInOutTable.RowDefinitions.Count - 1);
 
-            var oldContent = CheckInOutTable.Children.Skip(10).ToList(); // Skip headers
+            var oldContent = CheckInOutTable.Children.Skip(11).ToList(); // Skip headers
             foreach (var view in oldContent)
                 CheckInOutTable.Children.Remove(view);
 
             int row = 1;
 
-            var groupedRecords = records
-                .Where(r => r.RoomNumber != null)
-                .GroupBy(r => r.RoomNumber)
-                .OrderBy(g => g.Key);
-
-            foreach (var group in groupedRecords)
+            foreach (var group in records.GroupBy(r => r.RoomNumber))
             {
-                // Header Row
                 CheckInOutTable.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
                 var roomHeader = new Label
@@ -77,7 +77,7 @@ namespace Jindal.Views
                     Padding = new Thickness(8),
                 };
                 Grid.SetColumn(roomHeader, 0);
-                Grid.SetColumnSpan(roomHeader, 11); // span all columns including action
+                Grid.SetColumnSpan(roomHeader, 11);
                 Grid.SetRow(roomHeader, row);
                 CheckInOutTable.Children.Add(roomHeader);
                 row++;
@@ -86,18 +86,17 @@ namespace Jindal.Views
                 {
                     CheckInOutTable.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-                    AddToGrid(new Label { Text = r.RoomNumber?.ToString() ?? "-", TextColor = Colors.White }, 0, row);
-                    AddToGrid(new Label { Text = r.GuestName, TextColor = Colors.White }, 1, row);
-                    AddToGrid(new Label { Text = r.GuestIdNumber, TextColor = Colors.White }, 2, row);
+                    AddToGrid(new Label { Text = r.RoomNumber ?? "-", TextColor = Colors.White }, 0, row);
+                    AddToGrid(new Label { Text = r.GuestName ?? "-", TextColor = Colors.White }, 1, row);
+                    AddToGrid(new Label { Text = r.GuestIdNumber ?? "-", TextColor = Colors.White }, 2, row);
                     AddToGrid(new Label { Text = r.CheckInDate.ToString("dd-MM-yyyy"), TextColor = Colors.White }, 3, row);
                     AddToGrid(new Label { Text = r.CheckInTime.ToString(@"hh\:mm"), TextColor = Colors.White }, 4, row);
                     AddToGrid(new Label { Text = r.CheckOutDate?.ToString("dd-MM-yyyy") ?? "-", TextColor = Colors.White }, 5, row);
                     AddToGrid(new Label { Text = r.CheckOutTime?.ToString(@"hh\:mm") ?? "-", TextColor = Colors.White }, 6, row);
-                    AddToGrid(new Label { Text = r.Department, TextColor = Colors.White }, 7, row);
-                    AddToGrid(new Label { Text = r.Purpose, TextColor = Colors.White }, 8, row);
+                    AddToGrid(new Label { Text = r.Department ?? "-", TextColor = Colors.White }, 7, row);
+                    AddToGrid(new Label { Text = r.Purpose ?? "-", TextColor = Colors.White }, 8, row);
                     AddToGrid(new Label { Text = r.MailReceivedDate.ToString("dd-MM-yyyy"), TextColor = Colors.White }, 9, row);
 
-                    // Right-aligned buttons
                     var buttonStack = new HorizontalStackLayout
                     {
                         Spacing = 6,
@@ -139,7 +138,6 @@ namespace Jindal.Views
                     buttonStack.Children.Add(checkOutButton);
 
                     AddToGrid(buttonStack, 10, row);
-
                     row++;
                 }
 
@@ -147,11 +145,6 @@ namespace Jindal.Views
                 row++;
             }
         }
-
-
-
-
-
 
         private void AddToGrid(View view, int col, int row)
         {
@@ -163,7 +156,6 @@ namespace Jindal.Views
         private async void OnAddClicked(object sender, EventArgs e)
         {
             await Shell.Current.GoToAsync(nameof(AddCheckInOutPage));
-
         }
 
         private async void OnReloadClicked(object sender, EventArgs e)
@@ -189,11 +181,10 @@ namespace Jindal.Views
                 return;
 
             var filtered = allRecords
-                .Where(r => r.RoomNumber?.ToString() == selectedRoom)
+                .Where(r => r.RoomNumber == selectedRoom)
                 .ToList();
 
             PopulateTable(filtered);
         }
-
     }
 }

@@ -5,7 +5,6 @@
              Title="Check In/Out"
              BackgroundColor="#121212">
 
-    <!-- ?? Unified scrolling both directions -->
     <ScrollView Orientation="Both">
         <Grid Padding="20" RowSpacing="24">
             <Grid.RowDefinitions>
@@ -13,14 +12,9 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- ? Control Panel -->
-            <Border Stroke="#2A2A2A"
-                    StrokeThickness="1"
-                    BackgroundColor="#1E1E1E"
-                    Padding="16"
-                    StrokeShape="RoundRectangle 18"
-                    Grid.Row="0"
-                    Margin="0,0,0,10">
+            <!-- Controls -->
+            <Border Stroke="#2A2A2A" StrokeThickness="1" BackgroundColor="#1E1E1E"
+                    Padding="16" StrokeShape="RoundRectangle 18" Grid.Row="0" Margin="0,0,0,10">
 
                 <Grid ColumnSpacing="12">
                     <Grid.ColumnDefinitions>
@@ -75,24 +69,14 @@
                 </Grid>
             </Border>
 
-            <!-- ? Table with horizontal + vertical scroll -->
-            <Border Stroke="#2A2A2A"
-                    StrokeThickness="1"
-                    BackgroundColor="#1E1E1E"
-                    Padding="16"
-                    StrokeShape="RoundRectangle 18"
-                    Grid.Row="1">
+            <!-- Table -->
+            <Border Stroke="#2A2A2A" StrokeThickness="1" BackgroundColor="#1E1E1E"
+                    Padding="16" StrokeShape="RoundRectangle 18" Grid.Row="1">
 
-                <Grid x:Name="CheckInOutTable"
-                      ColumnSpacing="16"
-                      RowSpacing="12">
-
-                    <!-- Table Header Row -->
+                <Grid x:Name="CheckInOutTable" ColumnSpacing="16" RowSpacing="12">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
-
-                    <!-- Table Columns -->
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="120"/>
                         <ColumnDefinition Width="200"/>
@@ -107,7 +91,7 @@
                         <ColumnDefinition Width="180"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Column Headers -->
+                    <!-- Headers -->
                     <Label Text="Room No" Grid.Column="0" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
                     <Label Text="Guest Name" Grid.Column="1" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
                     <Label Text="Guest ID No" Grid.Column="2" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
@@ -121,7 +105,6 @@
                     <Label Text="Actions" Grid.Column="10" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
                 </Grid>
             </Border>
-
         </Grid>
     </ScrollView>
 </ContentPage>

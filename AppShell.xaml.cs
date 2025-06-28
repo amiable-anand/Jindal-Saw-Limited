@@ -15,6 +15,8 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(CheckInOutPage), typeof(CheckInOutPage));
         Routing.RegisterRoute(nameof(AddGuestToSameRoomPage), typeof(AddGuestToSameRoomPage));
         Routing.RegisterRoute(nameof(EditGuestPage), typeof(EditGuestPage));
+       
+
 
 
 

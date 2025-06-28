@@ -9,6 +9,7 @@ public class Room
 
     public int RoomNumber { get; set; }
 
+
     public string Availability { get; set; }
 
     public string Location { get; set; }

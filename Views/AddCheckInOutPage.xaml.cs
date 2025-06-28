@@ -1,8 +1,6 @@
 using Jindal.Models;
 using Jindal.Services;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 
 namespace Jindal.Views
@@ -12,26 +10,30 @@ namespace Jindal.Views
         public AddCheckInOutPage()
         {
             InitializeComponent();
-            LoadAvailableRooms(); // Load rooms when the page is initialized
+
+            try
+            {
+                LoadAvailableRooms();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"?? Constructor error: {ex.Message}");
+            }
         }
 
-        /// <summary>
-        /// Loads available rooms from the database and binds to the RoomPicker.
-        /// </summary>
         private async void LoadAvailableRooms()
         {
             try
             {
-                await DatabaseService.Init(); // Ensure database is initialized
+                await DatabaseService.Init();
                 var availableRooms = await DatabaseService.GetAvailableRooms();
 
                 RoomPicker.ItemsSource = availableRooms;
                 RoomPicker.ItemDisplayBinding = new Binding("RoomNumber");
 
-                // Debug: Log available rooms
                 foreach (var room in availableRooms)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Room: {room.RoomNumber}, Available: {room.IsAvailable}");
+                    System.Diagnostics.Debug.WriteLine($"Room: {room.RoomNumber}, Available: {room.Availability}");
                 }
             }
             catch (Exception ex)
@@ -41,9 +43,6 @@ namespace Jindal.Views
             }
         }
 
-        /// <summary>
-        /// Handles the check-in button click. Validates and saves guest info to the database.
-        /// </summary>
         private async void OnCheckInClicked(object sender, EventArgs e)
         {
             if (RoomPicker.SelectedItem == null || string.IsNullOrWhiteSpace(GuestNameEntry.Text))
@@ -58,7 +57,7 @@ namespace Jindal.Views
 
                 var newEntry = new CheckInOut
                 {
-                    RoomNumber = selectedRoom?.RoomNumber.ToString() ?? "",
+                    RoomNumber = selectedRoom?.RoomNumber.ToString(),
                     IdType = IdTypePicker.SelectedItem?.ToString(),
                     GuestName = GuestNameEntry.Text,
                     GuestIdNumber = IdNumberEntry.Text,
@@ -68,8 +67,8 @@ namespace Jindal.Views
                     Nationality = NationalityEntry.Text,
                     CheckInDate = CheckInDatePicker.Date,
                     CheckInTime = CheckInTimePicker.Time,
-                    CheckOutDate = CheckOutDatePicker.Date,
-                    CheckOutTime = CheckOutTimePicker.Time,
+                    CheckOutDate = CheckOutDatePicker?.Date,
+                    CheckOutTime = CheckOutTimePicker?.Time,
                     Department = DepartmentEntry.Text,
                     Purpose = PurposeEntry.Text,
                     MailReceivedDate = MailReceivedDatePicker.Date
@@ -77,7 +76,6 @@ namespace Jindal.Views
 
                 await DatabaseService.AddCheckInOut(newEntry);
 
-                // ? Mark room as Booked
                 if (selectedRoom != null)
                 {
                     selectedRoom.Availability = "Booked";
@@ -85,7 +83,7 @@ namespace Jindal.Views
                 }
 
                 await DisplayAlert("Success", "Guest checked in successfully.", "OK");
-                await Navigation.PopAsync(); // Navigate back to list
+                await Navigation.PopAsync();
             }
             catch (Exception ex)
             {
@@ -94,11 +92,6 @@ namespace Jindal.Views
             }
         }
 
-        
-
-        /// <summary>
-        /// Navigates to another page to add a second guest to the same room.
-        /// </summary>
         private async void OnAddGuestClicked(object sender, EventArgs e)
         {
             if (RoomPicker.SelectedItem == null)
@@ -111,8 +104,6 @@ namespace Jindal.Views
             {
                 var selectedRoom = RoomPicker.SelectedItem as Room;
                 await Shell.Current.GoToAsync($"{nameof(AddGuestToSameRoomPage)}?roomNumber={selectedRoom.RoomNumber}");
-
-
             }
             catch (Exception ex)
             {

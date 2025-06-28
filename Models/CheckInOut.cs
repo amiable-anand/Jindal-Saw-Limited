@@ -1,22 +1,32 @@
-﻿using SQLite;
+﻿using System;
+using SQLite;
 
-public class CheckInOut
+namespace Jindal.Models
 {
-    [PrimaryKey, AutoIncrement]
-    public int Id { get; set; }
-    public string RoomNumber { get; set; }
-    public string GuestName { get; set; }
-    public string GuestIdNumber { get; set; }
-    public string IdType { get; set; }            // ✅ Add this
-    public string CompanyName { get; set; }       // ✅ Add this
-    public string Nationality { get; set; }       // ✅ Add this
-    public string Address { get; set; }           // ✅ Add this
-    public string Mobile { get; set; }            // ✅ Add this
-    public DateTime CheckInDate { get; set; }
-    public TimeSpan CheckInTime { get; set; }
-    public DateTime? CheckOutDate { get; set; }
-    public TimeSpan? CheckOutTime { get; set; }
-    public string Department { get; set; }
-    public string Purpose { get; set; }
-    public DateTime MailReceivedDate { get; set; }
+    public class CheckInOut
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
+        // Main Guest and Room Info
+        public string RoomNumber { get; set; } = string.Empty;
+        public string GuestName { get; set; } = string.Empty;
+        public string GuestIdNumber { get; set; } = string.Empty;
+        public string IdType { get; set; } = string.Empty;
+        public string CompanyName { get; set; } = string.Empty;
+        public string Nationality { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
+        public string Mobile { get; set; } = string.Empty;
+
+        // Check-in / Check-out Details
+        public DateTime CheckInDate { get; set; } = DateTime.Now;
+        public TimeSpan CheckInTime { get; set; } = DateTime.Now.TimeOfDay;
+        public DateTime? CheckOutDate { get; set; }
+        public TimeSpan? CheckOutTime { get; set; }
+
+        // Department, Purpose, Mail info
+        public string Department { get; set; } = string.Empty;
+        public string Purpose { get; set; } = string.Empty;
+        public DateTime MailReceivedDate { get; set; } = DateTime.Now;
+    }
 }
