@@ -52,6 +52,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\CheckOutPage.xaml.cs">
+      <DependentUpon>CheckOutPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <MauiXaml Update="Views\AddCheckInOutPage.xaml">
       <Generator></Generator>
     </MauiXaml>

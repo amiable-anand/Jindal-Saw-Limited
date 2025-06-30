@@ -128,11 +128,17 @@ namespace Jindal.Views
                     };
                     checkOutButton.Clicked += async (s, e) =>
                     {
-                        r.CheckOutDate = DateTime.Now.Date;
-                        r.CheckOutTime = DateTime.Now.TimeOfDay;
-                        await DatabaseService.UpdateCheckInOut(r);
-                        await LoadData();
+                        try
+                        {
+                            // Navigate to dedicated CheckOutPage with guest ID
+                            await Shell.Current.GoToAsync($"CheckOutPage?guestId={r.Id}");
+                        }
+                        catch (Exception ex)
+                        {
+                            await DisplayAlert("Navigation Error", ex.Message, "OK");
+                        }
                     };
+
 
                     buttonStack.Children.Add(editButton);
                     buttonStack.Children.Add(checkOutButton);
