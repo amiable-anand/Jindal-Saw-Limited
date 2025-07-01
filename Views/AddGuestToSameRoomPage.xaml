@@ -14,7 +14,7 @@
                    TextColor="White"
                    HorizontalOptions="Center" />
 
-            <!-- Display Selected Room Number (Read-only for reference) -->
+            <!-- Room Number Label -->
             <Label x:Name="RoomNumberLabel"
                    Text="Room: "
                    FontSize="18"
@@ -22,18 +22,21 @@
                    Margin="0,0,0,10" />
 
             <!-- Guest Name -->
+            <Label Text="Guest Name" TextColor="#AAAAAA" FontSize="13"/>
             <Entry x:Name="GuestNameEntry"
                    Placeholder="Guest Name"
                    BackgroundColor="#1E1E1E"
                    TextColor="White" />
 
             <!-- Guest ID Number -->
+            <Label Text="Guest ID Number" TextColor="#AAAAAA" FontSize="13"/>
             <Entry x:Name="GuestIdEntry"
                    Placeholder="Guest ID Number"
                    BackgroundColor="#1E1E1E"
                    TextColor="White" />
 
-            <!-- ID Type Picker -->
+            <!-- ID Type -->
+            <Label Text="ID Type" TextColor="#AAAAAA" FontSize="13"/>
             <Picker x:Name="IdTypePicker"
                     Title="Select ID Type"
                     BackgroundColor="#1E1E1E"
@@ -47,12 +50,14 @@
             </Picker>
 
             <!-- Company Name -->
+            <Label Text="Company Name" TextColor="#AAAAAA" FontSize="13"/>
             <Entry x:Name="CompanyEntry"
                    Placeholder="Company Name"
                    BackgroundColor="#1E1E1E"
                    TextColor="White" />
 
-            <!-- Mobile Number -->
+            <!-- Mobile -->
+            <Label Text="Mobile Number" TextColor="#AAAAAA" FontSize="13"/>
             <Entry x:Name="MobileEntry"
                    Placeholder="Mobile"
                    Keyboard="Telephone"
@@ -60,35 +65,62 @@
                    TextColor="White" />
 
             <!-- Nationality -->
+            <Label Text="Nationality" TextColor="#AAAAAA" FontSize="13"/>
             <Entry x:Name="NationalityEntry"
                    Placeholder="Nationality"
                    BackgroundColor="#1E1E1E"
                    TextColor="White" />
 
             <!-- Address -->
+            <Label Text="Address" TextColor="#AAAAAA" FontSize="13"/>
             <Entry x:Name="AddressEntry"
                    Placeholder="Address"
                    BackgroundColor="#1E1E1E"
                    TextColor="White" />
 
-            <!-- Optional Check-in Date -->
+            <!-- Check-In Date -->
+            <Label Text="Check-In Date" TextColor="#AAAAAA" FontSize="13"/>
             <DatePicker x:Name="CheckInDatePicker"
                         BackgroundColor="#1E1E1E"
                         TextColor="White" />
 
-            <!-- Optional Check-in Time -->
+            <!-- Check-In Time -->
+            <Label Text="Check-In Time" TextColor="#AAAAAA" FontSize="13"/>
             <TimePicker x:Name="CheckInTimePicker"
                         BackgroundColor="#1E1E1E"
                         TextColor="White" />
 
+            <!-- Department -->
+            <Label Text="Department" TextColor="#AAAAAA" FontSize="13"/>
+            <Entry x:Name="DepartmentEntry"
+                   Placeholder="Department"
+                   BackgroundColor="#1E1E1E"
+                   TextColor="White" />
+
+            <!-- Purpose -->
+            <Label Text="Purpose" TextColor="#AAAAAA" FontSize="13"/>
+            <Entry x:Name="PurposeEntry"
+                   Placeholder="Purpose"
+                   BackgroundColor="#1E1E1E"
+                   TextColor="White" />
+
+            <!-- Mail Received Date -->
+            <Label Text="Mail Received Date" TextColor="#AAAAAA" FontSize="13"/>
+            <DatePicker x:Name="MailReceivedDatePicker"
+                        BackgroundColor="#1E1E1E"
+                        TextColor="White" />
+
             <!-- Save Button -->
-            <Button Text="Save Guest"
+            <Button Text="? Check In"
                     Clicked="OnSaveClicked"
-                    BackgroundColor="#10B981"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    CornerRadius="6"
-                    HeightRequest="44" />
+                    BackgroundColor="#1F2937"
+                    TextColor="#10B981"
+                    BorderColor="#10B981"
+                    BorderWidth="1"
+                    CornerRadius="12"
+                    Padding="20,8"
+                    WidthRequest="130"
+                    HeightRequest="46"/>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

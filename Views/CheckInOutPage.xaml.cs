@@ -97,53 +97,57 @@ namespace Jindal.Views
                     AddToGrid(new Label { Text = r.Purpose ?? "-", TextColor = Colors.White }, 8, row);
                     AddToGrid(new Label { Text = r.MailReceivedDate.ToString("dd-MM-yyyy"), TextColor = Colors.White }, 9, row);
 
-                    var buttonStack = new HorizontalStackLayout
-                    {
-                        Spacing = 6,
-                        HorizontalOptions = LayoutOptions.End
-                    };
+                    // Check if guest is still staying
+                    bool isCheckedOut = r.CheckOutDate != null || r.CheckOutTime != null;
 
-                    var editButton = new Button
+                    if (!isCheckedOut)
                     {
-                        Text = "Edit",
-                        FontSize = 12,
-                        BackgroundColor = Color.FromArgb("#3B82F6"),
-                        TextColor = Colors.White,
-                        CornerRadius = 6,
-                        Padding = new Thickness(8, 4)
-                    };
-                    editButton.Clicked += async (s, e) =>
-                    {
-                        await Shell.Current.GoToAsync($"///EditGuestPage?guestId={r.Id}");
-                    };
-
-                    var checkOutButton = new Button
-                    {
-                        Text = "Check Out",
-                        FontSize = 12,
-                        BackgroundColor = Color.FromArgb("#EF4444"),
-                        TextColor = Colors.White,
-                        CornerRadius = 6,
-                        Padding = new Thickness(8, 4)
-                    };
-                    checkOutButton.Clicked += async (s, e) =>
-                    {
-                        try
+                        var buttonStack = new HorizontalStackLayout
                         {
-                            // Navigate to dedicated CheckOutPage with guest ID
-                            await Shell.Current.GoToAsync($"CheckOutPage?guestId={r.Id}");
-                        }
-                        catch (Exception ex)
+                            Spacing = 6,
+                            HorizontalOptions = LayoutOptions.End
+                        };
+
+                        var editButton = new Button
                         {
-                            await DisplayAlert("Navigation Error", ex.Message, "OK");
-                        }
-                    };
+                            Text = "Edit",
+                            FontSize = 12,
+                            BackgroundColor = Color.FromArgb("#3B82F6"),
+                            TextColor = Colors.White,
+                            CornerRadius = 6,
+                            Padding = new Thickness(8, 4)
+                        };
+                        editButton.Clicked += async (s, e) =>
+                        {
+                            await Shell.Current.GoToAsync($"///EditGuestPage?guestId={r.Id}");
+                        };
 
+                        var checkOutButton = new Button
+                        {
+                            Text = "Check Out",
+                            FontSize = 12,
+                            BackgroundColor = Color.FromArgb("#EF4444"),
+                            TextColor = Colors.White,
+                            CornerRadius = 6,
+                            Padding = new Thickness(8, 4)
+                        };
+                        checkOutButton.Clicked += async (s, e) =>
+                        {
+                            try
+                            {
+                                await Shell.Current.GoToAsync($"CheckOutPage?guestId={r.Id}");
+                            }
+                            catch (Exception ex)
+                            {
+                                await DisplayAlert("Navigation Error", ex.Message, "OK");
+                            }
+                        };
 
-                    buttonStack.Children.Add(editButton);
-                    buttonStack.Children.Add(checkOutButton);
+                        buttonStack.Children.Add(editButton);
+                        buttonStack.Children.Add(checkOutButton);
+                        AddToGrid(buttonStack, 10, row);
+                    }
 
-                    AddToGrid(buttonStack, 10, row);
                     row++;
                 }
 

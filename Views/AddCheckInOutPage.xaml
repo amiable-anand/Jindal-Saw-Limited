@@ -2,14 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:Jindal.Models"
              x:Class="Jindal.Views.AddCheckInOutPage"
-             Title="Add Check In/Out"
+             Title="Add Check In"
              BackgroundColor="#0D0D0D">
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="24">
 
             <!-- Page Title -->
-            <Label Text="Add Guest Check In / Out"
+            <Label Text="Add Guest Check-In"
                    FontSize="28"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
@@ -112,71 +112,43 @@
                            FontSize="14"
                            HeightRequest="48"/>
 
-                    <DatePicker x:Name="CheckInDatePicker"
-                                Grid.Row="4" Grid.Column="0"
-                                TextColor="#CCCCCC"
-                                BackgroundColor="#222222"
-                                HeightRequest="48"/>
+                    <!-- Check-in details with labels -->
+                    <VerticalStackLayout Grid.Row="4" Grid.ColumnSpan="2" Spacing="8">
 
-                    <TimePicker x:Name="CheckInTimePicker"
-                                Grid.Row="4" Grid.Column="1"
-                                TextColor="#CCCCCC"
-                                BackgroundColor="#222222"
-                                HeightRequest="48"/>
-                </Grid>
-            </Frame>
+                        <Label Text="Check-In Date" TextColor="#AAAAAA" FontSize="13"/>
+                        <DatePicker x:Name="CheckInDatePicker"
+                                    TextColor="#CCCCCC"
+                                    BackgroundColor="#222222"
+                                    HeightRequest="48"/>
 
-            <!-- Check-Out Section -->
-            <Frame BackgroundColor="#1A1A1A"
-                   CornerRadius="20"
-                   HasShadow="True"
-                   Padding="20"
-                   BorderColor="#2A2A2A">
+                        <Label Text="Check-In Time" TextColor="#AAAAAA" FontSize="13"/>
+                        <TimePicker x:Name="CheckInTimePicker"
+                                    TextColor="#CCCCCC"
+                                    BackgroundColor="#222222"
+                                    HeightRequest="48"/>
 
-                <Grid RowSpacing="20" ColumnSpacing="14">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                        <Label Text="Mail Received Date" TextColor="#AAAAAA" FontSize="13"/>
+                        <DatePicker x:Name="MailReceivedDatePicker"
+                                    TextColor="#CCCCCC"
+                                    BackgroundColor="#222222"
+                                    HeightRequest="48"/>
 
-                    <DatePicker x:Name="CheckOutDatePicker"
-                                Grid.Row="0" Grid.Column="0"
-                                TextColor="#CCCCCC"
-                                BackgroundColor="#222222"
-                                HeightRequest="48"/>
+                        <Label Text="Department" TextColor="#AAAAAA" FontSize="13"/>
+                        <Entry x:Name="DepartmentEntry"
+                               Placeholder="Enter Department"
+                               BackgroundColor="#222222"
+                               TextColor="#CCCCCC"
+                               FontSize="14"
+                               HeightRequest="48"/>
 
-                    <TimePicker x:Name="CheckOutTimePicker"
-                                Grid.Row="0" Grid.Column="1"
-                                TextColor="#CCCCCC"
-                                BackgroundColor="#222222"
-                                HeightRequest="48"/>
-
-                    <Entry x:Name="DepartmentEntry"
-                           Placeholder="Department"
-                           Grid.Row="1" Grid.Column="0"
-                           BackgroundColor="#222222"
-                           TextColor="#CCCCCC"
-                           FontSize="14"
-                           HeightRequest="48"/>
-
-                    <Entry x:Name="PurposeEntry"
-                           Placeholder="Purpose"
-                           Grid.Row="1" Grid.Column="1"
-                           BackgroundColor="#222222"
-                           TextColor="#CCCCCC"
-                           FontSize="14"
-                           HeightRequest="48"/>
-
-                    <DatePicker x:Name="MailReceivedDatePicker"
-                                Grid.Row="2" Grid.ColumnSpan="2"
-                                TextColor="#CCCCCC"
-                                BackgroundColor="#222222"
-                                HeightRequest="48"/>
+                        <Label Text="Purpose" TextColor="#AAAAAA" FontSize="13"/>
+                        <Entry x:Name="PurposeEntry"
+                               Placeholder="Enter Purpose"
+                               BackgroundColor="#222222"
+                               TextColor="#CCCCCC"
+                               FontSize="14"
+                               HeightRequest="48"/>
+                    </VerticalStackLayout>
                 </Grid>
             </Frame>
 

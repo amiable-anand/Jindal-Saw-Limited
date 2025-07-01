@@ -65,12 +65,10 @@ namespace Jindal.Views
                     Mobile = MobileEntry.Text,
                     Address = AddressEntry.Text,
                     Nationality = NationalityEntry.Text,
-                    CheckInDate = CheckInDatePicker.Date,
-                    CheckInTime = CheckInTimePicker.Time,
-                    CheckOutDate = CheckOutDatePicker?.Date,
-                    CheckOutTime = CheckOutTimePicker?.Time,
                     Department = DepartmentEntry.Text,
                     Purpose = PurposeEntry.Text,
+                    CheckInDate = CheckInDatePicker.Date,
+                    CheckInTime = CheckInTimePicker.Time,
                     MailReceivedDate = MailReceivedDatePicker.Date
                 };
 

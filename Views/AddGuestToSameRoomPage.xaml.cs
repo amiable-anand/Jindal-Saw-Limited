@@ -30,7 +30,7 @@ namespace Jindal.Views
 
         private async void OnSaveClicked(object sender, EventArgs e)
         {
-            // Validation
+            // Basic validation
             if (string.IsNullOrWhiteSpace(GuestNameEntry.Text) ||
                 string.IsNullOrWhiteSpace(GuestIdEntry.Text) ||
                 IdTypePicker.SelectedItem == null)
@@ -39,28 +39,34 @@ namespace Jindal.Views
                 return;
             }
 
-            // Save the guest
-            var guest = new CheckInOut
+            try
             {
-                RoomNumber = RoomNumber,
-                GuestName = GuestNameEntry.Text?.Trim(),
-                GuestIdNumber = GuestIdEntry.Text?.Trim(),
-                IdType = IdTypePicker.SelectedItem?.ToString(),
-                CompanyName = CompanyEntry.Text?.Trim(),
-                Nationality = NationalityEntry.Text?.Trim(),
-                Address = AddressEntry.Text?.Trim(),
-                Mobile = MobileEntry.Text?.Trim(),
-                CheckInDate = CheckInDatePicker.Date,
-                CheckInTime = CheckInTimePicker.Time,
-                MailReceivedDate = DateTime.Now
-            };
+                var guest = new CheckInOut
+                {
+                    RoomNumber = RoomNumber,
+                    GuestName = GuestNameEntry.Text?.Trim(),
+                    GuestIdNumber = GuestIdEntry.Text?.Trim(),
+                    IdType = IdTypePicker.SelectedItem?.ToString(),
+                    CompanyName = CompanyEntry.Text?.Trim(),
+                    Nationality = NationalityEntry.Text?.Trim(),
+                    Address = AddressEntry.Text?.Trim(),
+                    Mobile = MobileEntry.Text?.Trim(),
+                    CheckInDate = CheckInDatePicker.Date,
+                    CheckInTime = CheckInTimePicker.Time,
+                    Department = DepartmentEntry.Text?.Trim(),
+                    Purpose = PurposeEntry.Text?.Trim(),
+                    MailReceivedDate = MailReceivedDatePicker.Date
+                };
 
-            await DatabaseService.AddCheckInOut(guest);
+                await DatabaseService.AddCheckInOut(guest);
 
-            await DisplayAlert("Success", "Guest added successfully!", "OK");
-
-            // Navigate back using Shell
-            await Shell.Current.GoToAsync("..");
+                await DisplayAlert("Success", "Guest added successfully!", "OK");
+                await Shell.Current.GoToAsync("..");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Something went wrong: {ex.Message}", "OK");
+            }
         }
     }
 }

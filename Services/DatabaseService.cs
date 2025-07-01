@@ -19,6 +19,11 @@ namespace Jindal.Services
                 return;
 
             var databasePath = Path.Combine(FileSystem.AppDataDirectory, "Jindal.db");
+
+            // ✅ ONLY ONCE: Delete database to apply updated schema (Department, Purpose, MailReceivedDate)
+            //if (File.Exists(databasePath))
+             //   File.Delete(databasePath);  // 🛑 COMMENT THIS LINE AFTER FIRST RUN TO PREVENT DATA LOSS
+
             _database = new SQLiteAsyncConnection(databasePath);
 
             await _database.CreateTableAsync<Employee>();
