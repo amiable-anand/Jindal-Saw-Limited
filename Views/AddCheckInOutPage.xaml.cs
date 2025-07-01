@@ -26,7 +26,8 @@ namespace Jindal.Views
             try
             {
                 await DatabaseService.Init();
-                var availableRooms = await DatabaseService.GetAvailableRooms();
+                var availableRooms = await DatabaseService.GetCompletelyAvailableRooms();
+
 
                 RoomPicker.ItemsSource = availableRooms;
                 RoomPicker.ItemDisplayBinding = new Binding("RoomNumber");

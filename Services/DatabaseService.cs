@@ -20,10 +20,6 @@ namespace Jindal.Services
 
             var databasePath = Path.Combine(FileSystem.AppDataDirectory, "Jindal.db");
 
-            // ✅ ONLY ONCE: Delete database to apply updated schema (Department, Purpose, MailReceivedDate)
-            //if (File.Exists(databasePath))
-             //   File.Delete(databasePath);  // 🛑 COMMENT THIS LINE AFTER FIRST RUN TO PREVENT DATA LOSS
-
             _database = new SQLiteAsyncConnection(databasePath);
 
             await _database.CreateTableAsync<Employee>();
@@ -31,35 +27,68 @@ namespace Jindal.Services
             await _database.CreateTableAsync<CheckInOut>();
             await _database.CreateTableAsync<LocationModel>();
 
-            // Seed admin employee
             var existing = await _database.Table<Employee>().FirstOrDefaultAsync();
             if (existing == null)
             {
-                var defaultEmployee = new Employee
+                await _database.InsertAsync(new Employee
                 {
                     EmployeeCode = "admin",
                     Password = "admin123"
-                };
-                await _database.InsertAsync(defaultEmployee);
+                });
             }
 
-            // Seed default rooms
             var existingRooms = await _database.Table<Room>().ToListAsync();
             if (existingRooms.Count == 0)
             {
-                var defaultRooms = new List<Room>
+                await _database.InsertAllAsync(new List<Room>
                 {
                     new Room { RoomNumber = 101, Availability = "Available", Location = "First Floor", Remark = "" },
                     new Room { RoomNumber = 102, Availability = "Available", Location = "First Floor", Remark = "" },
                     new Room { RoomNumber = 201, Availability = "Available", Location = "Second Floor", Remark = "" },
                     new Room { RoomNumber = 202, Availability = "Available", Location = "Second Floor", Remark = "" }
-                };
-
-                await _database.InsertAllAsync(defaultRooms);
+                });
             }
         }
 
-        // ✅ Employee
+        // ✅ Get rooms where no current guest is staying
+        public static async Task<List<Room>> GetAvailableRooms()
+        {
+            await Init();
+
+            var occupiedRoomNumbers = (await _database.Table<CheckInOut>()
+                .Where(c => c.CheckOutDate == null && c.CheckOutTime == null)
+                .ToListAsync())
+                .Select(c => c.RoomNumber)
+                .Distinct()
+                .ToHashSet();
+
+            return await _database.Table<Room>()
+                .Where(r => !occupiedRoomNumbers.Contains(r.RoomNumber.ToString()))
+                .ToListAsync();
+        }
+
+        // ✅ Get rooms where ALL guests (if any) have checked out
+        public static async Task<List<Room>> GetCompletelyAvailableRooms()
+        {
+            await Init();
+
+            var allRooms = await _database.Table<Room>().ToListAsync();
+            var allCheckIns = await _database.Table<CheckInOut>().ToListAsync();
+
+            var occupiedRoomNumbers = allCheckIns
+                .Where(c => c.CheckOutDate == null && c.CheckOutTime == null)
+                .Select(c => c.RoomNumber)
+                .Distinct()
+                .ToHashSet();
+
+            var availableRooms = allRooms
+                .Where(r => !occupiedRoomNumbers.Contains(r.RoomNumber.ToString()))
+                .ToList();
+
+            return availableRooms;
+        }
+
+        // ✅ Other methods remain unchanged
         public static async Task<Employee> GetEmployee(string username, string password)
         {
             await Init();
@@ -67,7 +96,6 @@ namespace Jindal.Services
                 .FirstOrDefaultAsync(e => e.EmployeeCode == username && e.Password == password);
         }
 
-        // ✅ Room
         public static async Task<List<Room>> GetRooms()
         {
             await Init();
@@ -92,13 +120,6 @@ namespace Jindal.Services
             await _database.DeleteAsync(room);
         }
 
-        public static async Task<List<Room>> GetAvailableRooms()
-        {
-            await Init();
-            return await _database.Table<Room>().Where(r => r.Availability == "Available").ToListAsync();
-        }
-
-        // ✅ CheckInOut
         public static async Task<List<CheckInOut>> GetCheckInOuts()
         {
             await Init();
@@ -137,7 +158,6 @@ namespace Jindal.Services
             await _database.DeleteAsync(check);
         }
 
-        // ✅ Location
         public static async Task<List<LocationModel>> GetLocations()
         {
             await Init();

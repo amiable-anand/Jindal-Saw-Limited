@@ -40,7 +40,11 @@ namespace Jindal.Views
         private async Task LoadData()
         {
             await DatabaseService.Init();
-            allRecords = await DatabaseService.GetCheckInOuts();
+
+            // Load only guests who are currently staying (not checked out)
+            allRecords = (await DatabaseService.GetCheckInOuts())
+                         .Where(r => r.CheckOutDate == null && r.CheckOutTime == null)
+                         .ToList();
 
             RoomFilterPicker.ItemsSource = allRecords
                 .Select(r => r.RoomNumber)
@@ -91,63 +95,56 @@ namespace Jindal.Views
                     AddToGrid(new Label { Text = r.GuestIdNumber ?? "-", TextColor = Colors.White }, 2, row);
                     AddToGrid(new Label { Text = r.CheckInDate.ToString("dd-MM-yyyy"), TextColor = Colors.White }, 3, row);
                     AddToGrid(new Label { Text = r.CheckInTime.ToString(@"hh\:mm"), TextColor = Colors.White }, 4, row);
-                    AddToGrid(new Label { Text = r.CheckOutDate?.ToString("dd-MM-yyyy") ?? "-", TextColor = Colors.White }, 5, row);
-                    AddToGrid(new Label { Text = r.CheckOutTime?.ToString(@"hh\:mm") ?? "-", TextColor = Colors.White }, 6, row);
+                    AddToGrid(new Label { Text = "-", TextColor = Colors.White }, 5, row);
+                    AddToGrid(new Label { Text = "-", TextColor = Colors.White }, 6, row);
                     AddToGrid(new Label { Text = r.Department ?? "-", TextColor = Colors.White }, 7, row);
                     AddToGrid(new Label { Text = r.Purpose ?? "-", TextColor = Colors.White }, 8, row);
                     AddToGrid(new Label { Text = r.MailReceivedDate.ToString("dd-MM-yyyy"), TextColor = Colors.White }, 9, row);
 
-                    // Check if guest is still staying
-                    bool isCheckedOut = r.CheckOutDate != null || r.CheckOutTime != null;
-
-                    if (!isCheckedOut)
+                    var buttonStack = new HorizontalStackLayout
                     {
-                        var buttonStack = new HorizontalStackLayout
-                        {
-                            Spacing = 6,
-                            HorizontalOptions = LayoutOptions.End
-                        };
+                        Spacing = 6,
+                        HorizontalOptions = LayoutOptions.End
+                    };
 
-                        var editButton = new Button
-                        {
-                            Text = "Edit",
-                            FontSize = 12,
-                            BackgroundColor = Color.FromArgb("#3B82F6"),
-                            TextColor = Colors.White,
-                            CornerRadius = 6,
-                            Padding = new Thickness(8, 4)
-                        };
-                        editButton.Clicked += async (s, e) =>
-                        {
-                            await Shell.Current.GoToAsync($"///EditGuestPage?guestId={r.Id}");
-                        };
+                    var editButton = new Button
+                    {
+                        Text = "Edit",
+                        FontSize = 12,
+                        BackgroundColor = Color.FromArgb("#3B82F6"),
+                        TextColor = Colors.White,
+                        CornerRadius = 6,
+                        Padding = new Thickness(8, 4)
+                    };
+                    editButton.Clicked += async (s, e) =>
+                    {
+                        await Shell.Current.GoToAsync($"///EditGuestPage?guestId={r.Id}");
+                    };
 
-                        var checkOutButton = new Button
+                    var checkOutButton = new Button
+                    {
+                        Text = "Check Out",
+                        FontSize = 12,
+                        BackgroundColor = Color.FromArgb("#EF4444"),
+                        TextColor = Colors.White,
+                        CornerRadius = 6,
+                        Padding = new Thickness(8, 4)
+                    };
+                    checkOutButton.Clicked += async (s, e) =>
+                    {
+                        try
                         {
-                            Text = "Check Out",
-                            FontSize = 12,
-                            BackgroundColor = Color.FromArgb("#EF4444"),
-                            TextColor = Colors.White,
-                            CornerRadius = 6,
-                            Padding = new Thickness(8, 4)
-                        };
-                        checkOutButton.Clicked += async (s, e) =>
+                            await Shell.Current.GoToAsync($"CheckOutPage?guestId={r.Id}");
+                        }
+                        catch (Exception ex)
                         {
-                            try
-                            {
-                                await Shell.Current.GoToAsync($"CheckOutPage?guestId={r.Id}");
-                            }
-                            catch (Exception ex)
-                            {
-                                await DisplayAlert("Navigation Error", ex.Message, "OK");
-                            }
-                        };
+                            await DisplayAlert("Navigation Error", ex.Message, "OK");
+                        }
+                    };
 
-                        buttonStack.Children.Add(editButton);
-                        buttonStack.Children.Add(checkOutButton);
-                        AddToGrid(buttonStack, 10, row);
-                    }
-
+                    buttonStack.Children.Add(editButton);
+                    buttonStack.Children.Add(checkOutButton);
+                    AddToGrid(buttonStack, 10, row);
                     row++;
                 }
 

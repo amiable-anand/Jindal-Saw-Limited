@@ -55,6 +55,9 @@
     <Compile Update="Views\CheckOutPage.xaml.cs">
       <DependentUpon>CheckOutPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\ReportPage.xaml.cs">
+      <DependentUpon>ReportPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

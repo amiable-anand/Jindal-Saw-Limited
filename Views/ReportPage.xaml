@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Jindal.Views.ReportPage"
+             Title="Guest Report"
+             BackgroundColor="#121212">
+
+    <ScrollView Orientation="Both">
+        <Grid Padding="20" RowSpacing="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Controls -->
+            <Border Stroke="#2A2A2A" StrokeThickness="1" BackgroundColor="#1E1E1E"
+                    Padding="16" StrokeShape="RoundRectangle 18" Grid.Row="0" Margin="0,0,0,10">
+
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Checked Out Guests"
+                           VerticalOptions="Center"
+                           TextColor="#10B981"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           Margin="0,0,10,0"
+                           Grid.Column="0"/>
+
+                    <Picker x:Name="RoomFilterPicker"
+                            Title="Filter by Room"
+                            BackgroundColor="#2F2F2F"
+                            TextColor="#DDDDDD"
+                            TitleColor="#888"
+                            Margin="4,0"
+                            HeightRequest="42"
+                            FontSize="13"
+                            Grid.Column="1"
+                            SelectedIndexChanged="OnRoomFilterChanged"/>
+
+                    <Entry x:Name="SearchEntry"
+                           Placeholder="Search guest name..."
+                           BackgroundColor="#2F2F2F"
+                           TextColor="#DDDDDD"
+                           PlaceholderColor="#888"
+                           Margin="4,0"
+                           HeightRequest="42"
+                           FontSize="13"
+                           Grid.Column="2"
+                           TextChanged="OnSearchTextChanged"/>
+
+                    <Button Text="Reset"
+                            Clicked="OnReloadClicked"
+                            BackgroundColor="#2F2F2F"
+                            TextColor="#58A6FF"
+                            FontAttributes="Bold"
+                            Padding="10,6"
+                            CornerRadius="10"
+                            FontSize="16"
+                            Grid.Column="3" />
+                </Grid>
+            </Border>
+
+            <!-- Table -->
+            <Border Stroke="#2A2A2A" StrokeThickness="1" BackgroundColor="#1E1E1E"
+                    Padding="16" StrokeShape="RoundRectangle 18" Grid.Row="1">
+
+                <Grid x:Name="ReportTable" ColumnSpacing="16" RowSpacing="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="160"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Headers -->
+                    <Label Text="Room No" Grid.Column="0" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
+                    <Label Text="Guest Name" Grid.Column="1" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
+                    <Label Text="Guest ID No" Grid.Column="2" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
+                    <Label Text="Check In Date" Grid.Column="3" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
+                    <Label Text="Check In Time" Grid.Column="4" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
+                    <Label Text="Check Out Date" Grid.Column="5" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
+                    <Label Text="Check Out Time" Grid.Column="6" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
+                    <Label Text="Dept" Grid.Column="7" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
+                    <Label Text="Purpose" Grid.Column="8" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
+                    <Label Text="Mail Received Date" Grid.Column="9" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </ScrollView>
+</ContentPage>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Jindal.Views
 {
-    [QueryProperty("GuestId", "guestId")]
+    [QueryProperty(nameof(GuestId), "guestId")]
     public partial class CheckOutPage : ContentPage
     {
         private CheckInOut guest;
@@ -19,7 +19,7 @@ namespace Jindal.Views
             set
             {
                 guestId = value;
-                LoadGuestDetails(value);
+                _ = LoadGuestDetailsAsync(value); // Fire and forget
             }
         }
 
@@ -28,52 +28,72 @@ namespace Jindal.Views
             InitializeComponent();
         }
 
-        private async void LoadGuestDetails(string id)
+        private async Task LoadGuestDetailsAsync(string id)
         {
-            await DatabaseService.Init();
-
-            if (int.TryParse(id, out int guestIdInt))
+            try
             {
-                guest = (await DatabaseService.GetCheckInOuts())
-                    .FirstOrDefault(g => g.Id == guestIdInt);
+                await DatabaseService.Init();
 
-                if (guest != null)
+                if (int.TryParse(id, out int guestIdInt))
                 {
-                    GuestNameLabel.Text = guest.GuestName;
-                    RoomNumberLabel.Text = guest.RoomNumber;
-                    CheckOutDatePicker.Date = DateTime.Now;
-                    CheckOutTimePicker.Time = DateTime.Now.TimeOfDay;
+                    guest = await DatabaseService.GetCheckInOutById(guestIdInt);
+
+                    if (guest != null)
+                    {
+                        GuestNameLabel.Text = guest.GuestName;
+                        RoomNumberLabel.Text = guest.RoomNumber;
+                        CheckOutDatePicker.Date = DateTime.Now.Date;
+                        CheckOutTimePicker.Time = DateTime.Now.TimeOfDay;
+                    }
+                    else
+                    {
+                        await DisplayAlert("Error", "Guest not found.", "OK");
+                        await Shell.Current.GoToAsync("..");
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Failed to load guest details: {ex.Message}", "OK");
             }
         }
 
         private async void OnConfirmCheckOutClicked(object sender, EventArgs e)
         {
-            if (guest == null) return;
+            if (guest == null)
+                return;
 
-            guest.CheckOutDate = CheckOutDatePicker.Date;
-            guest.CheckOutTime = CheckOutTimePicker.Time;
-
-            await DatabaseService.UpdateCheckInOut(guest);
-
-            // Check if all guests in this room have checked out
-            var allGuests = await DatabaseService.GetCheckInOuts();
-            var guestsInRoom = allGuests.Where(g => g.RoomNumber == guest.RoomNumber);
-            bool allCheckedOut = guestsInRoom.All(g => g.CheckOutDate != null && g.CheckOutTime != null);
-
-            if (allCheckedOut)
+            try
             {
-                var rooms = await DatabaseService.GetRooms();
-                var room = rooms.FirstOrDefault(r => r.RoomNumber.ToString() == guest.RoomNumber);
-                if (room != null)
-                {
-                    room.Availability = "Available";
-                    await DatabaseService.UpdateRoom(room);
-                }
-            }
+                // ? Update the guest's check-out info
+                guest.CheckOutDate = CheckOutDatePicker.Date;
+                guest.CheckOutTime = CheckOutTimePicker.Time;
 
-            await DisplayAlert("Success", "Guest checked out successfully.", "OK");
-            await Shell.Current.GoToAsync("..");
+                await DatabaseService.UpdateCheckInOut(guest);
+
+                // ? Check if all guests in this room are checked out
+                var guestsInRoom = await DatabaseService.GetCheckInOutsByRoomNumber(guest.RoomNumber);
+                bool allCheckedOut = guestsInRoom.All(g => g.CheckOutDate != null && g.CheckOutTime != null);
+
+                if (allCheckedOut)
+                {
+                    var room = (await DatabaseService.GetRooms())
+                               .FirstOrDefault(r => r.RoomNumber.ToString() == guest.RoomNumber);
+
+                    if (room != null)
+                    {
+                        room.Availability = "Available"; // Optional — for UI reflection
+                        await DatabaseService.UpdateRoom(room);
+                    }
+                }
+
+                await DisplayAlert("Success", "Guest checked out successfully.", "OK");
+                await Shell.Current.GoToAsync("..");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Check-out failed: {ex.Message}", "OK");
+            }
         }
     }
 }
