@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              x:Class="Jindal.Views.ReportPage"
              Title="Guest Report"
              BackgroundColor="#121212">
@@ -10,17 +11,52 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Controls -->
-            <Border Stroke="#2A2A2A" StrokeThickness="1" BackgroundColor="#1E1E1E"
-                    Padding="16" StrokeShape="RoundRectangle 18" Grid.Row="0" Margin="0,0,0,10">
+            <!-- Date Range Filters -->
+            <Border Grid.Row="0" Padding="16" BackgroundColor="#1E1E1E" Stroke="#2A2A2A" StrokeThickness="1" StrokeShape="RoundRectangle 18" Margin="0,0,0,10">
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
+                    <DatePicker x:Name="FromDatePicker"
+                                Format="dd-MM-yyyy"
+                                BackgroundColor="#2F2F2F"
+                                TextColor="White"
+                                Margin="4"
+                                Grid.Column="0" />
+
+                    <DatePicker x:Name="ToDatePicker"
+                                Format="dd-MM-yyyy"
+                                BackgroundColor="#2F2F2F"
+                                TextColor="White"
+                                Margin="4"
+                                Grid.Column="1" />
+
+                    <Button Text="Filter"
+                            Clicked="OnDateFilterClicked"
+                            BackgroundColor="#2F2F2F"
+                            TextColor="#10B981"
+                            FontAttributes="Bold"
+                            Padding="10,6"
+                            CornerRadius="10"
+                            Grid.Column="2" />
+                </Grid>
+            </Border>
+
+            <!-- Room / Name Filter + Action Buttons -->
+            <Border Grid.Row="1" Padding="16" BackgroundColor="#1E1E1E" Stroke="#2A2A2A" StrokeThickness="1" StrokeShape="RoundRectangle 18" Margin="0,0,0,10">
                 <Grid ColumnSpacing="12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
@@ -61,15 +97,23 @@
                             FontAttributes="Bold"
                             Padding="10,6"
                             CornerRadius="10"
-                            FontSize="16"
+                            FontSize="14"
                             Grid.Column="3" />
+
+                    <Button Text="Export Excel"
+                            Clicked="OnExportToExcelClicked"
+                            BackgroundColor="#2F2F2F"
+                            TextColor="#FACC15"
+                            FontAttributes="Bold"
+                            Padding="10,6"
+                            CornerRadius="10"
+                            FontSize="14"
+                            Grid.Column="4" />
                 </Grid>
             </Border>
 
             <!-- Table -->
-            <Border Stroke="#2A2A2A" StrokeThickness="1" BackgroundColor="#1E1E1E"
-                    Padding="16" StrokeShape="RoundRectangle 18" Grid.Row="1">
-
+            <Border Grid.Row="2" Padding="16" BackgroundColor="#1E1E1E" Stroke="#2A2A2A" StrokeThickness="1" StrokeShape="RoundRectangle 18">
                 <Grid x:Name="ReportTable" ColumnSpacing="16" RowSpacing="12">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40"/>
@@ -100,6 +144,15 @@
                     <Label Text="Mail Received Date" Grid.Column="9" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
                 </Grid>
             </Border>
+
+            <!-- Row Count -->
+            <Label x:Name="RowCountLabel"
+                   Grid.Row="3"
+                   HorizontalOptions="End"
+                   Text="Total guests: 0"
+                   FontSize="13"
+                   TextColor="LightGray"
+                   Margin="10,5,4,0"/>
         </Grid>
     </ScrollView>
 </ContentPage>
