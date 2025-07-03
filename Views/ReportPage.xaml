@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              x:Class="Jindal.Views.ReportPage"
              Title="Guest Report"
              BackgroundColor="#121212">
@@ -12,108 +11,117 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Date Range Filters -->
-            <Border Grid.Row="0" Padding="16" BackgroundColor="#1E1E1E" Stroke="#2A2A2A" StrokeThickness="1" StrokeShape="RoundRectangle 18" Margin="0,0,0,10">
-                <Grid ColumnSpacing="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+            <!-- Combined Filters in One Row -->
+            <Border Grid.Row="0"
+                    Padding="16"
+                    BackgroundColor="#1E1E1E"
+                    Stroke="#2A2A2A"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 18"
+                    Margin="0,0,0,10">
 
-                    <DatePicker x:Name="FromDatePicker"
-                                Format="dd-MM-yyyy"
+                <ScrollView Orientation="Horizontal">
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Checked Out Guests"
+                               VerticalOptions="Center"
+                               TextColor="#10B981"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               Margin="0,0,10,0"
+                               Grid.Column="0" />
+
+                        <DatePicker x:Name="FromDatePicker"
+                                    Format="dd-MM-yyyy"
+                                    BackgroundColor="#2F2F2F"
+                                    TextColor="White"
+                                    HeightRequest="42"
+                                    Margin="0"
+                                    Grid.Column="1" />
+
+                        <DatePicker x:Name="ToDatePicker"
+                                    Format="dd-MM-yyyy"
+                                    BackgroundColor="#2F2F2F"
+                                    TextColor="White"
+                                    HeightRequest="42"
+                                    Margin="0"
+                                    Grid.Column="2" />
+
+                        <Button Text="Filter"
+                                Clicked="OnDateFilterClicked"
                                 BackgroundColor="#2F2F2F"
-                                TextColor="White"
-                                Margin="4"
-                                Grid.Column="0" />
+                                TextColor="#10B981"
+                                FontAttributes="Bold"
+                                Padding="10,6"
+                                CornerRadius="10"
+                                FontSize="14"
+                                Grid.Column="3" />
 
-                    <DatePicker x:Name="ToDatePicker"
-                                Format="dd-MM-yyyy"
+                        <Picker x:Name="RoomFilterPicker"
+                                Title="Filter by Room"
                                 BackgroundColor="#2F2F2F"
-                                TextColor="White"
-                                Margin="4"
-                                Grid.Column="1" />
+                                TextColor="#DDDDDD"
+                                TitleColor="#888"
+                                Margin="0"
+                                HeightRequest="42"
+                                FontSize="13"
+                                Grid.Column="4"
+                                SelectedIndexChanged="OnRoomFilterChanged"/>
 
-                    <Button Text="Filter"
-                            Clicked="OnDateFilterClicked"
-                            BackgroundColor="#2F2F2F"
-                            TextColor="#10B981"
-                            FontAttributes="Bold"
-                            Padding="10,6"
-                            CornerRadius="10"
-                            Grid.Column="2" />
-                </Grid>
-            </Border>
+                        <Entry x:Name="SearchEntry"
+                               Placeholder="Search guest name..."
+                               BackgroundColor="#2F2F2F"
+                               TextColor="#DDDDDD"
+                               PlaceholderColor="#888"
+                               Margin="0"
+                               HeightRequest="42"
+                               FontSize="13"
+                               Grid.Column="5"
+                               TextChanged="OnSearchTextChanged"/>
 
-            <!-- Room / Name Filter + Action Buttons -->
-            <Border Grid.Row="1" Padding="16" BackgroundColor="#1E1E1E" Stroke="#2A2A2A" StrokeThickness="1" StrokeShape="RoundRectangle 18" Margin="0,0,0,10">
-                <Grid ColumnSpacing="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                        <Button Text="Reset"
+                                Clicked="OnReloadClicked"
+                                BackgroundColor="#2F2F2F"
+                                TextColor="#58A6FF"
+                                FontAttributes="Bold"
+                                Padding="10,6"
+                                CornerRadius="10"
+                                FontSize="14"
+                                Grid.Column="6" />
 
-                    <Label Text="Checked Out Guests"
-                           VerticalOptions="Center"
-                           TextColor="#10B981"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           Margin="0,0,10,0"
-                           Grid.Column="0"/>
-
-                    <Picker x:Name="RoomFilterPicker"
-                            Title="Filter by Room"
-                            BackgroundColor="#2F2F2F"
-                            TextColor="#DDDDDD"
-                            TitleColor="#888"
-                            Margin="4,0"
-                            HeightRequest="42"
-                            FontSize="13"
-                            Grid.Column="1"
-                            SelectedIndexChanged="OnRoomFilterChanged"/>
-
-                    <Entry x:Name="SearchEntry"
-                           Placeholder="Search guest name..."
-                           BackgroundColor="#2F2F2F"
-                           TextColor="#DDDDDD"
-                           PlaceholderColor="#888"
-                           Margin="4,0"
-                           HeightRequest="42"
-                           FontSize="13"
-                           Grid.Column="2"
-                           TextChanged="OnSearchTextChanged"/>
-
-                    <Button Text="Reset"
-                            Clicked="OnReloadClicked"
-                            BackgroundColor="#2F2F2F"
-                            TextColor="#58A6FF"
-                            FontAttributes="Bold"
-                            Padding="10,6"
-                            CornerRadius="10"
-                            FontSize="14"
-                            Grid.Column="3" />
-
-                    <Button Text="Export Excel"
-                            Clicked="OnExportToExcelClicked"
-                            BackgroundColor="#2F2F2F"
-                            TextColor="#FACC15"
-                            FontAttributes="Bold"
-                            Padding="10,6"
-                            CornerRadius="10"
-                            FontSize="14"
-                            Grid.Column="4" />
-                </Grid>
+                        <Button Text="Export Excel"
+                                Clicked="OnExportToExcelClicked"
+                                BackgroundColor="#2F2F2F"
+                                TextColor="#FACC15"
+                                FontAttributes="Bold"
+                                Padding="10,6"
+                                CornerRadius="10"
+                                FontSize="14"
+                                Grid.Column="7" />
+                    </Grid>
+                </ScrollView>
             </Border>
 
             <!-- Table -->
-            <Border Grid.Row="2" Padding="16" BackgroundColor="#1E1E1E" Stroke="#2A2A2A" StrokeThickness="1" StrokeShape="RoundRectangle 18">
+            <Border Grid.Row="1"
+                    Padding="16"
+                    BackgroundColor="#1E1E1E"
+                    Stroke="#2A2A2A"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 18">
+
                 <Grid x:Name="ReportTable" ColumnSpacing="16" RowSpacing="12">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40"/>
@@ -147,7 +155,7 @@
 
             <!-- Row Count -->
             <Label x:Name="RowCountLabel"
-                   Grid.Row="3"
+                   Grid.Row="2"
                    HorizontalOptions="End"
                    Text="Total guests: 0"
                    FontSize="13"

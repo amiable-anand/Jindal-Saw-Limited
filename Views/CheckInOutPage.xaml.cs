@@ -41,7 +41,6 @@ namespace Jindal.Views
         {
             await DatabaseService.Init();
 
-            // Load only guests who are currently staying (not checked out)
             allRecords = (await DatabaseService.GetCheckInOuts())
                          .Where(r => r.CheckOutDate == null && r.CheckOutTime == null)
                          .ToList();
@@ -93,13 +92,13 @@ namespace Jindal.Views
                     AddToGrid(new Label { Text = r.RoomNumber ?? "-", TextColor = Colors.White }, 0, row);
                     AddToGrid(new Label { Text = r.GuestName ?? "-", TextColor = Colors.White }, 1, row);
                     AddToGrid(new Label { Text = r.GuestIdNumber ?? "-", TextColor = Colors.White }, 2, row);
-                    AddToGrid(new Label { Text = r.CheckInDate.ToString("dd-MM-yyyy"), TextColor = Colors.White }, 3, row);
-                    AddToGrid(new Label { Text = r.CheckInTime.ToString(@"hh\:mm"), TextColor = Colors.White }, 4, row);
-                    AddToGrid(new Label { Text = "-", TextColor = Colors.White }, 5, row);
-                    AddToGrid(new Label { Text = "-", TextColor = Colors.White }, 6, row);
+                    AddToGrid(new Label { Text = r.CheckInDate != default ? r.CheckInDate.ToString("dd-MM-yyyy") : "-", TextColor = Colors.White }, 3, row);
+                    AddToGrid(new Label { Text = r.CheckInTime != default ? r.CheckInTime.ToString(@"hh\:mm") : "-", TextColor = Colors.White }, 4, row);
+                    AddToGrid(new Label { Text = "-", TextColor = Colors.White }, 5, row); // Placeholder
+                    AddToGrid(new Label { Text = "-", TextColor = Colors.White }, 6, row); // Placeholder
                     AddToGrid(new Label { Text = r.Department ?? "-", TextColor = Colors.White }, 7, row);
                     AddToGrid(new Label { Text = r.Purpose ?? "-", TextColor = Colors.White }, 8, row);
-                    AddToGrid(new Label { Text = r.MailReceivedDate.ToString("dd-MM-yyyy"), TextColor = Colors.White }, 9, row);
+                    AddToGrid(new Label { Text = r.MailReceivedDate != default ? r.MailReceivedDate.ToString("dd-MM-yyyy") : "-", TextColor = Colors.White }, 9, row);
 
                     var buttonStack = new HorizontalStackLayout
                     {
@@ -118,7 +117,8 @@ namespace Jindal.Views
                     };
                     editButton.Clicked += async (s, e) =>
                     {
-                        await Shell.Current.GoToAsync($"///EditGuestPage?guestId={r.Id}");
+                        await Shell.Current.GoToAsync($"{nameof(EditGuestPage)}?guestId={r.Id}");
+;
                     };
 
                     var checkOutButton = new Button
@@ -134,7 +134,8 @@ namespace Jindal.Views
                     {
                         try
                         {
-                            await Shell.Current.GoToAsync($"CheckOutPage?guestId={r.Id}");
+                            await Shell.Current.GoToAsync($"{nameof(CheckOutPage)}?guestId={r.Id}");
+
                         }
                         catch (Exception ex)
                         {
@@ -155,9 +156,12 @@ namespace Jindal.Views
 
         private void AddToGrid(View view, int col, int row)
         {
-            Grid.SetColumn(view, col);
-            Grid.SetRow(view, row);
-            CheckInOutTable.Children.Add(view);
+            if (view != null)
+            {
+                Grid.SetColumn(view, col);
+                Grid.SetRow(view, row);
+                CheckInOutTable.Children.Add(view);
+            }
         }
 
         private async void OnAddClicked(object sender, EventArgs e)

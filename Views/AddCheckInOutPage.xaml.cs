@@ -102,7 +102,8 @@ namespace Jindal.Views
             try
             {
                 var selectedRoom = RoomPicker.SelectedItem as Room;
-                await Shell.Current.GoToAsync($"{nameof(AddGuestToSameRoomPage)}?roomNumber={selectedRoom.RoomNumber}");
+                await Shell.Current.GoToAsync($"{nameof(AddGuestToSameRoomPage)}?roomNumber={selectedRoom.RoomNumber}&sourcePage={nameof(AddCheckInOutPage)}");
+
             }
             catch (Exception ex)
             {

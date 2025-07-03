@@ -6,31 +6,29 @@ using System;
 namespace Jindal.Views
 {
     [QueryProperty(nameof(RoomNumber), "roomNumber")]
+    [QueryProperty(nameof(GuestId), "guestId")]
+    [QueryProperty(nameof(SourcePage), "sourcePage")]
     public partial class AddGuestToSameRoomPage : ContentPage
     {
-        private string _roomNumber;
-
-        public string RoomNumber
-        {
-            get => _roomNumber;
-            set
-            {
-                _roomNumber = value;
-                if (!string.IsNullOrEmpty(_roomNumber))
-                {
-                    RoomNumberLabel.Text = $"Room: {_roomNumber}";
-                }
-            }
-        }
+        public string RoomNumber { get; set; }
+        public int GuestId { get; set; } // Only needed when returning to EditGuestPage
+        public string SourcePage { get; set; }
 
         public AddGuestToSameRoomPage()
         {
             InitializeComponent();
         }
 
+        protected override void OnNavigatedTo(NavigatedToEventArgs args)
+        {
+            base.OnNavigatedTo(args);
+
+            if (!string.IsNullOrEmpty(RoomNumber))
+                RoomNumberLabel.Text = $"Room: {RoomNumber}";
+        }
+
         private async void OnSaveClicked(object sender, EventArgs e)
         {
-            // Basic validation
             if (string.IsNullOrWhiteSpace(GuestNameEntry.Text) ||
                 string.IsNullOrWhiteSpace(GuestIdEntry.Text) ||
                 IdTypePicker.SelectedItem == null)
@@ -59,13 +57,30 @@ namespace Jindal.Views
                 };
 
                 await DatabaseService.AddCheckInOut(guest);
-
                 await DisplayAlert("Success", "Guest added successfully!", "OK");
-                await Shell.Current.GoToAsync("..");
+                NavigateBack();
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Error", $"Something went wrong: {ex.Message}", "OK");
+            }
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            NavigateBack();
+            return true; // prevent default behavior
+        }
+
+        private async void NavigateBack()
+        {
+            if (SourcePage == nameof(EditGuestPage))
+            {
+                await Shell.Current.GoToAsync($"{nameof(EditGuestPage)}?guestId={GuestId}");
+            }
+            else
+            {
+                await Shell.Current.GoToAsync(".."); // fallback to previous
             }
         }
     }
