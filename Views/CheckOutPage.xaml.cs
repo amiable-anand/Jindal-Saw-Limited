@@ -13,13 +13,14 @@ namespace Jindal.Views
         private CheckInOut guest;
         private string guestId;
 
+        // Bound from query via Shell navigation
         public string GuestId
         {
             get => guestId;
             set
             {
                 guestId = value;
-                _ = LoadGuestDetailsAsync(value); // Fire and forget
+                _ = LoadGuestDetailsAsync(value); // Fire-and-forget safely
             }
         }
 
@@ -28,6 +29,10 @@ namespace Jindal.Views
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Loads the guest details from the database using the passed GuestId.
+        /// Sets default check-out date/time to now.
+        /// </summary>
         private async Task LoadGuestDetailsAsync(string id)
         {
             try
@@ -41,7 +46,7 @@ namespace Jindal.Views
                     if (guest != null)
                     {
                         GuestNameLabel.Text = guest.GuestName;
-                        RoomNumberLabel.Text = guest.RoomNumber;
+                        RoomNumberLabel.Text = $"Room: {guest.RoomNumber}";
                         CheckOutDatePicker.Date = DateTime.Now.Date;
                         CheckOutTimePicker.Time = DateTime.Now.TimeOfDay;
                     }
@@ -51,6 +56,11 @@ namespace Jindal.Views
                         await Shell.Current.GoToAsync("..");
                     }
                 }
+                else
+                {
+                    await DisplayAlert("Invalid ID", "Guest ID format is invalid.", "OK");
+                    await Shell.Current.GoToAsync("..");
+                }
             }
             catch (Exception ex)
             {
@@ -58,6 +68,10 @@ namespace Jindal.Views
             }
         }
 
+        /// <summary>
+        /// Handles the Confirm Check-Out button click.
+        /// Updates guest check-out info and room availability if needed.
+        /// </summary>
         private async void OnConfirmCheckOutClicked(object sender, EventArgs e)
         {
             if (guest == null)
@@ -65,24 +79,26 @@ namespace Jindal.Views
 
             try
             {
-                // ? Update the guest's check-out info
+                // Update checkout info
                 guest.CheckOutDate = CheckOutDatePicker.Date;
                 guest.CheckOutTime = CheckOutTimePicker.Time;
 
                 await DatabaseService.UpdateCheckInOut(guest);
 
-                // ? Check if all guests in this room are checked out
-                var guestsInRoom = await DatabaseService.GetCheckInOutsByRoomNumber(guest.RoomNumber);
-                bool allCheckedOut = guestsInRoom.All(g => g.CheckOutDate != null && g.CheckOutTime != null);
+                // Check if room can be marked as Available
+                var guestsInSameRoom = await DatabaseService.GetCheckInOutsByRoomNumber(guest.RoomNumber);
+                bool allGuestsCheckedOut = guestsInSameRoom.All(g =>
+                    g.CheckOutDate != null && g.CheckOutTime != null);
 
-                if (allCheckedOut)
+                if (allGuestsCheckedOut)
                 {
-                    var room = (await DatabaseService.GetRooms())
-                               .FirstOrDefault(r => r.RoomNumber.ToString() == guest.RoomNumber);
+                    var allRooms = await DatabaseService.GetRooms();
+                    var room = allRooms.FirstOrDefault(r =>
+                        r.RoomNumber.ToString() == guest.RoomNumber);
 
                     if (room != null)
                     {
-                        room.Availability = "Available"; // Optional — for UI reflection
+                        room.Availability = "Available";
                         await DatabaseService.UpdateRoom(room);
                     }
                 }

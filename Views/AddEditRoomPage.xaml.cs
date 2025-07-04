@@ -1,92 +1,104 @@
 using Jindal.Models;
 using Jindal.Services;
 using Microsoft.Maui.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Jindal.Views
 {
     public partial class AddEditRoomPage : ContentPage
     {
-        private Room _room;
-        private List<Jindal.Models.Location> _locations;
+        private Room editingRoom; // Null if adding new
+        private List<Jindal.Models.Location> allLocations = new();
 
-        public AddEditRoomPage(Room room = null)
+        public AddEditRoomPage()
         {
             InitializeComponent();
-            _room = room;
+            LoadLocationsAsync();
         }
 
-        protected override async void OnAppearing()
+        public AddEditRoomPage(Room room) : this()
         {
-            base.OnAppearing();
+            editingRoom = room;
+            LoadRoomData();
+        }
 
-            // Load locations
-            _locations = await DatabaseService.GetLocations();
-
-            // Bind picker to location names
-            LocationPicker.ItemsSource = _locations.Select(l => l.Name).ToList();
-
-            // Pre-fill if editing
-            if (_room != null)
+        private async void LoadLocationsAsync()
+        {
+            try
             {
-                RoomNumberEntry.Text = _room.RoomNumber.ToString();
-                RemarkEntry.Text = _room.Remark;
+                await DatabaseService.Init();
+                allLocations = await DatabaseService.GetLocations();
 
-                // Find the location name for the selected LocationId
-                var selectedLocation = _locations.FirstOrDefault(l => l.Id == _room.LocationId);
-                if (selectedLocation != null)
+                LocationPicker.ItemsSource = allLocations;
+
+                if (editingRoom != null)
                 {
-                    LocationPicker.SelectedItem = selectedLocation.Name;
+                    var selectedLocation = allLocations.FirstOrDefault(l => l.Id == editingRoom.LocationId);
+                    if (selectedLocation != null)
+                        LocationPicker.SelectedItem = selectedLocation;
                 }
             }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Failed to load locations: {ex.Message}", "OK");
+            }
+        }
+
+        private void LoadRoomData()
+        {
+            if (editingRoom == null)
+                return;
+
+            RoomNumberEntry.Text = editingRoom.RoomNumber.ToString();
+            RemarkEntry.Text = editingRoom.Remark;
         }
 
         private async void OnSaveClicked(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(RoomNumberEntry.Text) || LocationPicker.SelectedItem == null)
+            if (!int.TryParse(RoomNumberEntry.Text?.Trim(), out int roomNumber))
             {
-                await DisplayAlert("Validation Error", "Please fill all required fields.", "OK");
+                await DisplayAlert("Error", "Please enter a valid Room Number.", "OK");
                 return;
             }
 
-            if (!int.TryParse(RoomNumberEntry.Text, out int roomNumber))
+            if (LocationPicker.SelectedItem is not Jindal.Models.Location selectedLocation)
             {
-                await DisplayAlert("Input Error", "Room number must be a valid integer.", "OK");
+                await DisplayAlert("Error", "Please select a location.", "OK");
                 return;
             }
 
-            // Get selected location ID
-            string selectedLocationName = LocationPicker.SelectedItem.ToString();
-            var selectedLocation = _locations.FirstOrDefault(l => l.Name == selectedLocationName);
-            int locationId = selectedLocation?.Id ?? 0;
+            var remark = RemarkEntry.Text?.Trim() ?? "";
 
-            string availability = _room?.Availability ?? "Available";
-            string remark = RemarkEntry.Text?.Trim() ?? "";
-
-            if (_room == null)
+            try
             {
-                var newRoom = new Room
+                if (editingRoom == null)
                 {
-                    RoomNumber = roomNumber,
-                    Availability = availability,
-                    LocationId = locationId,
-                    Remark = remark
-                };
+                    var newRoom = new Room
+                    {
+                        RoomNumber = roomNumber,
+                        LocationId = selectedLocation.Id,
+                        Remark = remark,
+                        Availability = "Available"
+                    };
+                    await DatabaseService.AddRoom(newRoom);
+                }
+                else
+                {
+                    editingRoom.RoomNumber = roomNumber;
+                    editingRoom.LocationId = selectedLocation.Id;
+                    editingRoom.Remark = remark;
+                    await DatabaseService.UpdateRoom(editingRoom);
+                }
 
-                await DatabaseService.AddRoom(newRoom);
+                await DisplayAlert("Success", "Room saved successfully.", "OK");
+                await Navigation.PopAsync();
             }
-            else
+            catch (Exception ex)
             {
-                _room.RoomNumber = roomNumber;
-                _room.LocationId = locationId;
-                _room.Remark = remark;
-
-                await DatabaseService.UpdateRoom(_room);
+                await DisplayAlert("Error", $"Failed to save room: {ex.Message}", "OK");
             }
-
-            await Navigation.PopAsync();
         }
     }
 }

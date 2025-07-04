@@ -7,7 +7,7 @@
 
     <VerticalStackLayout Padding="20" Spacing="16">
 
-        <!-- Header Controls -->
+        <!-- ?? Header: Add, Search, Reload -->
         <Grid ColumnSpacing="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -15,6 +15,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
+            <!-- ? Add Button -->
             <Button Text="+ Add Location"
                     Grid.Column="0"
                     Clicked="OnAddLocationClicked"
@@ -28,6 +29,7 @@
                     BorderColor="#10B981"
                     BorderWidth="1" />
 
+            <!-- ?? Search -->
             <SearchBar x:Name="SearchBar"
                        Grid.Column="1"
                        Placeholder="Search location..."
@@ -39,6 +41,7 @@
                        Margin="8,0"
                        HeightRequest="40" />
 
+            <!-- ?? Reload -->
             <Button Text="Reload"
                     Grid.Column="2"
                     Clicked="OnReloadClicked"
@@ -53,7 +56,7 @@
                     BorderWidth="0.8" />
         </Grid>
 
-        <!-- Table Headers -->
+        <!-- ?? Table Headers -->
         <Grid BackgroundColor="#1A1A1A" Padding="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" />
@@ -70,11 +73,16 @@
             <Label Text="Action" Grid.Column="4" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
         </Grid>
 
-        <!-- Location List -->
+        <!-- ?? Location List -->
         <CollectionView x:Name="LocationCollection" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:Location">
-                    <Frame BackgroundColor="#212121" CornerRadius="6" Padding="10" Margin="0,5" HasShadow="False">
+                    <Frame BackgroundColor="#212121"
+                           CornerRadius="6"
+                           Padding="10"
+                           Margin="0,5"
+                           HasShadow="False">
+
                         <Grid ColumnSpacing="8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" />
@@ -89,8 +97,8 @@
                             <Label Text="{Binding Address}" Grid.Column="2" TextColor="White" FontSize="13"/>
                             <Label Text="{Binding Remark}" Grid.Column="3" TextColor="White" FontSize="13"/>
 
+                            <!-- ?? Edit & ? Delete Actions -->
                             <HorizontalStackLayout Grid.Column="4" Spacing="4">
-                                <!-- Edit Button -->
                                 <Button Text="Edit"
                                         Clicked="OnEditClicked"
                                         BackgroundColor="#1F2937"
@@ -103,7 +111,6 @@
                                         BorderColor="#3B82F6"
                                         BorderWidth="0.8" />
 
-                                <!-- Delete Button -->
                                 <Button Text="Delete"
                                         Clicked="OnDeleteClicked"
                                         BackgroundColor="#1F2937"
@@ -121,5 +128,6 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
     </VerticalStackLayout>
 </ContentPage>

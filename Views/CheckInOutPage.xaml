@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.CheckInOutPage"
@@ -8,22 +7,23 @@
     <ScrollView Orientation="Both">
         <Grid Padding="20" RowSpacing="24">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- Controls -->
+            <!-- 🔹 Top Filter & Action Controls -->
             <Border Stroke="#2A2A2A" StrokeThickness="1" BackgroundColor="#1E1E1E"
                     Padding="16" StrokeShape="RoundRectangle 18" Grid.Row="0" Margin="0,0,0,10">
 
                 <Grid ColumnSpacing="12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
+                    <!-- 🔘 Add Button -->
                     <Button Text="+ Check In/Out"
                             Clicked="OnAddClicked"
                             BackgroundColor="#1F2937"
@@ -36,27 +36,29 @@
                             BorderColor="#10B981"
                             BorderWidth="1" />
 
+                    <!-- 🏠 Room Filter -->
                     <Picker x:Name="RoomFilterPicker"
                             Title="Filter by Room"
                             BackgroundColor="#2F2F2F"
                             TextColor="#DDDDDD"
                             TitleColor="#888"
                             Margin="4,0"
-                            HeightRequest="42"
                             FontSize="13"
-                            Grid.Column="1"/>
+                            Grid.Column="1" />
 
+                    <!-- 🔍 Guest Name Search -->
                     <Entry x:Name="SearchEntry"
                            Placeholder="Search guest name..."
                            BackgroundColor="#2F2F2F"
                            TextColor="#DDDDDD"
                            PlaceholderColor="#888"
                            Margin="4,0"
-                           HeightRequest="42"
                            FontSize="13"
                            Grid.Column="2"
-                           TextChanged="OnSearchTextChanged"/>
+                           HeightRequest="42"
+                           TextChanged="OnSearchTextChanged" />
 
+                    <!-- 🔄 Reset -->
                     <Button Text="Reset"
                             Clicked="OnReloadClicked"
                             BackgroundColor="#2F2F2F"
@@ -64,45 +66,47 @@
                             FontAttributes="Bold"
                             Padding="10,6"
                             CornerRadius="10"
-                            FontSize="16"
+                            FontSize="14"
                             Grid.Column="3" />
                 </Grid>
             </Border>
 
-            <!-- Table -->
+            <!-- 📋 Guest Table Header -->
             <Border Stroke="#2A2A2A" StrokeThickness="1" BackgroundColor="#1E1E1E"
                     Padding="16" StrokeShape="RoundRectangle 18" Grid.Row="1">
 
-                <Grid x:Name="CheckInOutTable" ColumnSpacing="16" RowSpacing="12">
+                <Grid x:Name="CheckInOutTable" ColumnSpacing="12" RowSpacing="12">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
+
+                    <!-- ⚙ Define columns in proportion for better responsiveness -->
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="180"/>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="160"/>
-                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="180" />
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="160" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- Headers -->
-                    <Label Text="Room No" Grid.Column="0" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                    <Label Text="Guest Name" Grid.Column="1" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                    <Label Text="Guest ID No" Grid.Column="2" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                    <Label Text="Check In Date" Grid.Column="3" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                    <Label Text="Check In Time" Grid.Column="4" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                    <Label Text="Check Out Date" Grid.Column="5" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                    <Label Text="Check Out Time" Grid.Column="6" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                    <Label Text="Dept" Grid.Column="7" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                    <Label Text="Purpose" Grid.Column="8" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                    <Label Text="Mail Received Date" Grid.Column="9" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                    <Label Text="Actions" Grid.Column="10" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
+                    <!-- 🔠 Column Headers -->
+                    <Label Text="Room No" Grid.Column="0" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13" />
+                    <Label Text="Guest Name" Grid.Column="1" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13" />
+                    <Label Text="Guest ID No" Grid.Column="2" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13" />
+                    <Label Text="Check In Date" Grid.Column="3" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13" />
+                    <Label Text="Check In Time" Grid.Column="4" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13" />
+                    <Label Text="Check Out Date" Grid.Column="5" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13" />
+                    <Label Text="Check Out Time" Grid.Column="6" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13" />
+                    <Label Text="Dept" Grid.Column="7" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13" />
+                    <Label Text="Purpose" Grid.Column="8" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13" />
+                    <Label Text="Mail Received Date" Grid.Column="9" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13" />
+                    <Label Text="Actions" Grid.Column="10" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13" />
                 </Grid>
             </Border>
         </Grid>

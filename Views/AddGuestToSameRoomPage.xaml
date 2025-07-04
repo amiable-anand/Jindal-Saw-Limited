@@ -7,111 +7,86 @@
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="20">
 
-            <!-- Page Header -->
+            <!-- Header -->
             <Label Text="Add Additional Guest"
-                   FontSize="24"
+                   FontSize="26"
                    FontAttributes="Bold"
-                   TextColor="White"
-                   HorizontalOptions="Center" />
+                   HorizontalOptions="Center"
+                   TextColor="#E0E0E0" />
 
-            <!-- Room Number Label -->
+            <!-- Room Info -->
             <Label x:Name="RoomNumberLabel"
                    Text="Room: "
                    FontSize="18"
+                   FontAttributes="Bold"
                    TextColor="#CCCCCC"
                    Margin="0,0,0,10" />
 
-            <!-- Guest Name -->
-            <Label Text="Guest Name" TextColor="#AAAAAA" FontSize="13"/>
-            <Entry x:Name="GuestNameEntry"
-                   Placeholder="Guest Name"
-                   BackgroundColor="#1E1E1E"
-                   TextColor="White" />
+            <!-- Form Inputs -->
+            <Frame BackgroundColor="#1A1A1A"
+                   CornerRadius="20"
+                   Padding="20"
+                   HasShadow="True"
+                   BorderColor="#2A2A2A">
 
-            <!-- Guest ID Number -->
-            <Label Text="Guest ID Number" TextColor="#AAAAAA" FontSize="13"/>
-            <Entry x:Name="GuestIdEntry"
-                   Placeholder="Guest ID Number"
-                   BackgroundColor="#1E1E1E"
-                   TextColor="White" />
+                <VerticalStackLayout Spacing="16">
 
-            <!-- ID Type -->
-            <Label Text="ID Type" TextColor="#AAAAAA" FontSize="13"/>
-            <Picker x:Name="IdTypePicker"
-                    Title="Select ID Type"
-                    BackgroundColor="#1E1E1E"
-                    TextColor="White">
-                <Picker.Items>
-                    <x:String>Aadhaar Card</x:String>
-                    <x:String>Driving License</x:String>
-                    <x:String>Passport</x:String>
-                    <x:String>PAN Card</x:String>
-                </Picker.Items>
-            </Picker>
+                    <!-- Guest Details -->
+                    <Entry x:Name="GuestNameEntry" Placeholder="Guest Name"
+                           BackgroundColor="#222222" TextColor="#FFFFFF" />
+                    <Entry x:Name="GuestIdEntry" Placeholder="Guest ID Number"
+                           BackgroundColor="#222222" TextColor="#FFFFFF" />
 
-            <!-- Company Name -->
-            <Label Text="Company Name" TextColor="#AAAAAA" FontSize="13"/>
-            <Entry x:Name="CompanyEntry"
-                   Placeholder="Company Name"
-                   BackgroundColor="#1E1E1E"
-                   TextColor="White" />
+                    <!-- ID Type -->
+                    <Picker x:Name="IdTypePicker"
+                            Title="Select ID Type"
+                            BackgroundColor="#222222"
+                            TextColor="#FFFFFF"
+                            TitleColor="#888">
+                        <Picker.Items>
+                            <x:String>Aadhaar Card</x:String>
+                            <x:String>Driving License</x:String>
+                            <x:String>Passport</x:String>
+                            <x:String>PAN Card</x:String>
+                        </Picker.Items>
+                    </Picker>
 
-            <!-- Mobile -->
-            <Label Text="Mobile Number" TextColor="#AAAAAA" FontSize="13"/>
-            <Entry x:Name="MobileEntry"
-                   Placeholder="Mobile"
-                   Keyboard="Telephone"
-                   BackgroundColor="#1E1E1E"
-                   TextColor="White" />
+                    <!-- More Details -->
+                    <Entry x:Name="CompanyEntry" Placeholder="Company Name"
+                           BackgroundColor="#222222" TextColor="#FFFFFF" />
+                    <Entry x:Name="MobileEntry" Placeholder="Mobile"
+                           Keyboard="Telephone" BackgroundColor="#222222"
+                           TextColor="#FFFFFF" />
+                    <Entry x:Name="NationalityEntry" Placeholder="Nationality"
+                           BackgroundColor="#222222" TextColor="#FFFFFF" />
+                    <Entry x:Name="AddressEntry" Placeholder="Address"
+                           BackgroundColor="#222222" TextColor="#FFFFFF" />
 
-            <!-- Nationality -->
-            <Label Text="Nationality" TextColor="#AAAAAA" FontSize="13"/>
-            <Entry x:Name="NationalityEntry"
-                   Placeholder="Nationality"
-                   BackgroundColor="#1E1E1E"
-                   TextColor="White" />
+                    <!-- Check-In Info -->
+                    <Label Text="Check-In Date" TextColor="#AAAAAA" FontSize="13" />
+                    <DatePicker x:Name="CheckInDatePicker"
+                                BackgroundColor="#222222"
+                                TextColor="#FFFFFF" />
 
-            <!-- Address -->
-            <Label Text="Address" TextColor="#AAAAAA" FontSize="13"/>
-            <Entry x:Name="AddressEntry"
-                   Placeholder="Address"
-                   BackgroundColor="#1E1E1E"
-                   TextColor="White" />
+                    <Label Text="Check-In Time" TextColor="#AAAAAA" FontSize="13" />
+                    <TimePicker x:Name="CheckInTimePicker"
+                                BackgroundColor="#222222"
+                                TextColor="#FFFFFF" />
 
-            <!-- Check-In Date -->
-            <Label Text="Check-In Date" TextColor="#AAAAAA" FontSize="13"/>
-            <DatePicker x:Name="CheckInDatePicker"
-                        BackgroundColor="#1E1E1E"
-                        TextColor="White" />
+                    <Entry x:Name="DepartmentEntry" Placeholder="Department"
+                           BackgroundColor="#222222" TextColor="#FFFFFF" />
+                    <Entry x:Name="PurposeEntry" Placeholder="Purpose"
+                           BackgroundColor="#222222" TextColor="#FFFFFF" />
 
-            <!-- Check-In Time -->
-            <Label Text="Check-In Time" TextColor="#AAAAAA" FontSize="13"/>
-            <TimePicker x:Name="CheckInTimePicker"
-                        BackgroundColor="#1E1E1E"
-                        TextColor="White" />
+                    <Label Text="Mail Received Date" TextColor="#AAAAAA" FontSize="13" />
+                    <DatePicker x:Name="MailReceivedDatePicker"
+                                BackgroundColor="#222222"
+                                TextColor="#FFFFFF" />
+                </VerticalStackLayout>
+            </Frame>
 
-            <!-- Department -->
-            <Label Text="Department" TextColor="#AAAAAA" FontSize="13"/>
-            <Entry x:Name="DepartmentEntry"
-                   Placeholder="Department"
-                   BackgroundColor="#1E1E1E"
-                   TextColor="White" />
-
-            <!-- Purpose -->
-            <Label Text="Purpose" TextColor="#AAAAAA" FontSize="13"/>
-            <Entry x:Name="PurposeEntry"
-                   Placeholder="Purpose"
-                   BackgroundColor="#1E1E1E"
-                   TextColor="White" />
-
-            <!-- Mail Received Date -->
-            <Label Text="Mail Received Date" TextColor="#AAAAAA" FontSize="13"/>
-            <DatePicker x:Name="MailReceivedDatePicker"
-                        BackgroundColor="#1E1E1E"
-                        TextColor="White" />
-
-            <!-- Save Button -->
-            <Button Text=" Check In"
+            <!-- Action Button -->
+            <Button Text="? Check In"
                     Clicked="OnSaveClicked"
                     BackgroundColor="#1F2937"
                     TextColor="#10B981"
@@ -119,8 +94,9 @@
                     BorderWidth="1"
                     CornerRadius="12"
                     Padding="20,8"
-                    WidthRequest="130"
-                    HeightRequest="46"/>
+                    HeightRequest="46"
+                    WidthRequest="150"
+                    HorizontalOptions="Center" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

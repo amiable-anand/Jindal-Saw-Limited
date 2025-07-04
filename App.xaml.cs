@@ -12,9 +12,13 @@ namespace Jindal
             bool isLoggedIn = Preferences.Get("IsLoggedIn", false);
 
             if (isLoggedIn)
-                MainPage = new AppShell(); // Home shell
+            {
+                MainPage = new AppShell(); // User already logged in
+            }
             else
-                MainPage = new NavigationPage(new Views.MainPage()); // Login page
+            {
+                MainPage = new NavigationPage(new Views.MainPage()); // Show login page
+            }
         }
     }
 }

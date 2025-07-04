@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.AddEditRoomPage"
@@ -5,7 +6,6 @@
              BackgroundColor="#0D0D0D"
              Padding="20">
 
-    <!-- Main Layout -->
     <VerticalStackLayout Spacing="16">
 
         <!-- Room Number -->
@@ -25,15 +25,10 @@
         <Picker x:Name="LocationPicker"
                 Title="Select Location"
                 BackgroundColor="#1E1E1E"
-                TextColor="White">
-            <Picker.ItemsSource>
-                <x:Array Type="{x:Type x:String}">
-                    <x:String>Jindal Saw Ltd Guest House - Samaghogha</x:String>
-                </x:Array>
-            </Picker.ItemsSource>
-        </Picker>
+                TextColor="White"
+                ItemDisplayBinding="{Binding Name}" />
 
-        <!-- Remark Text Entry -->
+        <!-- Remark -->
         <Label Text="Remark"
                TextColor="White"
                FontSize="14" />
@@ -51,5 +46,7 @@
                 CornerRadius="6"
                 Padding="10"
                 HeightRequest="44" />
+
     </VerticalStackLayout>
+
 </ContentPage>

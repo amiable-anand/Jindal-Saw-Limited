@@ -5,51 +5,67 @@
              Title="Check Out"
              BackgroundColor="#0D0D0D">
 
-    <VerticalStackLayout Padding="24" Spacing="24">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="24">
 
-        <Label Text="Guest Check Out"
-               FontSize="28"
-               FontAttributes="Bold"
-               HorizontalOptions="Center"
-               TextColor="#E0E0E0" />
+            <!-- Page Title -->
+            <Label Text="Guest Check-Out"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="#E0E0E0" />
 
-        <Frame BackgroundColor="#1A1A1A"
-               CornerRadius="20"
-               HasShadow="True"
-               Padding="20"
-               BorderColor="#2A2A2A">
+            <!-- Guest & Room Details -->
+            <Frame BackgroundColor="#1A1A1A"
+                   CornerRadius="20"
+                   HasShadow="True"
+                   Padding="20"
+                   BorderColor="#2A2A2A">
 
-            <VerticalStackLayout Spacing="16">
-                <Label x:Name="GuestNameLabel"
-                       TextColor="#FFFFFF"
-                       FontSize="18"
-                       FontAttributes="Bold" />
-                <Label x:Name="RoomNumberLabel"
-                       TextColor="#AAAAAA"
-                       FontSize="16" />
+                <VerticalStackLayout Spacing="18">
 
-                <DatePicker x:Name="CheckOutDatePicker"
-                            TextColor="#CCCCCC"
-                            BackgroundColor="#222222"
-                            HeightRequest="48" />
+                    <Label x:Name="GuestNameLabel"
+                           FontSize="20"
+                           TextColor="#FFFFFF"
+                           FontAttributes="Bold"
+                           LineBreakMode="TailTruncation" />
 
-                <TimePicker x:Name="CheckOutTimePicker"
-                            TextColor="#CCCCCC"
-                            BackgroundColor="#222222"
-                            HeightRequest="48" />
+                    <Label x:Name="RoomNumberLabel"
+                           FontSize="16"
+                           TextColor="#AAAAAA" />
 
-                <Button Text="✓ Confirm Check Out"
-                        Clicked="OnConfirmCheckOutClicked"
-                        BackgroundColor="#EF4444"
-                        TextColor="#FFFFFF"
-                        BorderColor="#EF4444"
-                        BorderWidth="1"
-                        CornerRadius="12"
-                        Padding="20,8"
-                        FontAttributes="Bold"
-                        FontSize="16" />
-            </VerticalStackLayout>
-        </Frame>
+                    <!-- Checkout Date -->
+                    <Label Text="Check-Out Date"
+                           TextColor="#AAAAAA"
+                           FontSize="13" />
+                    <DatePicker x:Name="CheckOutDatePicker"
+                                TextColor="#CCCCCC"
+                                BackgroundColor="#222222"
+                                HeightRequest="48" />
 
-    </VerticalStackLayout>
+                    <!-- Checkout Time -->
+                    <Label Text="Check-Out Time"
+                           TextColor="#AAAAAA"
+                           FontSize="13" />
+                    <TimePicker x:Name="CheckOutTimePicker"
+                                TextColor="#CCCCCC"
+                                BackgroundColor="#222222"
+                                HeightRequest="48" />
+
+                    <!-- Confirm Button -->
+                    <Button Text="✓ Confirm Check-Out"
+                            Clicked="OnConfirmCheckOutClicked"
+                            BackgroundColor="#DC2626"
+                            TextColor="White"
+                            BorderColor="#DC2626"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            CornerRadius="12"
+                            Padding="20,10"
+                            HeightRequest="48"
+                            HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

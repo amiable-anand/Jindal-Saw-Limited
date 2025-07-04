@@ -2,55 +2,118 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.EditGuestPage"
-             Title="Edit Guest">
+             Title="Edit Guest"
+             BackgroundColor="#0D0D0D">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="16">
+        <VerticalStackLayout Padding="24" Spacing="18">
 
-            <Label Text="Room Number:" FontAttributes="Bold"/>
-            <Label x:Name="RoomLabel" TextColor="Gray" FontSize="16"/>
+            <!-- Page Title -->
+            <Label Text="Edit Guest Details"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="#E0E0E0"
+                   HorizontalOptions="Center" />
 
-            <Entry x:Name="GuestNameEntry" Placeholder="Guest Name" FontSize="14"/>
-            <Entry x:Name="GuestIdEntry" Placeholder="ID Number" FontSize="14"/>
-            <Entry x:Name="DepartmentEntry" Placeholder="Department" FontSize="14"/>
-            <Entry x:Name="PurposeEntry" Placeholder="Purpose" FontSize="14"/>
+            <!-- Room Number Display -->
+            <Label Text="Room Number" TextColor="#AAAAAA" FontSize="13"/>
+            <Frame BackgroundColor="#1E1E1E"
+                   Padding="12,8"
+                   CornerRadius="6"
+                   HasShadow="False"
+                   BorderColor="#2A2A2A"
+                   HorizontalOptions="Fill">
+                <Label x:Name="RoomLabel"
+                       TextColor="#CCCCCC"
+                       FontSize="16"
+                       FontAttributes="Bold" />
+            </Frame>
 
+            <!-- Editable Guest Fields -->
+            <Label Text="Guest Name" TextColor="#AAAAAA" FontSize="13"/>
+            <Entry x:Name="GuestNameEntry"
+                   Placeholder="Guest Name"
+                   FontSize="14"
+                   BackgroundColor="#1E1E1E"
+                   TextColor="White"/>
+
+            <Label Text="ID Number" TextColor="#AAAAAA" FontSize="13"/>
+            <Entry x:Name="GuestIdEntry"
+                   Placeholder="ID Number"
+                   FontSize="14"
+                   BackgroundColor="#1E1E1E"
+                   TextColor="White"/>
+
+            <Label Text="Department" TextColor="#AAAAAA" FontSize="13"/>
+            <Entry x:Name="DepartmentEntry"
+                   Placeholder="Department"
+                   FontSize="14"
+                   BackgroundColor="#1E1E1E"
+                   TextColor="White"/>
+
+            <Label Text="Purpose" TextColor="#AAAAAA" FontSize="13"/>
+            <Entry x:Name="PurposeEntry"
+                   Placeholder="Purpose"
+                   FontSize="14"
+                   BackgroundColor="#1E1E1E"
+                   TextColor="White"/>
+
+            <!-- Check-in Date and Time -->
             <HorizontalStackLayout Spacing="12">
-                <VerticalStackLayout>
-                    <Label Text="Check-In Date" FontSize="12"/>
-                    <DatePicker x:Name="CheckInDatePicker"/>
+                <VerticalStackLayout WidthRequest="150">
+                    <Label Text="Check-In Date" TextColor="#AAAAAA" FontSize="13"/>
+                    <DatePicker x:Name="CheckInDatePicker"
+                                TextColor="White"
+                                BackgroundColor="#1E1E1E"/>
                 </VerticalStackLayout>
 
-                <VerticalStackLayout>
-                    <Label Text="Check-In Time" FontSize="12"/>
-                    <TimePicker x:Name="CheckInTimePicker"/>
+                <VerticalStackLayout WidthRequest="150">
+                    <Label Text="Check-In Time" TextColor="#AAAAAA" FontSize="13"/>
+                    <TimePicker x:Name="CheckInTimePicker"
+                                TextColor="White"
+                                BackgroundColor="#1E1E1E"/>
                 </VerticalStackLayout>
             </HorizontalStackLayout>
 
-            <Button Text="Save"
-                    BackgroundColor="#10B981"
-                    TextColor="White"
-                    CornerRadius="8"
-                    Clicked="OnSaveClicked"/>
+            <!-- Save & Add Guest Buttons -->
+            <HorizontalStackLayout Spacing="16" Margin="0,12,0,0">
+                <Button Text="Save"
+                        Clicked="OnSaveClicked"
+                        BackgroundColor="#10B981"
+                        TextColor="White"
+                        CornerRadius="12"
+                        HeightRequest="44"
+                        WidthRequest="130"/>
 
-            <Button Text="Add Guest to This Room"
-                    BackgroundColor="#3B82F6"
-                    TextColor="White"
-                    CornerRadius="8"
-                    Clicked="OnAddGuestToSameRoomClicked"/>
+                <Button Text="Add Guest"
+                        Clicked="OnAddGuestToSameRoomClicked"
+                        BackgroundColor="#3B82F6"
+                        TextColor="White"
+                        CornerRadius="12"
+                        HeightRequest="44"
+                        WidthRequest="130"/>
+            </HorizontalStackLayout>
 
+            <!-- Guests in same room -->
             <Label Text="Guests in the same room:"
                    FontSize="16"
                    FontAttributes="Bold"
-                   Margin="0,20,0,5"/>
+                   TextColor="#E0E0E0"
+                   Margin="0,20,0,8" />
 
-            <Grid x:Name="RoomGuestsTable"
-                  ColumnDefinitions="*,*,*,*,*"
-                  RowSpacing="10"
-                  ColumnSpacing="6"
-                  Padding="4">
-                <!-- Guest rows inserted in code-behind -->
-            </Grid>
+            <Frame BackgroundColor="#1A1A1A"
+                   CornerRadius="12"
+                   BorderColor="#2A2A2A"
+                   HasShadow="False"
+                   Padding="6">
+                <Grid x:Name="RoomGuestsTable"
+                      ColumnDefinitions="*,*,*,*,*"
+                      RowSpacing="10"
+                      ColumnSpacing="8">
+                    <!-- Guest rows will be generated in code-behind -->
+                </Grid>
+            </Frame>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

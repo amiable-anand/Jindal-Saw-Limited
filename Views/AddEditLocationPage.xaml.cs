@@ -7,59 +7,78 @@ namespace Jindal.Views
 {
     public partial class AddEditLocationPage : ContentPage
     {
-        private LocationModel currentLocation;
+        // Holds the current location for edit scenario
+        private readonly LocationModel currentLocation;
 
+        // Constructor: Accepts an optional existing location for editing
         public AddEditLocationPage(LocationModel location = null)
         {
             InitializeComponent();
             currentLocation = location;
 
-            if (location != null)
+            // Populate the fields if editing an existing location
+            if (currentLocation != null)
             {
-                NameEntry.Text = location.Name;
-                CodeEntry.Text = location.LocationCode;
-                AddressEntry.Text = location.Address;
-                RemarkEntry.Text = location.Remark;
+                NameEntry.Text = currentLocation.Name;
+                CodeEntry.Text = currentLocation.LocationCode;
+                AddressEntry.Text = currentLocation.Address;
+                RemarkEntry.Text = currentLocation.Remark;
             }
         }
 
+        // Called when the "Save" button is clicked
         private async void OnSaveClicked(object sender, EventArgs e)
         {
-            var name = NameEntry.Text?.Trim();
-            var code = CodeEntry.Text?.Trim();
-            var address = AddressEntry.Text?.Trim();
-            var remark = RemarkEntry.Text?.Trim();
-
-            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(code))
+            try
             {
-                await DisplayAlert("Missing Fields", "Name and Code are required.", "OK");
-                return;
-            }
+                string name = NameEntry.Text?.Trim();
+                string code = CodeEntry.Text?.Trim();
+                string address = AddressEntry.Text?.Trim();
+                string remark = RemarkEntry.Text?.Trim();
 
-            if (currentLocation == null)
-            {
-                var newLocation = new LocationModel
+                // Validate required fields
+                if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(code))
                 {
-                    Name = name,
-                    LocationCode = code,
-                    Address = address,
-                    Remark = remark
-                };
+                    await DisplayAlert("Missing Fields", "Location Name and Code are required.", "OK");
+                    return;
+                }
 
-                await DatabaseService.AddLocation(newLocation);
+                if (currentLocation == null)
+                {
+                    // Adding a new location
+                    var newLocation = new LocationModel
+                    {
+                        Name = name,
+                        LocationCode = code,
+                        Address = address,
+                        Remark = remark
+                    };
+
+                    await DatabaseService.AddLocation(newLocation);
+                    System.Diagnostics.Debug.WriteLine("New location added.");
+                }
+                else
+                {
+                    // Updating existing location
+                    currentLocation.Name = name;
+                    currentLocation.LocationCode = code;
+                    currentLocation.Address = address;
+                    currentLocation.Remark = remark;
+
+                    await DatabaseService.UpdateLocation(currentLocation);
+                    System.Diagnostics.Debug.WriteLine($"Location updated: ID={currentLocation.Id}");
+                }
+
+                await DisplayAlert("Success", "Location saved successfully.", "OK");
+
+                // Pop this page asynchronously to return to previous page
+                await Navigation.PopAsync();
             }
-            else
+            catch (Exception ex)
             {
-                currentLocation.Name = name;
-                currentLocation.LocationCode = code;
-                currentLocation.Address = address;
-                currentLocation.Remark = remark;
-
-                await DatabaseService.UpdateLocation(currentLocation);
+                System.Diagnostics.Debug.WriteLine($"Error saving location: {ex.Message}");
+                await DisplayAlert("Error", "Something went wrong while saving the location.", "OK");
             }
-
-            await DisplayAlert("Success", "Location saved successfully.", "OK");
-            await Navigation.PopAsync();
         }
     }
 }

@@ -1,6 +1,5 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:models="clr-namespace:Jindal.Models"
              x:Class="Jindal.Views.AddCheckInOutPage"
              Title="Add Check In"
              BackgroundColor="#0D0D0D">
@@ -8,14 +7,12 @@
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="24">
 
-            <!-- Page Title -->
             <Label Text="Add Guest Check-In"
                    FontSize="28"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
                    TextColor="#E0E0E0" />
 
-            <!-- Guest Information -->
             <Frame BackgroundColor="#1A1A1A"
                    CornerRadius="20"
                    HasShadow="True"
@@ -35,25 +32,24 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
+                    <!-- Room Picker -->
                     <Picker x:Name="RoomPicker"
                             Title="Select Room"
                             Grid.Row="0" Grid.Column="0"
                             BackgroundColor="#222222"
-                            TextColor="#FFFFFF"
-                            TitleColor="#888"
+                            TextColor="White"
                             FontSize="14"
                             HeightRequest="48"
-                            HorizontalTextAlignment="Start"
-                            ZIndex="10"/>
+                            HorizontalTextAlignment="Start" />
 
+                    <!-- ID Type Picker -->
                     <Picker x:Name="IdTypePicker"
                             Title="Select ID Type"
                             Grid.Row="0" Grid.Column="1"
                             BackgroundColor="#222222"
-                            TextColor="#FFFFFF"
+                            TextColor="White"
                             FontSize="14"
-                            HeightRequest="48"
-                            TitleColor="#888">
+                            HeightRequest="48">
                         <Picker.ItemsSource>
                             <x:Array Type="{x:Type x:String}">
                                 <x:String>Aadhaar Card</x:String>
@@ -64,95 +60,49 @@
                         </Picker.ItemsSource>
                     </Picker>
 
-                    <Entry x:Name="IdNumberEntry"
-                           Placeholder="ID Number"
-                           Grid.Row="1" Grid.Column="0"
-                           BackgroundColor="#222222"
-                           TextColor="#CCCCCC"
-                           FontSize="14"
-                           HeightRequest="48"/>
+                    <!-- Guest Info -->
+                    <Entry x:Name="IdNumberEntry" Placeholder="ID Number" Grid.Row="1" Grid.Column="0"
+                           BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48"/>
 
-                    <Entry x:Name="GuestNameEntry"
-                           Placeholder="Guest Name"
-                           Grid.Row="1" Grid.Column="1"
-                           BackgroundColor="#222222"
-                           TextColor="#CCCCCC"
-                           FontSize="14"
-                           HeightRequest="48"/>
+                    <Entry x:Name="GuestNameEntry" Placeholder="Guest Name" Grid.Row="1" Grid.Column="1"
+                           BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48"/>
 
-                    <Entry x:Name="CompanyEntry"
-                           Placeholder="Company Name"
-                           Grid.Row="2" Grid.Column="0"
-                           BackgroundColor="#222222"
-                           TextColor="#CCCCCC"
-                           FontSize="14"
-                           HeightRequest="48"/>
+                    <Entry x:Name="CompanyEntry" Placeholder="Company Name" Grid.Row="2" Grid.Column="0"
+                           BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48"/>
 
-                    <Entry x:Name="MobileEntry"
-                           Placeholder="Mobile"
-                           Grid.Row="2" Grid.Column="1"
-                           BackgroundColor="#222222"
-                           TextColor="#CCCCCC"
-                           FontSize="14"
-                           HeightRequest="48"/>
+                    <Entry x:Name="MobileEntry" Placeholder="Mobile" Grid.Row="2" Grid.Column="1"
+                           BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48"
+                           Keyboard="Telephone" />
 
-                    <Entry x:Name="NationalityEntry"
-                           Placeholder="Nationality"
-                           Grid.Row="3" Grid.Column="0"
-                           BackgroundColor="#222222"
-                           TextColor="#CCCCCC"
-                           FontSize="14"
-                           HeightRequest="48"/>
+                    <Entry x:Name="NationalityEntry" Placeholder="Nationality" Grid.Row="3" Grid.Column="0"
+                           BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48"/>
 
-                    <Entry x:Name="AddressEntry"
-                           Placeholder="Address"
-                           Grid.Row="3" Grid.Column="1"
-                           BackgroundColor="#222222"
-                           TextColor="#CCCCCC"
-                           FontSize="14"
-                           HeightRequest="48"/>
+                    <Entry x:Name="AddressEntry" Placeholder="Address" Grid.Row="3" Grid.Column="1"
+                           BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48"/>
 
-                    <!-- Check-in details with labels -->
+                    <!-- Check-In Details -->
                     <VerticalStackLayout Grid.Row="4" Grid.ColumnSpan="2" Spacing="8">
 
-                        <Label Text="Check-In Date" TextColor="#AAAAAA" FontSize="13"/>
-                        <DatePicker x:Name="CheckInDatePicker"
-                                    TextColor="#CCCCCC"
-                                    BackgroundColor="#222222"
-                                    HeightRequest="48"/>
+                        <Label Text="Check-In Date" TextColor="#AAAAAA" FontSize="13" />
+                        <DatePicker x:Name="CheckInDatePicker" TextColor="#CCCCCC" BackgroundColor="#222222" HeightRequest="48" />
 
-                        <Label Text="Check-In Time" TextColor="#AAAAAA" FontSize="13"/>
-                        <TimePicker x:Name="CheckInTimePicker"
-                                    TextColor="#CCCCCC"
-                                    BackgroundColor="#222222"
-                                    HeightRequest="48"/>
+                        <Label Text="Check-In Time" TextColor="#AAAAAA" FontSize="13" />
+                        <TimePicker x:Name="CheckInTimePicker" TextColor="#CCCCCC" BackgroundColor="#222222" HeightRequest="48" />
 
-                        <Label Text="Mail Received Date" TextColor="#AAAAAA" FontSize="13"/>
-                        <DatePicker x:Name="MailReceivedDatePicker"
-                                    TextColor="#CCCCCC"
-                                    BackgroundColor="#222222"
-                                    HeightRequest="48"/>
+                        <Label Text="Mail Received Date" TextColor="#AAAAAA" FontSize="13" />
+                        <DatePicker x:Name="MailReceivedDatePicker" TextColor="#CCCCCC" BackgroundColor="#222222" HeightRequest="48" />
 
-                        <Label Text="Department" TextColor="#AAAAAA" FontSize="13"/>
-                        <Entry x:Name="DepartmentEntry"
-                               Placeholder="Enter Department"
-                               BackgroundColor="#222222"
-                               TextColor="#CCCCCC"
-                               FontSize="14"
-                               HeightRequest="48"/>
+                        <Label Text="Department" TextColor="#AAAAAA" FontSize="13" />
+                        <Entry x:Name="DepartmentEntry" Placeholder="Enter Department"
+                               BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48" />
 
-                        <Label Text="Purpose" TextColor="#AAAAAA" FontSize="13"/>
-                        <Entry x:Name="PurposeEntry"
-                               Placeholder="Enter Purpose"
-                               BackgroundColor="#222222"
-                               TextColor="#CCCCCC"
-                               FontSize="14"
-                               HeightRequest="48"/>
+                        <Label Text="Purpose" TextColor="#AAAAAA" FontSize="13" />
+                        <Entry x:Name="PurposeEntry" Placeholder="Enter Purpose"
+                               BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48" />
                     </VerticalStackLayout>
                 </Grid>
             </Frame>
 
-            <!-- Action Buttons -->
             <HorizontalStackLayout Spacing="16" HorizontalOptions="Center">
                 <Button Text="+ Add Guest"
                         Clicked="OnAddGuestClicked"
@@ -163,7 +113,8 @@
                         CornerRadius="12"
                         Padding="16,8"
                         WidthRequest="130"
-                        HeightRequest="46"/>
+                        HeightRequest="46" />
+
                 <Button Text="✓ Check In"
                         Clicked="OnCheckInClicked"
                         BackgroundColor="#1F2937"
@@ -173,7 +124,7 @@
                         CornerRadius="12"
                         Padding="20,8"
                         WidthRequest="130"
-                        HeightRequest="46"/>
+                        HeightRequest="46" />
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

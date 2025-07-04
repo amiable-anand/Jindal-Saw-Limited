@@ -1,31 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.AddEditLocationPage"
              Title="Add/Edit Location"
-             BackgroundColor="White">
+             BackgroundColor="#0D0D0D">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="16">
+        <VerticalStackLayout Padding="24" Spacing="18">
 
-            <Label Text="Location Name" FontAttributes="Bold"/>
-            <Entry x:Name="NameEntry" Placeholder="Enter location name" />
+            <!-- Page Heading -->
+            <Label Text="Add or Edit Location"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="#E0E0E0"
+                   Margin="0,10" />
 
-            <Label Text="Location Code" FontAttributes="Bold"/>
-            <Entry x:Name="CodeEntry" Placeholder="Enter location code" />
+            <!-- Location Name -->
+            <Label Text="Location Name"
+                   FontSize="14"
+                   TextColor="#AAAAAA"/>
+            <Frame BackgroundColor="#222222"
+                   CornerRadius="8"
+                   Padding="0"
+                   HasShadow="False">
+                <Entry x:Name="NameEntry"
+                       Placeholder="Enter location name"
+                       BackgroundColor="Transparent"
+                       TextColor="#FFFFFF"
+                       PlaceholderColor="#888888"
+                       HeightRequest="48"
+                       FontSize="14"/>
+            </Frame>
 
-            <Label Text="Address" FontAttributes="Bold"/>
-            <Entry x:Name="AddressEntry" Placeholder="Enter address" />
+            <!-- Location Code -->
+            <Label Text="Location Code"
+                   FontSize="14"
+                   TextColor="#AAAAAA"/>
+            <Frame BackgroundColor="#222222"
+                   CornerRadius="8"
+                   Padding="0"
+                   HasShadow="False">
+                <Entry x:Name="CodeEntry"
+                       Placeholder="Enter location code"
+                       BackgroundColor="Transparent"
+                       TextColor="#FFFFFF"
+                       PlaceholderColor="#888888"
+                       HeightRequest="48"
+                       FontSize="14"/>
+            </Frame>
 
-            <Label Text="Remark" FontAttributes="Bold"/>
-            <Entry x:Name="RemarkEntry" Placeholder="Enter remark (optional)" />
+            <!-- Address -->
+            <Label Text="Address"
+                   FontSize="14"
+                   TextColor="#AAAAAA"/>
+            <Frame BackgroundColor="#222222"
+                   CornerRadius="8"
+                   Padding="0"
+                   HasShadow="False">
+                <Entry x:Name="AddressEntry"
+                       Placeholder="Enter address"
+                       BackgroundColor="Transparent"
+                       TextColor="#FFFFFF"
+                       PlaceholderColor="#888888"
+                       HeightRequest="48"
+                       FontSize="14"/>
+            </Frame>
 
-            <Button Text="Save"
-                    Clicked="OnSaveClicked"
-                    BackgroundColor="#007AFF"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    CornerRadius="10"
-                    HeightRequest="48" />
+            <!-- Remark -->
+            <Label Text="Remark"
+                   FontSize="14"
+                   TextColor="#AAAAAA"/>
+            <Frame BackgroundColor="#222222"
+                   CornerRadius="8"
+                   Padding="0"
+                   HasShadow="False">
+                <Entry x:Name="RemarkEntry"
+                       Placeholder="Enter remark (optional)"
+                       BackgroundColor="Transparent"
+                       TextColor="#FFFFFF"
+                       PlaceholderColor="#888888"
+                       HeightRequest="48"
+                       FontSize="14"/>
+            </Frame>
+
+            <!-- Save Button -->
+            <Frame CornerRadius="10" HasShadow="False" Padding="0" HorizontalOptions="Center">
+                <Button Text="Save"
+                        Clicked="OnSaveClicked"
+                        BackgroundColor="#1F2937"
+                        TextColor="#10B981"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        Padding="16,10"
+                        HeightRequest="50"
+                        WidthRequest="200" />
+            </Frame>
 
         </VerticalStackLayout>
     </ScrollView>

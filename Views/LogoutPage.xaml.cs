@@ -1,5 +1,5 @@
 using Microsoft.Maui.Controls;
-using System.Threading.Tasks;
+using Microsoft.Maui.Storage;
 
 namespace Jindal.Views
 {
@@ -18,15 +18,17 @@ namespace Jindal.Views
 
             if (confirm)
             {
-                // ? Optional: clear stored login/session data
-                // Preferences.Default.Remove("IsLoggedIn");
+                // ?? Clear stored login/session data
+                Preferences.Set("IsLoggedIn", false);
+                Preferences.Remove("UserId");
+                Preferences.Remove("UserName");
 
-                // ? Navigate to MainPage and remove navigation history
+                // ?? Navigate to MainPage and remove history
                 Application.Current.MainPage = new NavigationPage(new MainPage());
             }
             else
             {
-                // Cancel logout: go back to previous screen
+                // Cancel logout, return to previous page
                 await Navigation.PopAsync();
             }
         }

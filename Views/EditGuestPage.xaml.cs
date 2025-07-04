@@ -1,9 +1,9 @@
 using Jindal.Models;
 using Jindal.Services;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Jindal.Views
@@ -24,10 +24,13 @@ namespace Jindal.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            await LoadGuestDetails();
+            await LoadGuestDetailsAsync();
         }
 
-        private async Task LoadGuestDetails()
+        /// <summary>
+        /// Loads guest and related room guest details by GuestId.
+        /// </summary>
+        private async Task LoadGuestDetailsAsync()
         {
             await DatabaseService.Init();
 
@@ -40,7 +43,7 @@ namespace Jindal.Views
                 return;
             }
 
-            // Fill fields
+            // Populate UI fields
             GuestNameEntry.Text = currentGuest.GuestName;
             GuestIdEntry.Text = currentGuest.GuestIdNumber;
             DepartmentEntry.Text = currentGuest.Department;
@@ -49,26 +52,33 @@ namespace Jindal.Views
             CheckInTimePicker.Time = currentGuest.CheckInTime;
             RoomLabel.Text = currentGuest.RoomNumber;
 
-            // Load all guests in the same room
+            // Load guests in the same room
             roomGuests = await DatabaseService.GetCheckInOutsByRoomNumber(currentGuest.RoomNumber);
             PopulateRoomGuestTable(roomGuests);
         }
 
+        /// <summary>
+        /// Save updated guest info to the database.
+        /// </summary>
         private async void OnSaveClicked(object sender, EventArgs e)
         {
+            if (currentGuest == null)
+            {
+                await DisplayAlert("Error", "No guest loaded to update.", "OK");
+                return;
+            }
+
             try
             {
-                currentGuest.GuestName = GuestNameEntry.Text;
-                currentGuest.GuestIdNumber = GuestIdEntry.Text;
-                currentGuest.Department = DepartmentEntry.Text;
-                currentGuest.Purpose = PurposeEntry.Text;
+                currentGuest.GuestName = GuestNameEntry.Text?.Trim();
+                currentGuest.GuestIdNumber = GuestIdEntry.Text?.Trim();
+                currentGuest.Department = DepartmentEntry.Text?.Trim();
+                currentGuest.Purpose = PurposeEntry.Text?.Trim();
                 currentGuest.CheckInDate = CheckInDatePicker.Date;
                 currentGuest.CheckInTime = CheckInTimePicker.Time;
 
                 await DatabaseService.UpdateCheckInOut(currentGuest);
                 await DisplayAlert("Success", "Guest updated successfully.", "OK");
-
-                // Navigate explicitly to CheckInOutPage
                 await Shell.Current.GoToAsync("//CheckInOutPage");
             }
             catch (Exception ex)
@@ -77,6 +87,9 @@ namespace Jindal.Views
             }
         }
 
+        /// <summary>
+        /// Populates the grid with guests in the same room.
+        /// </summary>
         private void PopulateRoomGuestTable(List<CheckInOut> guests)
         {
             RoomGuestsTable.Children.Clear();
@@ -84,37 +97,38 @@ namespace Jindal.Views
 
             // Add header row
             RoomGuestsTable.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            AddToGrid(new Label { Text = "Name", FontAttributes = FontAttributes.Bold }, 0, 0);
-            AddToGrid(new Label { Text = "Date", FontAttributes = FontAttributes.Bold }, 1, 0);
-            AddToGrid(new Label { Text = "Time", FontAttributes = FontAttributes.Bold }, 2, 0);
-            AddToGrid(new Label { Text = "Purpose", FontAttributes = FontAttributes.Bold }, 3, 0);
-            AddToGrid(new Label { Text = "Department", FontAttributes = FontAttributes.Bold }, 4, 0);
+
+            AddToGrid(new Label { Text = "Name", FontAttributes = FontAttributes.Bold, TextColor = Colors.White }, 0, 0);
+            AddToGrid(new Label { Text = "Date", FontAttributes = FontAttributes.Bold, TextColor = Colors.White }, 1, 0);
+            AddToGrid(new Label { Text = "Time", FontAttributes = FontAttributes.Bold, TextColor = Colors.White }, 2, 0);
+            AddToGrid(new Label { Text = "Purpose", FontAttributes = FontAttributes.Bold, TextColor = Colors.White }, 3, 0);
+            AddToGrid(new Label { Text = "Department", FontAttributes = FontAttributes.Bold, TextColor = Colors.White }, 4, 0);
 
             int row = 1;
-            foreach (var g in guests)
+            foreach (var guest in guests)
             {
                 RoomGuestsTable.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-                AddToGrid(new Label { Text = g.GuestName ?? "-" }, 0, row);
-                AddToGrid(new Label { Text = g.CheckInDate != default ? g.CheckInDate.ToString("dd-MM-yyyy") : "-" }, 1, row);
-                AddToGrid(new Label { Text = g.CheckInTime != default ? g.CheckInTime.ToString(@"hh\:mm") : "-" }, 2, row);
-                AddToGrid(new Label { Text = string.IsNullOrWhiteSpace(g.Purpose) ? "-" : g.Purpose }, 3, row);
-                AddToGrid(new Label { Text = string.IsNullOrWhiteSpace(g.Department) ? "-" : g.Department }, 4, row);
+                AddToGrid(new Label { Text = guest.GuestName ?? "-", TextColor = Colors.LightGray }, 0, row);
+                AddToGrid(new Label { Text = guest.CheckInDate.ToString("dd-MM-yyyy"), TextColor = Colors.LightGray }, 1, row);
+                AddToGrid(new Label { Text = guest.CheckInTime.ToString(@"hh\:mm"), TextColor = Colors.LightGray }, 2, row);
+                AddToGrid(new Label { Text = string.IsNullOrWhiteSpace(guest.Purpose) ? "-" : guest.Purpose, TextColor = Colors.LightGray }, 3, row);
+                AddToGrid(new Label { Text = string.IsNullOrWhiteSpace(guest.Department) ? "-" : guest.Department, TextColor = Colors.LightGray }, 4, row);
 
                 row++;
             }
         }
 
+        /// <summary>
+        /// Adds a view to the grid at the specified column and row.
+        /// </summary>
         private void AddToGrid(View view, int col, int row)
         {
             try
             {
-                if (view != null)
-                {
-                    Grid.SetColumn(view, col);
-                    Grid.SetRow(view, row);
-                    RoomGuestsTable.Children.Add(view);
-                }
+                Grid.SetColumn(view, col);
+                Grid.SetRow(view, row);
+                RoomGuestsTable.Children.Add(view);
             }
             catch (Exception ex)
             {
@@ -122,21 +136,27 @@ namespace Jindal.Views
             }
         }
 
+        /// <summary>
+        /// Navigate to AddGuestToSameRoomPage for current room.
+        /// </summary>
         private async void OnAddGuestToSameRoomClicked(object sender, EventArgs e)
         {
+            if (currentGuest == null)
+                return;
+
             await Shell.Current.GoToAsync($"{nameof(AddGuestToSameRoomPage)}?roomNumber={currentGuest.RoomNumber}&guestId={currentGuest.Id}&sourcePage={nameof(EditGuestPage)}");
         }
 
-        // ?? Custom Back Button override
+        /// <summary>
+        /// Override back button to navigate explicitly to CheckInOutPage.
+        /// </summary>
         protected override bool OnBackButtonPressed()
         {
-            // Navigate directly to CheckInOutPage
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 await Shell.Current.GoToAsync("//CheckInOutPage");
             });
-
-            return true; // ? We handled the back button
+            return true; // Prevent default back navigation
         }
     }
 }

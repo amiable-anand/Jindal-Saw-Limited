@@ -5,7 +5,7 @@
              Title="Login">
 
     <Grid>
-        <!-- 🔹 Background Gradient -->
+        <!-- 🔹 Optional Background Gradient -->
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Color="White" Offset="0.0" />
@@ -13,82 +13,85 @@
             </LinearGradientBrush>
         </Grid.Background>
 
+        <!-- 🔹 ScrollView for responsiveness -->
         <ScrollView>
-            <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
+            <VerticalStackLayout Padding="30"
+                                 Spacing="24"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center">
 
-                <!-- 🔷 Banner -->
+                <!-- 🔷 Jindal Logo/Banner -->
                 <Image Source="jindal_banner.png"
                        Aspect="AspectFit"
                        HeightRequest="100"
-                       Margin="0,10" />
+                       Margin="0,20" />
 
                 <!-- 🔷 Login Card -->
-                <Frame BackgroundColor="#1A1A1A90"
+                <Frame BackgroundColor="#1A1A1A"
                        CornerRadius="24"
                        Padding="24"
                        HasShadow="True"
-                       BorderColor="#2D2D2D"
+                       BorderColor="#3A3A3A"
                        WidthRequest="320"
                        VerticalOptions="Center">
 
                     <VerticalStackLayout Spacing="18">
 
-                        <!-- Welcome Text -->
+                        <!-- Welcome Title -->
                         <Label Text="Welcome to Guesthouse"
-                               FontSize="22"
+                               FontSize="24"
                                FontAttributes="Bold"
                                HorizontalOptions="Center"
-                               TextColor="#EAEAEA" />
+                               TextColor="White" />
 
-                        <!-- Username Entry -->
+                        <!-- 🧑 Username Entry -->
                         <Entry x:Name="EmployeeCode"
                                Placeholder="Employee Code"
-                               TextColor="#FFFFFF"
-                               PlaceholderColor="#9E9E9E"
-                               BackgroundColor="#2B2B2B"
-                               HeightRequest="48"
                                Keyboard="Numeric"
-                               Margin="0,0" />
+                               TextColor="White"
+                               PlaceholderColor="#CCCCCC"
+                               BackgroundColor="#2C2C2C"
+                               HeightRequest="50"
+                               Margin="0" />
 
-                        <!-- Password Entry -->
+                        <!-- 🔐 Password Entry -->
                         <Entry x:Name="Password"
                                Placeholder="Password"
                                IsPassword="True"
-                               TextColor="#FFFFFF"
-                               PlaceholderColor="#9E9E9E"
-                               BackgroundColor="#2B2B2B"
-                               HeightRequest="48"
-                               Margin="0,0" />
+                               TextColor="White"
+                               PlaceholderColor="#CCCCCC"
+                               BackgroundColor="#2C2C2C"
+                               HeightRequest="50"
+                               Margin="0" />
 
-                        <!-- Show Password Checkbox with Label -->
-                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center" Padding="4,0">
+                        <!-- 👁 Show Password Option -->
+                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
                             <CheckBox x:Name="ShowPasswordCheckBox"
                                       Color="#007AFF"
                                       CheckedChanged="OnShowPasswordCheckedChanged" />
                             <Label Text="Show Password"
-                                   TextColor="Black"
-                                   FontSize="13"
+                                   TextColor="White"
+                                   FontSize="14"
                                    VerticalOptions="Center" />
                         </HorizontalStackLayout>
 
-
-                        <!-- Error Message -->
+                        <!-- ❗ Error Message -->
                         <Label x:Name="ErrorMessage"
                                TextColor="#FF5C5C"
                                FontSize="13"
                                IsVisible="False"
                                HorizontalOptions="Center" />
 
-                        <!-- Login Button -->
+                        <!-- 🔘 Login Button -->
                         <Button Text="Login"
                                 Clicked="OnLoginClicked"
                                 BackgroundColor="#007AFF"
                                 TextColor="White"
                                 FontAttributes="Bold"
-                                HeightRequest="46"
-                                CornerRadius="18"
-                                WidthRequest="220"
-                                HorizontalOptions="Center" />
+                                HeightRequest="50"
+                                CornerRadius="25"
+                                HorizontalOptions="Center"
+                                WidthRequest="220" />
 
                     </VerticalStackLayout>
                 </Frame>

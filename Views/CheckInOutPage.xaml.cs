@@ -23,6 +23,7 @@ namespace Jindal.Views
 
             try
             {
+                // Ensure event handlers are not duplicated
                 RoomFilterPicker.SelectedIndexChanged -= OnRoomFilterChanged;
                 RoomFilterPicker.SelectedIndexChanged += OnRoomFilterChanged;
 
@@ -37,13 +38,16 @@ namespace Jindal.Views
             }
         }
 
+        /// <summary>
+        /// Loads all active check-in records and populates filters and grid.
+        /// </summary>
         private async Task LoadData()
         {
             await DatabaseService.Init();
 
             allRecords = (await DatabaseService.GetCheckInOuts())
-                         .Where(r => r.CheckOutDate == null && r.CheckOutTime == null)
-                         .ToList();
+                .Where(r => r.CheckOutDate == null && r.CheckOutTime == null)
+                .ToList();
 
             RoomFilterPicker.ItemsSource = allRecords
                 .Select(r => r.RoomNumber)
@@ -55,12 +59,16 @@ namespace Jindal.Views
             PopulateTable(allRecords);
         }
 
+        /// <summary>
+        /// Renders the table based on filtered or full guest records.
+        /// </summary>
         private void PopulateTable(List<CheckInOut> records)
         {
+            // Clear existing rows beyond header
             while (CheckInOutTable.RowDefinitions.Count > 1)
                 CheckInOutTable.RowDefinitions.RemoveAt(CheckInOutTable.RowDefinitions.Count - 1);
 
-            var oldContent = CheckInOutTable.Children.Skip(11).ToList(); // Skip headers
+            var oldContent = CheckInOutTable.Children.Skip(11).ToList(); // Skip header cells
             foreach (var view in oldContent)
                 CheckInOutTable.Children.Remove(view);
 
@@ -68,6 +76,7 @@ namespace Jindal.Views
 
             foreach (var group in records.GroupBy(r => r.RoomNumber))
             {
+                // Room Header Row
                 CheckInOutTable.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
                 var roomHeader = new Label
@@ -89,17 +98,19 @@ namespace Jindal.Views
                 {
                     CheckInOutTable.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
+                    // Guest Data Row
                     AddToGrid(new Label { Text = r.RoomNumber ?? "-", TextColor = Colors.White }, 0, row);
                     AddToGrid(new Label { Text = r.GuestName ?? "-", TextColor = Colors.White }, 1, row);
                     AddToGrid(new Label { Text = r.GuestIdNumber ?? "-", TextColor = Colors.White }, 2, row);
                     AddToGrid(new Label { Text = r.CheckInDate != default ? r.CheckInDate.ToString("dd-MM-yyyy") : "-", TextColor = Colors.White }, 3, row);
                     AddToGrid(new Label { Text = r.CheckInTime != default ? r.CheckInTime.ToString(@"hh\:mm") : "-", TextColor = Colors.White }, 4, row);
-                    AddToGrid(new Label { Text = "-", TextColor = Colors.White }, 5, row); // Placeholder
-                    AddToGrid(new Label { Text = "-", TextColor = Colors.White }, 6, row); // Placeholder
+                    AddToGrid(new Label { Text = "-", TextColor = Colors.White }, 5, row); // Placeholder for CheckOutDate
+                    AddToGrid(new Label { Text = "-", TextColor = Colors.White }, 6, row); // Placeholder for CheckOutTime
                     AddToGrid(new Label { Text = r.Department ?? "-", TextColor = Colors.White }, 7, row);
                     AddToGrid(new Label { Text = r.Purpose ?? "-", TextColor = Colors.White }, 8, row);
                     AddToGrid(new Label { Text = r.MailReceivedDate != default ? r.MailReceivedDate.ToString("dd-MM-yyyy") : "-", TextColor = Colors.White }, 9, row);
 
+                    // Action Buttons
                     var buttonStack = new HorizontalStackLayout
                     {
                         Spacing = 6,
@@ -118,7 +129,6 @@ namespace Jindal.Views
                     editButton.Clicked += async (s, e) =>
                     {
                         await Shell.Current.GoToAsync($"{nameof(EditGuestPage)}?guestId={r.Id}");
-;
                     };
 
                     var checkOutButton = new Button
@@ -135,7 +145,6 @@ namespace Jindal.Views
                         try
                         {
                             await Shell.Current.GoToAsync($"{nameof(CheckOutPage)}?guestId={r.Id}");
-
                         }
                         catch (Exception ex)
                         {
@@ -146,14 +155,19 @@ namespace Jindal.Views
                     buttonStack.Children.Add(editButton);
                     buttonStack.Children.Add(checkOutButton);
                     AddToGrid(buttonStack, 10, row);
+
                     row++;
                 }
 
+                // Add spacing row after group
                 CheckInOutTable.RowDefinitions.Add(new RowDefinition { Height = new GridLength(10) });
                 row++;
             }
         }
 
+        /// <summary>
+        /// Utility method to add any view to grid at given row/column.
+        /// </summary>
         private void AddToGrid(View view, int col, int row)
         {
             if (view != null)
@@ -179,6 +193,7 @@ namespace Jindal.Views
         private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
         {
             string search = e.NewTextValue?.ToLower() ?? "";
+
             var filtered = allRecords
                 .Where(r => r.GuestName?.ToLower().Contains(search) ?? false)
                 .ToList();
