@@ -111,7 +111,7 @@
                         TextColor="White" />
 
             <!-- Save Button -->
-            <Button Text="? Check In"
+            <Button Text=" Check In"
                     Clicked="OnSaveClicked"
                     BackgroundColor="#1F2937"
                     TextColor="#10B981"

@@ -1,26 +1,30 @@
 ﻿using SQLite;
-namespace Jindal.Models;
 
-
-public class Room
+namespace Jindal.Models
 {
-    [PrimaryKey, AutoIncrement]
-    public int Id { get; set; }
-
-    public int RoomNumber { get; set; }
-
-
-    public string Availability { get; set; }
-
-    public string Location { get; set; }
-
-    public string Remark { get; set; }
-
-    public bool IsAvailable
+    public class Room
     {
-        get => Availability == "Available";
-        set => Availability = value ? "Available" : "Booked";
-    }
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
 
-    public override string ToString() => RoomNumber.ToString();
+        public int RoomNumber { get; set; }
+
+        public string Availability { get; set; }
+
+        public int LocationId { get; set; } // 🔄 Replaces old string Location
+
+        public string Remark { get; set; }
+
+        // For runtime display only
+        [Ignore]
+        public string LocationName { get; set; } // fetched via join in code
+
+        public bool IsAvailable
+        {
+            get => Availability == "Available";
+            set => Availability = value ? "Available" : "Booked";
+        }
+
+        public override string ToString() => RoomNumber.ToString();
+    }
 }

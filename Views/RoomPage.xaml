@@ -86,11 +86,10 @@
 
                             <Label Text="{Binding RoomNumber}" TextColor="White" FontSize="13"/>
                             <Label Text="{Binding Availability}" Grid.Column="1" TextColor="White" FontSize="13"/>
-                            <Label Text="{Binding Location}" Grid.Column="2" TextColor="White" FontSize="13"/>
+                            <Label Text="{Binding LocationName}" Grid.Column="2" TextColor="White" FontSize="13"/>
                             <Label Text="{Binding Remark}" Grid.Column="3" TextColor="White" FontSize="13"/>
 
                             <HorizontalStackLayout Grid.Column="4" Spacing="4">
-                                <!-- Edit Button -->
                                 <Button Text="Edit"
                                         Clicked="OnEditClicked"
                                         BackgroundColor="#1F2937"
@@ -103,7 +102,6 @@
                                         BorderColor="#3B82F6"
                                         BorderWidth="0.8" />
 
-                                <!-- Delete Button -->
                                 <Button Text="Delete"
                                         Clicked="OnDeleteClicked"
                                         BackgroundColor="#1F2937"

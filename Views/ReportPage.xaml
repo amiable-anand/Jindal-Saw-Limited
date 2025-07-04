@@ -13,7 +13,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Combined Filters in One Row -->
+            <!-- Filter Bar -->
             <Border Grid.Row="0"
                     Padding="16"
                     BackgroundColor="#1E1E1E"
@@ -21,7 +21,6 @@
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 18"
                     Margin="0,0,0,10">
-
                 <ScrollView Orientation="Horizontal">
                     <Grid ColumnSpacing="12">
                         <Grid.ColumnDefinitions>
@@ -35,81 +34,69 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Text="Checked Out Guests"
+                        <Label Text="Checked Out Guests" Grid.Column="0"
                                VerticalOptions="Center"
                                TextColor="#10B981"
                                FontSize="16"
                                FontAttributes="Bold"
-                               Margin="0,0,10,0"
-                               Grid.Column="0" />
+                               Margin="0,0,10,0" />
 
-                        <DatePicker x:Name="FromDatePicker"
+                        <DatePicker x:Name="FromDatePicker" Grid.Column="1"
                                     Format="dd-MM-yyyy"
                                     BackgroundColor="#2F2F2F"
                                     TextColor="White"
-                                    HeightRequest="42"
-                                    Margin="0"
-                                    Grid.Column="1" />
+                                    HeightRequest="42"/>
 
-                        <DatePicker x:Name="ToDatePicker"
+                        <DatePicker x:Name="ToDatePicker" Grid.Column="2"
                                     Format="dd-MM-yyyy"
                                     BackgroundColor="#2F2F2F"
                                     TextColor="White"
-                                    HeightRequest="42"
-                                    Margin="0"
-                                    Grid.Column="2" />
+                                    HeightRequest="42"/>
 
-                        <Button Text="Filter"
+                        <Button Text="Filter" Grid.Column="3"
                                 Clicked="OnDateFilterClicked"
                                 BackgroundColor="#2F2F2F"
                                 TextColor="#10B981"
                                 FontAttributes="Bold"
                                 Padding="10,6"
                                 CornerRadius="10"
-                                FontSize="14"
-                                Grid.Column="3" />
+                                FontSize="14"/>
 
-                        <Picker x:Name="RoomFilterPicker"
+                        <Picker x:Name="RoomFilterPicker" Grid.Column="4"
                                 Title="Filter by Room"
                                 BackgroundColor="#2F2F2F"
                                 TextColor="#DDDDDD"
                                 TitleColor="#888"
-                                Margin="0"
                                 HeightRequest="42"
                                 FontSize="13"
-                                Grid.Column="4"
                                 SelectedIndexChanged="OnRoomFilterChanged"/>
 
-                        <Entry x:Name="SearchEntry"
+                        <Entry x:Name="SearchEntry" Grid.Column="5"
                                Placeholder="Search guest name..."
                                BackgroundColor="#2F2F2F"
                                TextColor="#DDDDDD"
                                PlaceholderColor="#888"
-                               Margin="0"
                                HeightRequest="42"
                                FontSize="13"
-                               Grid.Column="5"
                                TextChanged="OnSearchTextChanged"/>
 
-                        <Button Text="Reset"
+                        <Button Text="Reset" Grid.Column="6"
                                 Clicked="OnReloadClicked"
                                 BackgroundColor="#2F2F2F"
                                 TextColor="#58A6FF"
                                 FontAttributes="Bold"
                                 Padding="10,6"
                                 CornerRadius="10"
-                                FontSize="14"
-                                Grid.Column="6" />
+                                FontSize="14"/>
 
-                        <Button Text="Export Excel"
+                        <Button Text="Export Excel" Grid.Column="7"
                                 Clicked="OnExportToExcelClicked"
                                 BackgroundColor="#2F2F2F"
                                 TextColor="#FACC15"
                                 FontAttributes="Bold"
                                 Padding="10,6"
                                 CornerRadius="10"
-                                FontSize="14"
-                                Grid.Column="7" />
+                                FontSize="14"/>
                     </Grid>
                 </ScrollView>
             </Border>
@@ -139,13 +126,32 @@
                         <ColumnDefinition Width="160"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Headers -->
-                    <Label Text="Room No" Grid.Column="0" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                    <Label Text="Guest Name" Grid.Column="1" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
+                    <!-- Sortable Headers with Tap -->
+                    <Label x:Name="RoomHeader" Text="Room No ▲" Grid.Column="0"
+                           FontAttributes="Bold" TextColor="#93C5FD" FontSize="13">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSortByRoom"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <Label x:Name="GuestNameHeader" Text="Guest Name" Grid.Column="1"
+                           FontAttributes="Bold" TextColor="#93C5FD" FontSize="13">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSortByGuestName"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+
                     <Label Text="Guest ID No" Grid.Column="2" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
                     <Label Text="Check In Date" Grid.Column="3" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
                     <Label Text="Check In Time" Grid.Column="4" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                    <Label Text="Check Out Date" Grid.Column="5" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
+
+                    <Label x:Name="CheckOutDateHeader" Text="Check Out Date" Grid.Column="5"
+                           FontAttributes="Bold" TextColor="#93C5FD" FontSize="13">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSortByCheckOutDate"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+
                     <Label Text="Check Out Time" Grid.Column="6" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
                     <Label Text="Dept" Grid.Column="7" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
                     <Label Text="Purpose" Grid.Column="8" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
@@ -153,7 +159,7 @@
                 </Grid>
             </Border>
 
-            <!-- Row Count -->
+            <!-- Count -->
             <Label x:Name="RowCountLabel"
                    Grid.Row="2"
                    HorizontalOptions="End"

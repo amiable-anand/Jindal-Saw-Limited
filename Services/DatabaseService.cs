@@ -19,7 +19,6 @@ namespace Jindal.Services
                 return;
 
             var databasePath = Path.Combine(FileSystem.AppDataDirectory, "Jindal.db");
-
             _database = new SQLiteAsyncConnection(databasePath);
 
             await _database.CreateTableAsync<Employee>();
@@ -27,6 +26,7 @@ namespace Jindal.Services
             await _database.CreateTableAsync<CheckInOut>();
             await _database.CreateTableAsync<LocationModel>();
 
+            // Ensure default admin
             var existing = await _database.Table<Employee>().FirstOrDefaultAsync();
             if (existing == null)
             {
@@ -37,58 +37,57 @@ namespace Jindal.Services
                 });
             }
 
-            var existingRooms = await _database.Table<Room>().ToListAsync();
-            if (existingRooms.Count == 0)
+            // Ensure default locations exist
+            var locations = await GetLocations();
+            if (!locations.Any())
             {
+                var defaultLocations = new List<LocationModel>
+                {
+                    new() { Name = "First Floor", LocationCode = "FF", Address = "", Remark = "" },
+                    new() { Name = "Second Floor", LocationCode = "SF", Address = "", Remark = "" }
+                };
+
+                await _database.InsertAllAsync(defaultLocations);
+                locations = await GetLocations(); // refresh
+            }
+
+            // Insert demo rooms if empty
+            var existingRooms = await _database.Table<Room>().ToListAsync();
+            if (!existingRooms.Any())
+            {
+                var ff = locations.FirstOrDefault(l => l.Name == "First Floor")?.Id ?? 0;
+                var sf = locations.FirstOrDefault(l => l.Name == "Second Floor")?.Id ?? 0;
+
                 await _database.InsertAllAsync(new List<Room>
                 {
-                    new Room { RoomNumber = 101, Availability = "Available", Location = "First Floor", Remark = "" },
-                    new Room { RoomNumber = 102, Availability = "Available", Location = "First Floor", Remark = "" },
-                    new Room { RoomNumber = 201, Availability = "Available", Location = "Second Floor", Remark = "" },
-                    new Room { RoomNumber = 202, Availability = "Available", Location = "Second Floor", Remark = "" }
+                    new Room { RoomNumber = 101, Availability = "Available", LocationId = ff, Remark = "" },
+                    new Room { RoomNumber = 102, Availability = "Available", LocationId = ff, Remark = "" },
+                    new Room { RoomNumber = 201, Availability = "Available", LocationId = sf, Remark = "" },
+                    new Room { RoomNumber = 202, Availability = "Available", LocationId = sf, Remark = "" }
                 });
             }
-        }
 
-        // ✅ Get rooms where no current guest is staying
-        public static async Task<List<Room>> GetAvailableRooms()
-        {
-            await Init();
-
-            var occupiedRoomNumbers = (await _database.Table<CheckInOut>()
-                .Where(c => c.CheckOutDate == null && c.CheckOutTime == null)
-                .ToListAsync())
-                .Select(c => c.RoomNumber)
-                .Distinct()
-                .ToHashSet();
-
-            return await _database.Table<Room>()
-                .Where(r => !occupiedRoomNumbers.Contains(r.RoomNumber.ToString()))
+            // 🚨 Optional: Migrate old string-based Location to LocationId (if old data exists)
+            // NOTE: Only include if upgrading an existing database
+            /*
+            var allLocations = await GetLocations();
+            var roomsWithOldLocation = await _database.Table<Room>()
+                .Where(r => r.Location != null && r.Location != "")
                 .ToListAsync();
+
+            foreach (var room in roomsWithOldLocation)
+            {
+                var match = allLocations.FirstOrDefault(l => l.Name == room.Location);
+                if (match != null)
+                {
+                    room.LocationId = match.Id;
+                    room.Location = null;
+                    await _database.UpdateAsync(room);
+                }
+            }
+            */
         }
 
-        // ✅ Get rooms where ALL guests (if any) have checked out
-        public static async Task<List<Room>> GetCompletelyAvailableRooms()
-        {
-            await Init();
-
-            var allRooms = await _database.Table<Room>().ToListAsync();
-            var allCheckIns = await _database.Table<CheckInOut>().ToListAsync();
-
-            var occupiedRoomNumbers = allCheckIns
-                .Where(c => c.CheckOutDate == null && c.CheckOutTime == null)
-                .Select(c => c.RoomNumber)
-                .Distinct()
-                .ToHashSet();
-
-            var availableRooms = allRooms
-                .Where(r => !occupiedRoomNumbers.Contains(r.RoomNumber.ToString()))
-                .ToList();
-
-            return availableRooms;
-        }
-
-        // ✅ Other methods remain unchanged
         public static async Task<Employee> GetEmployee(string username, string password)
         {
             await Init();
@@ -99,7 +98,17 @@ namespace Jindal.Services
         public static async Task<List<Room>> GetRooms()
         {
             await Init();
-            return await _database.Table<Room>().ToListAsync();
+
+            var rooms = await _database.Table<Room>().ToListAsync();
+            var locations = await GetLocations();
+
+            // Add location name for display
+            foreach (var room in rooms)
+            {
+                room.LocationName = locations.FirstOrDefault(l => l.Id == room.LocationId)?.Name ?? "";
+            }
+
+            return rooms;
         }
 
         public static async Task AddRoom(Room room)
@@ -118,6 +127,56 @@ namespace Jindal.Services
         {
             await Init();
             await _database.DeleteAsync(room);
+        }
+
+        public static async Task<List<Room>> GetAvailableRooms()
+        {
+            await Init();
+
+            var occupiedRoomNumbers = (await _database.Table<CheckInOut>()
+                .Where(c => c.CheckOutDate == null && c.CheckOutTime == null)
+                .ToListAsync())
+                .Select(c => c.RoomNumber)
+                .Distinct()
+                .ToHashSet();
+
+            var rooms = await _database.Table<Room>()
+                .Where(r => !occupiedRoomNumbers.Contains(r.RoomNumber.ToString()))
+                .ToListAsync();
+
+            var locations = await GetLocations();
+            foreach (var room in rooms)
+            {
+                room.LocationName = locations.FirstOrDefault(l => l.Id == room.LocationId)?.Name ?? "";
+            }
+
+            return rooms;
+        }
+
+        public static async Task<List<Room>> GetCompletelyAvailableRooms()
+        {
+            await Init();
+
+            var allRooms = await _database.Table<Room>().ToListAsync();
+            var allCheckIns = await _database.Table<CheckInOut>().ToListAsync();
+
+            var occupiedRoomNumbers = allCheckIns
+                .Where(c => c.CheckOutDate == null && c.CheckOutTime == null)
+                .Select(c => c.RoomNumber)
+                .Distinct()
+                .ToHashSet();
+
+            var availableRooms = allRooms
+                .Where(r => !occupiedRoomNumbers.Contains(r.RoomNumber.ToString()))
+                .ToList();
+
+            var locations = await GetLocations();
+            foreach (var room in availableRooms)
+            {
+                room.LocationName = locations.FirstOrDefault(l => l.Id == room.LocationId)?.Name ?? "";
+            }
+
+            return availableRooms;
         }
 
         public static async Task<List<CheckInOut>> GetCheckInOuts()

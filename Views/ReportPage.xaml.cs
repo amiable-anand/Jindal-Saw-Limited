@@ -14,6 +14,9 @@ namespace Jindal.Views
     public partial class ReportPage : ContentPage
     {
         private List<CheckInOut> allCheckedOutRecords = new();
+        private bool isRoomAscending = true;
+        private bool isGuestNameAscending = true;
+        private bool isCheckOutDateAscending = false;
 
         public ReportPage()
         {
@@ -125,6 +128,39 @@ namespace Jindal.Views
             ToDatePicker.Date = DateTime.Today;
 
             await LoadCheckedOutData();
+        }
+
+        private void OnSortByRoom(object sender, EventArgs e)
+        {
+            isRoomAscending = !isRoomAscending;
+            allCheckedOutRecords = isRoomAscending
+                ? allCheckedOutRecords.OrderBy(r => r.RoomNumber).ToList()
+                : allCheckedOutRecords.OrderByDescending(r => r.RoomNumber).ToList();
+
+            RoomHeader.Text = $"Room No {(isRoomAscending ? "?" : "?")}";
+            ApplyFilters();
+        }
+
+        private void OnSortByGuestName(object sender, EventArgs e)
+        {
+            isGuestNameAscending = !isGuestNameAscending;
+            allCheckedOutRecords = isGuestNameAscending
+                ? allCheckedOutRecords.OrderBy(r => r.GuestName).ToList()
+                : allCheckedOutRecords.OrderByDescending(r => r.GuestName).ToList();
+
+            GuestNameHeader.Text = $"Guest Name {(isGuestNameAscending ? "?" : "?")}";
+            ApplyFilters();
+        }
+
+        private void OnSortByCheckOutDate(object sender, EventArgs e)
+        {
+            isCheckOutDateAscending = !isCheckOutDateAscending;
+            allCheckedOutRecords = isCheckOutDateAscending
+                ? allCheckedOutRecords.OrderBy(r => r.CheckOutDate).ToList()
+                : allCheckedOutRecords.OrderByDescending(r => r.CheckOutDate).ToList();
+
+            CheckOutDateHeader.Text = $"Check Out Date {(isCheckOutDateAscending ? "?" : "?")}";
+            ApplyFilters();
         }
 
         private async void OnExportToExcelClicked(object sender, EventArgs e)

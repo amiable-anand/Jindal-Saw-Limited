@@ -25,7 +25,17 @@ namespace Jindal.Views
         private async Task LoadRoomsAsync()
         {
             await DatabaseService.Init();
+
+            var locations = await DatabaseService.GetLocations();
             allRooms = await DatabaseService.GetRooms();
+
+            // Set LocationName for each room
+            foreach (var room in allRooms)
+            {
+                var loc = locations.FirstOrDefault(l => l.Id == room.LocationId);
+                room.LocationName = loc?.Name ?? "Unknown";
+            }
+
             RoomCollection.ItemsSource = allRooms;
         }
 
@@ -71,7 +81,7 @@ namespace Jindal.Views
 
             var filtered = allRooms.Where(r =>
                 r.RoomNumber.ToString().Contains(query) ||
-                (r.Location?.ToLower().Contains(query) ?? false) ||
+                (r.LocationName?.ToLower().Contains(query) ?? false) ||
                 (r.Remark?.ToLower().Contains(query) ?? false)).ToList();
 
             RoomCollection.ItemsSource = filtered;

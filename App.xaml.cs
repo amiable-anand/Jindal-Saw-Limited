@@ -1,4 +1,5 @@
 ﻿using Microsoft.Maui.Controls;
+using Microsoft.Maui.Storage;
 
 namespace Jindal
 {
@@ -7,15 +8,13 @@ namespace Jindal
         public App()
         {
             InitializeComponent();
-                                                    MainPage = new NavigationPage(new Views.MainPage());
+
+            bool isLoggedIn = Preferences.Get("IsLoggedIn", false);
+
+            if (isLoggedIn)
+                MainPage = new AppShell(); // Home shell
+            else
+                MainPage = new NavigationPage(new Views.MainPage()); // Login page
         }
-
-        //protected override Window CreateWindow(IActivationState activationState)
-       // {
-            // ✅ Setting the initial page here
-          //  return new Window(new NavigationPage(new Views.MainPage()));
-      //  }
-
     }
 }
-
