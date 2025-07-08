@@ -3,7 +3,7 @@
              xmlns:models="clr-namespace:Jindal.Models"
              x:Class="Jindal.Views.LocationPage"
              Title="Location Master"
-             BackgroundColor="#0D0D0D">
+             BackgroundColor="#F8FAFC">
 
     <VerticalStackLayout Padding="20" Spacing="16">
 
@@ -19,15 +19,14 @@
             <Button Text="+ Add Location"
                     Grid.Column="0"
                     Clicked="OnAddLocationClicked"
-                    BackgroundColor="#1F2937"
-                    TextColor="#10B981"
+                    BackgroundColor="#059669"
+                    TextColor="White"
                     FontSize="13"
-                    CornerRadius="6"
+                    FontAttributes="Bold"
+                    CornerRadius="8"
                     Padding="10,4"
                     WidthRequest="130"
-                    HeightRequest="36"
-                    BorderColor="#10B981"
-                    BorderWidth="1" />
+                    HeightRequest="36" />
 
             <!-- ?? Search -->
             <SearchBar x:Name="SearchBar"
@@ -35,9 +34,9 @@
                        Placeholder="Search location..."
                        SearchButtonPressed="OnSearchClicked"
                        FontSize="13"
-                       BackgroundColor="#1C1C1C"
-                       PlaceholderColor="#B0BEC5"
-                       TextColor="White"
+                       BackgroundColor="#F3F4F6"
+                       PlaceholderColor="#64748B"
+                       TextColor="#374151"
                        Margin="8,0"
                        HeightRequest="40" />
 
@@ -45,43 +44,44 @@
             <Button Text="Reload"
                     Grid.Column="2"
                     Clicked="OnReloadClicked"
-                    BackgroundColor="#1F2937"
-                    TextColor="White"
+                    BackgroundColor="#E5E7EB"
+                    TextColor="#374151"
                     FontSize="13"
-                    CornerRadius="6"
+                    FontAttributes="Bold"
+                    CornerRadius="8"
                     Padding="10,4"
                     WidthRequest="80"
-                    HeightRequest="36"
-                    BorderColor="#D1D5DB"
-                    BorderWidth="0.8" />
+                    HeightRequest="36" />
         </Grid>
 
         <!-- ?? Table Headers -->
-        <Grid BackgroundColor="#1A1A1A" Padding="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
+        <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="16" Shadow="{Shadow Brush=Gray, Offset='2,2', Radius=4, Opacity=0.3}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
 
-            <Label Text="Name" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-            <Label Text="Code" Grid.Column="1" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-            <Label Text="Address" Grid.Column="2" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-            <Label Text="Remark" Grid.Column="3" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-            <Label Text="Action" Grid.Column="4" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-        </Grid>
+                <Label Text="Name" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+                <Label Text="Code" Grid.Column="1" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+                <Label Text="Address" Grid.Column="2" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+                <Label Text="Remark" Grid.Column="3" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+                <Label Text="Action" Grid.Column="4" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+            </Grid>
+        </Border>
 
         <!-- ?? Location List -->
         <CollectionView x:Name="LocationCollection" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:Location">
-                    <Frame BackgroundColor="#212121"
-                           CornerRadius="6"
-                           Padding="10"
+                    <Border BackgroundColor="White"
+                           StrokeShape="RoundRectangle 8"
+                           Padding="12"
                            Margin="0,5"
-                           HasShadow="False">
+                           Shadow="{Shadow Brush=Gray, Offset='1,1', Radius=3, Opacity=0.2}">
 
                         <Grid ColumnSpacing="8">
                             <Grid.ColumnDefinitions>
@@ -92,39 +92,37 @@
                                 <ColumnDefinition Width="2*" />
                             </Grid.ColumnDefinitions>
 
-                            <Label Text="{Binding Name}" TextColor="White" FontSize="13"/>
-                            <Label Text="{Binding LocationCode}" Grid.Column="1" TextColor="White" FontSize="13"/>
-                            <Label Text="{Binding Address}" Grid.Column="2" TextColor="White" FontSize="13"/>
-                            <Label Text="{Binding Remark}" Grid.Column="3" TextColor="White" FontSize="13"/>
+                            <Label Text="{Binding Name}" TextColor="#374151" FontSize="13"/>
+                            <Label Text="{Binding LocationCode}" Grid.Column="1" TextColor="#374151" FontSize="13"/>
+                            <Label Text="{Binding Address}" Grid.Column="2" TextColor="#374151" FontSize="13"/>
+                            <Label Text="{Binding Remark}" Grid.Column="3" TextColor="#374151" FontSize="13"/>
 
                             <!-- ?? Edit & ? Delete Actions -->
                             <HorizontalStackLayout Grid.Column="4" Spacing="4">
                                 <Button Text="Edit"
                                         Clicked="OnEditClicked"
-                                        BackgroundColor="#1F2937"
-                                        TextColor="#93C5FD"
+                                        BackgroundColor="#1E3A8A"
+                                        TextColor="White"
                                         FontSize="12"
-                                        CornerRadius="4"
+                                        FontAttributes="Bold"
+                                        CornerRadius="6"
                                         Padding="8,3"
                                         WidthRequest="60"
-                                        HeightRequest="30"
-                                        BorderColor="#3B82F6"
-                                        BorderWidth="0.8" />
+                                        HeightRequest="30" />
 
                                 <Button Text="Delete"
                                         Clicked="OnDeleteClicked"
-                                        BackgroundColor="#1F2937"
-                                        TextColor="#F87171"
+                                        BackgroundColor="#DC2626"
+                                        TextColor="White"
                                         FontSize="12"
-                                        CornerRadius="4"
+                                        FontAttributes="Bold"
+                                        CornerRadius="6"
                                         Padding="8,3"
                                         WidthRequest="60"
-                                        HeightRequest="30"
-                                        BorderColor="#EF4444"
-                                        BorderWidth="0.8" />
+                                        HeightRequest="30" />
                             </HorizontalStackLayout>
                         </Grid>
-                    </Frame>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

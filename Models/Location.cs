@@ -12,9 +12,9 @@ namespace Jindal.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        public string Name { get; set; }
-        public string LocationCode { get; set; }
-        public string Address { get; set; }
-        public string Remark { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string LocationCode { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
+        public string Remark { get; set; } = string.Empty;
     }
 }

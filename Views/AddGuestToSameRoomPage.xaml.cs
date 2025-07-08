@@ -2,6 +2,7 @@ using Jindal.Models;
 using Jindal.Services;
 using Microsoft.Maui.Controls;
 using System;
+using System.Diagnostics;
 
 namespace Jindal.Views
 {
@@ -12,13 +13,18 @@ namespace Jindal.Views
     public partial class AddGuestToSameRoomPage : ContentPage
     {
         // Properties for navigation and room identification
-        public string RoomNumber { get; set; }
+        public string RoomNumber { get; set; } = string.Empty;
         public int GuestId { get; set; } // Used if returning to EditGuestPage
-        public string SourcePage { get; set; }
+        public string SourcePage { get; set; } = string.Empty;
 
         public AddGuestToSameRoomPage()
         {
             InitializeComponent();
+            
+            // Set default date and time values
+            CheckInDatePicker.Date = DateTime.Today;
+            CheckInTimePicker.Time = DateTime.Now.TimeOfDay;
+            MailReceivedDatePicker.Date = DateTime.Today;
         }
 
         /// <summary>
@@ -29,8 +35,26 @@ namespace Jindal.Views
         {
             base.OnNavigatedTo(args);
 
-            if (!string.IsNullOrEmpty(RoomNumber))
-                RoomNumberLabel.Text = $"Room: {RoomNumber}";
+            try
+            {
+                if (!string.IsNullOrEmpty(RoomNumber))
+                {
+                    RoomNumberLabel.Text = $"Room: {RoomNumber}";
+                    Debug.WriteLine($"AddGuestToSameRoomPage: Room Number set to {RoomNumber}");
+                }
+                else
+                {
+                    RoomNumberLabel.Text = "Room: Not specified";
+                    Debug.WriteLine("AddGuestToSameRoomPage: Room Number is empty");
+                }
+
+                Debug.WriteLine($"AddGuestToSameRoomPage: SourcePage = {SourcePage}, GuestId = {GuestId}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"OnNavigatedTo error: {ex.Message}");
+                RoomNumberLabel.Text = "Room: Error loading";
+            }
         }
 
         /// <summary>
@@ -49,20 +73,27 @@ namespace Jindal.Views
 
             try
             {
+                // Additional validation for RoomNumber
+                if (string.IsNullOrWhiteSpace(RoomNumber))
+                {
+                    await DisplayAlert("Error", "Room number is missing. Please go back and select a room.", "OK");
+                    return;
+                }
+
                 var guest = new CheckInOut
                 {
                     RoomNumber = RoomNumber,
-                    GuestName = GuestNameEntry.Text?.Trim(),
-                    GuestIdNumber = GuestIdEntry.Text?.Trim(),
-                    IdType = IdTypePicker.SelectedItem?.ToString(),
-                    CompanyName = CompanyEntry.Text?.Trim(),
-                    Nationality = NationalityEntry.Text?.Trim(),
-                    Address = AddressEntry.Text?.Trim(),
-                    Mobile = MobileEntry.Text?.Trim(),
+                    GuestName = GuestNameEntry.Text?.Trim() ?? string.Empty,
+                    GuestIdNumber = GuestIdEntry.Text?.Trim() ?? string.Empty,
+                    IdType = IdTypePicker.SelectedItem?.ToString() ?? string.Empty,
+                    CompanyName = CompanyEntry.Text?.Trim() ?? string.Empty,
+                    Nationality = NationalityEntry.Text?.Trim() ?? string.Empty,
+                    Address = AddressEntry.Text?.Trim() ?? string.Empty,
+                    Mobile = MobileEntry.Text?.Trim() ?? string.Empty,
                     CheckInDate = CheckInDatePicker.Date,
                     CheckInTime = CheckInTimePicker.Time,
-                    Department = DepartmentEntry.Text?.Trim(),
-                    Purpose = PurposeEntry.Text?.Trim(),
+                    Department = DepartmentEntry.Text?.Trim() ?? string.Empty,
+                    Purpose = PurposeEntry.Text?.Trim() ?? string.Empty,
                     MailReceivedDate = MailReceivedDatePicker.Date
                 };
 
@@ -94,13 +125,22 @@ namespace Jindal.Views
         /// </summary>
         private async void NavigateBack()
         {
-            if (SourcePage == nameof(EditGuestPage))
+            try
             {
-                await Shell.Current.GoToAsync($"{nameof(EditGuestPage)}?guestId={GuestId}");
+                if (!string.IsNullOrEmpty(SourcePage) && SourcePage == nameof(EditGuestPage) && GuestId > 0)
+                {
+                    await Shell.Current.GoToAsync($"{nameof(EditGuestPage)}?guestId={GuestId}");
+                }
+                else
+                {
+                    await Shell.Current.GoToAsync(".."); // Go back in navigation stack
+                }
             }
-            else
+            catch (Exception ex)
             {
-                await Shell.Current.GoToAsync(".."); // Go back in navigation stack
+                System.Diagnostics.Debug.WriteLine($"Navigation back error: {ex.Message}");
+                // Fallback: try to pop the current page
+                await Navigation.PopAsync();
             }
         }
     }

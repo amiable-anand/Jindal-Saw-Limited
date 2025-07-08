@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Jindal.Views.DashboardPage"
+             Title="Dashboard"
+             BackgroundColor="#F8FAFC">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Welcome Section -->
+            <Frame BackgroundColor="#1E3A8A" 
+                   CornerRadius="16" 
+                   Padding="20" 
+                   HasShadow="True">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="🏨 Welcome to Jindal Guest Management" 
+                           FontSize="20" 
+                           FontAttributes="Bold" 
+                           TextColor="White" 
+                           HorizontalOptions="Center" />
+                    <Label x:Name="WelcomeUserLabel"
+                           Text="Admin Dashboard" 
+                           FontSize="16" 
+                           TextColor="#93C5FD" 
+                           HorizontalOptions="Center" />
+                    <Label x:Name="CurrentDateTimeLabel"
+                           FontSize="14" 
+                           TextColor="#E2E8F0" 
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Quick Stats Grid -->
+            <Grid ColumnSpacing="15" RowSpacing="15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Total Rooms Card -->
+                <Frame Grid.Row="0" Grid.Column="0" 
+                       BackgroundColor="White" 
+                       CornerRadius="12" 
+                       Padding="16" 
+                       HasShadow="True">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="🏠" FontSize="24" HorizontalOptions="Center" />
+                        <Label Text="Total Rooms" 
+                               FontSize="14" 
+                               TextColor="#64748B" 
+                               HorizontalOptions="Center" />
+                        <Label x:Name="TotalRoomsLabel" 
+                               Text="0" 
+                               FontSize="24" 
+                               FontAttributes="Bold" 
+                               TextColor="#1E3A8A" 
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Available Rooms Card -->
+                <Frame Grid.Row="0" Grid.Column="1" 
+                       BackgroundColor="White" 
+                       CornerRadius="12" 
+                       Padding="16" 
+                       HasShadow="True">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="✅" FontSize="24" HorizontalOptions="Center" />
+                        <Label Text="Available" 
+                               FontSize="14" 
+                               TextColor="#64748B" 
+                               HorizontalOptions="Center" />
+                        <Label x:Name="AvailableRoomsLabel" 
+                               Text="0" 
+                               FontSize="24" 
+                               FontAttributes="Bold" 
+                               TextColor="#059669" 
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Occupied Rooms Card -->
+                <Frame Grid.Row="1" Grid.Column="0" 
+                       BackgroundColor="White" 
+                       CornerRadius="12" 
+                       Padding="16" 
+                       HasShadow="True">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="🔒" FontSize="24" HorizontalOptions="Center" />
+                        <Label Text="Occupied" 
+                               FontSize="14" 
+                               TextColor="#64748B" 
+                               HorizontalOptions="Center" />
+                        <Label x:Name="OccupiedRoomsLabel" 
+                               Text="0" 
+                               FontSize="24" 
+                               FontAttributes="Bold" 
+                               TextColor="#DC2626" 
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Total Guests Card -->
+                <Frame Grid.Row="1" Grid.Column="1" 
+                       BackgroundColor="White" 
+                       CornerRadius="12" 
+                       Padding="16" 
+                       HasShadow="True">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="👥" FontSize="24" HorizontalOptions="Center" />
+                        <Label Text="Active Guests" 
+                               FontSize="14" 
+                               TextColor="#64748B" 
+                               HorizontalOptions="Center" />
+                        <Label x:Name="ActiveGuestsLabel" 
+                               Text="0" 
+                               FontSize="24" 
+                               FontAttributes="Bold" 
+                               TextColor="#7C3AED" 
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <!-- Quick Actions -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="12" 
+                   Padding="20" 
+                   HasShadow="True">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="⚡ Quick Actions" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="#1E3A8A" />
+                    
+                    <Grid ColumnSpacing="12" RowSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Button Grid.Row="0" Grid.Column="0"
+                                Text="🚪 New Check-in"
+                                BackgroundColor="#059669"
+                                TextColor="White"
+                                CornerRadius="8"
+                                FontAttributes="Bold"
+                                Clicked="OnNewCheckInClicked" />
+
+                        <Button Grid.Row="0" Grid.Column="1"
+                                Text="🏠 Add Room"
+                                BackgroundColor="#7C3AED"
+                                TextColor="White"
+                                CornerRadius="8"
+                                FontAttributes="Bold"
+                                Clicked="OnAddRoomClicked" />
+
+                        <Button Grid.Row="1" Grid.Column="0"
+                                Text="📋 View Reports"
+                                BackgroundColor="#DC2626"
+                                TextColor="White"
+                                CornerRadius="8"
+                                FontAttributes="Bold"
+                                Clicked="OnViewReportsClicked" />
+
+                        <Button Grid.Row="1" Grid.Column="1"
+                                Text="📍 Manage Locations"
+                                BackgroundColor="#EA580C"
+                                TextColor="White"
+                                CornerRadius="8"
+                                FontAttributes="Bold"
+                                Clicked="OnManageLocationsClicked" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Recent Activity -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="12" 
+                   Padding="20" 
+                   HasShadow="True">
+                <VerticalStackLayout Spacing="16">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="🕐 Recent Activity" 
+                               FontSize="18" 
+                               FontAttributes="Bold" 
+                               TextColor="#1E3A8A" 
+                               VerticalOptions="Center" />
+                        <Button Text="Refresh" 
+                                BackgroundColor="#E5E7EB" 
+                                TextColor="#374151" 
+                                FontSize="12" 
+                                Padding="8,4" 
+                                CornerRadius="6"
+                                Clicked="OnRefreshClicked" />
+                    </HorizontalStackLayout>
+                    
+                    <CollectionView x:Name="RecentActivityCollection" 
+                                    MaximumHeightRequest="200">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame BackgroundColor="#F8FAFC" 
+                                       Padding="12" 
+                                       Margin="0,4" 
+                                       CornerRadius="8"
+                                       HasShadow="False">
+                                    <HorizontalStackLayout Spacing="10">
+                                        <Label Text="{Binding Icon}" 
+                                               FontSize="16" 
+                                               VerticalOptions="Center" />
+                                        <VerticalStackLayout Spacing="2">
+                                            <Label Text="{Binding Message}" 
+                                                   FontSize="14" 
+                                                   TextColor="#374151" />
+                                            <Label Text="{Binding Time}" 
+                                                   FontSize="12" 
+                                                   TextColor="#64748B" />
+                                        </VerticalStackLayout>
+                                    </HorizontalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

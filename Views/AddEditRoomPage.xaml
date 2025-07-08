@@ -3,50 +3,79 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.AddEditRoomPage"
              Title="Add/Edit Room"
-             BackgroundColor="#0D0D0D"
-             Padding="20">
+             BackgroundColor="#F8FAFC">
 
-    <VerticalStackLayout Spacing="16">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
 
-        <!-- Room Number -->
-        <Label Text="Room Number"
-               TextColor="White"
-               FontSize="14" />
-        <Entry x:Name="RoomNumberEntry"
-               Placeholder="Enter Room Number"
-               Keyboard="Numeric"
-               BackgroundColor="#1E1E1E"
-               TextColor="White" />
+            <!-- Welcome Section -->
+            <Frame BackgroundColor="#1E3A8A" 
+                   CornerRadius="16" 
+                   Padding="20" 
+                   HasShadow="True">
+                <Label Text="🏠 Add or Edit Room"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       TextColor="White" />
+            </Frame>
 
-        <!-- Location Picker -->
-        <Label Text="Location"
-               TextColor="White"
-               FontSize="14" />
-        <Picker x:Name="LocationPicker"
-                Title="Select Location"
-                BackgroundColor="#1E1E1E"
-                TextColor="White"
-                ItemDisplayBinding="{Binding Name}" />
+            <Frame BackgroundColor="White"
+                   CornerRadius="12"
+                   HasShadow="True"
+                   Padding="20">
+                <VerticalStackLayout Spacing="16">
 
-        <!-- Remark -->
-        <Label Text="Remark"
-               TextColor="White"
-               FontSize="14" />
-        <Entry x:Name="RemarkEntry"
-               Placeholder="Enter Remark or Floor"
-               BackgroundColor="#1E1E1E"
-               TextColor="White" />
+                    <!-- Room Number -->
+                    <Label Text="Room Number"
+                           TextColor="#64748B"
+                           FontSize="14" />
+                    <Entry x:Name="RoomNumberEntry"
+                           Placeholder="Enter Room Number"
+                           Keyboard="Numeric"
+                           BackgroundColor="#F3F4F6"
+                           TextColor="#374151"
+                           PlaceholderColor="#9CA3AF"
+                           HeightRequest="48" />
 
-        <!-- Save Button -->
-        <Button Text="Save"
-                Clicked="OnSaveClicked"
-                BackgroundColor="#2563EB"
-                TextColor="White"
-                FontSize="14"
-                CornerRadius="6"
-                Padding="10"
-                HeightRequest="44" />
+                    <!-- Location Picker -->
+                    <Label Text="Location"
+                           TextColor="#64748B"
+                           FontSize="14" />
+                    <Picker x:Name="LocationPicker"
+                            Title="Select Location"
+                            BackgroundColor="#F3F4F6"
+                            TextColor="#374151"
+                            TitleColor="#64748B"
+                            ItemDisplayBinding="{Binding Name}" />
 
-    </VerticalStackLayout>
+                    <!-- Remark -->
+                    <Label Text="Remark"
+                           TextColor="#64748B"
+                           FontSize="14" />
+                    <Entry x:Name="RemarkEntry"
+                           Placeholder="Enter Remark or Floor"
+                           BackgroundColor="#F3F4F6"
+                           TextColor="#374151"
+                           PlaceholderColor="#9CA3AF"
+                           HeightRequest="48" />
+
+                    <!-- Save Button -->
+                    <Button Text="Save"
+                            Clicked="OnSaveClicked"
+                            BackgroundColor="#059669"
+                            TextColor="White"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            CornerRadius="12"
+                            Padding="16,10"
+                            HeightRequest="50"
+                            HorizontalOptions="Center"
+                            WidthRequest="200" />
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentPage>

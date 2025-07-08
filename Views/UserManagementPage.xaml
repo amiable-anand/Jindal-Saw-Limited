@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Jindal.Views.UserManagementPage"
+             Title="👥 User Management"
+             BackgroundColor="#F8FAFC">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="CardStyle" TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="White"/>
+                <Setter Property="CornerRadius" Value="12"/>
+                <Setter Property="HasShadow" Value="True"/>
+                <Setter Property="Padding" Value="16"/>
+                <Setter Property="Margin" Value="8"/>
+            </Style>
+            
+            <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#1E3A8A"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="Padding" Value="16,12"/>
+            </Style>
+            
+            <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#E5E7EB"/>
+                <Setter Property="TextColor" Value="#374151"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Padding" Value="12,8"/>
+            </Style>
+            
+            <Style x:Key="DangerButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#DC2626"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Padding" Value="12,8"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" 
+                BackgroundColor="White" 
+                StrokeShape="RoundRectangle 12" 
+                Padding="16" 
+                Margin="16,16,16,8">
+            <Border.Shadow>
+                <Shadow Brush="Black" Opacity="0.1" Radius="4" Offset="0,2" />
+            </Border.Shadow>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackLayout Grid.Column="0">
+                    <Label Text="👥 User Management" 
+                           FontSize="24" 
+                           FontAttributes="Bold" 
+                           TextColor="#1E3A8A"/>
+                    <Label Text="Manage users and their permissions" 
+                           FontSize="14" 
+                           TextColor="#6B7280"/>
+                </StackLayout>
+                
+                <Button Grid.Column="1"
+                        Text="➕ Add User"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Clicked="OnAddUserClicked"/>
+            </Grid>
+        </Border>
+
+        <!-- User List -->
+        <ScrollView Grid.Row="1">
+            <StackLayout x:Name="UsersContainer" Padding="16,0,16,16">
+                <!-- Users will be loaded here dynamically -->
+            </StackLayout>
+        </ScrollView>
+
+        <!-- Loading Indicator -->
+        <ActivityIndicator x:Name="LoadingIndicator"
+                          Grid.Row="1"
+                          IsVisible="False"
+                          IsRunning="False"
+                          Color="#1E3A8A"
+                          VerticalOptions="Center"
+                          HorizontalOptions="Center"/>
+    </Grid>
+
+</ContentPage>

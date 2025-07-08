@@ -3,98 +3,90 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.AddEditLocationPage"
              Title="Add/Edit Location"
-             BackgroundColor="#0D0D0D">
+             BackgroundColor="#F8FAFC">
 
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="18">
+        <VerticalStackLayout Padding="20" Spacing="20">
 
-            <!-- Page Heading -->
-            <Label Text="Add or Edit Location"
-                   FontSize="26"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   TextColor="#E0E0E0"
-                   Margin="0,10" />
-
-            <!-- Location Name -->
-            <Label Text="Location Name"
-                   FontSize="14"
-                   TextColor="#AAAAAA"/>
-            <Frame BackgroundColor="#222222"
-                   CornerRadius="8"
-                   Padding="0"
-                   HasShadow="False">
-                <Entry x:Name="NameEntry"
-                       Placeholder="Enter location name"
-                       BackgroundColor="Transparent"
-                       TextColor="#FFFFFF"
-                       PlaceholderColor="#888888"
-                       HeightRequest="48"
-                       FontSize="14"/>
+            <!-- Welcome Section -->
+            <Frame BackgroundColor="#1E3A8A" 
+                   CornerRadius="16" 
+                   Padding="20" 
+                   HasShadow="True">
+                <Label Text="📋 Add or Edit Location"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       TextColor="White" />
             </Frame>
 
-            <!-- Location Code -->
-            <Label Text="Location Code"
-                   FontSize="14"
-                   TextColor="#AAAAAA"/>
-            <Frame BackgroundColor="#222222"
-                   CornerRadius="8"
-                   Padding="0"
-                   HasShadow="False">
-                <Entry x:Name="CodeEntry"
-                       Placeholder="Enter location code"
-                       BackgroundColor="Transparent"
-                       TextColor="#FFFFFF"
-                       PlaceholderColor="#888888"
-                       HeightRequest="48"
-                       FontSize="14"/>
-            </Frame>
+            <Frame BackgroundColor="White"
+                   CornerRadius="12"
+                   HasShadow="True"
+                   Padding="20">
+                <VerticalStackLayout Spacing="16">
 
-            <!-- Address -->
-            <Label Text="Address"
-                   FontSize="14"
-                   TextColor="#AAAAAA"/>
-            <Frame BackgroundColor="#222222"
-                   CornerRadius="8"
-                   Padding="0"
-                   HasShadow="False">
-                <Entry x:Name="AddressEntry"
-                       Placeholder="Enter address"
-                       BackgroundColor="Transparent"
-                       TextColor="#FFFFFF"
-                       PlaceholderColor="#888888"
-                       HeightRequest="48"
-                       FontSize="14"/>
-            </Frame>
+                    <!-- Location Name -->
+                    <Label Text="Location Name"
+                           FontSize="14"
+                           TextColor="#64748B"/>
+                    <Entry x:Name="NameEntry"
+                           Placeholder="Enter location name"
+                           BackgroundColor="#F3F4F6"
+                           TextColor="#374151"
+                           PlaceholderColor="#9CA3AF"
+                           HeightRequest="48"
+                           FontSize="14"/>
 
-            <!-- Remark -->
-            <Label Text="Remark"
-                   FontSize="14"
-                   TextColor="#AAAAAA"/>
-            <Frame BackgroundColor="#222222"
-                   CornerRadius="8"
-                   Padding="0"
-                   HasShadow="False">
-                <Entry x:Name="RemarkEntry"
-                       Placeholder="Enter remark (optional)"
-                       BackgroundColor="Transparent"
-                       TextColor="#FFFFFF"
-                       PlaceholderColor="#888888"
-                       HeightRequest="48"
-                       FontSize="14"/>
-            </Frame>
+                    <!-- Location Code -->
+                    <Label Text="Location Code"
+                           FontSize="14"
+                           TextColor="#64748B"/>
+                    <Entry x:Name="CodeEntry"
+                           Placeholder="Enter location code"
+                           BackgroundColor="#F3F4F6"
+                           TextColor="#374151"
+                           PlaceholderColor="#9CA3AF"
+                           HeightRequest="48"
+                           FontSize="14"/>
 
-            <!-- Save Button -->
-            <Frame CornerRadius="10" HasShadow="False" Padding="0" HorizontalOptions="Center">
-                <Button Text="Save"
-                        Clicked="OnSaveClicked"
-                        BackgroundColor="#1F2937"
-                        TextColor="#10B981"
-                        FontAttributes="Bold"
-                        FontSize="16"
-                        Padding="16,10"
-                        HeightRequest="50"
-                        WidthRequest="200" />
+                    <!-- Address -->
+                    <Label Text="Address"
+                           FontSize="14"
+                           TextColor="#64748B"/>
+                    <Entry x:Name="AddressEntry"
+                           Placeholder="Enter address"
+                           BackgroundColor="#F3F4F6"
+                           TextColor="#374151"
+                           PlaceholderColor="#9CA3AF"
+                           HeightRequest="48"
+                           FontSize="14"/>
+
+                    <!-- Remark -->
+                    <Label Text="Remark"
+                           FontSize="14"
+                           TextColor="#64748B"/>
+                    <Entry x:Name="RemarkEntry"
+                           Placeholder="Enter remark (optional)"
+                           BackgroundColor="#F3F4F6"
+                           TextColor="#374151"
+                           PlaceholderColor="#9CA3AF"
+                           HeightRequest="48"
+                           FontSize="14"/>
+
+                    <!-- Save Button -->
+                    <Button Text="Save"
+                            Clicked="OnSaveClicked"
+                            BackgroundColor="#059669"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            CornerRadius="12"
+                            Padding="16,10"
+                            HeightRequest="50"
+                            HorizontalOptions="Center"
+                            WidthRequest="200" />
+                </VerticalStackLayout>
             </Frame>
 
         </VerticalStackLayout>

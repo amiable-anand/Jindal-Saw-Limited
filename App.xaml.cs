@@ -8,17 +8,26 @@ namespace Jindal
         public App()
         {
             InitializeComponent();
+        }
 
+        protected override Window CreateWindow(IActivationState? activationState)
+        {
             bool isLoggedIn = Preferences.Get("IsLoggedIn", false);
 
+            Page mainPage;
             if (isLoggedIn)
             {
-                MainPage = new AppShell(); // User already logged in
+                mainPage = new AppShell(); // User already logged in - will show dashboard by default
             }
             else
             {
-                MainPage = new NavigationPage(new Views.MainPage()); // Show login page
+                mainPage = new NavigationPage(new Views.MainPage()); // Show login page
             }
+
+            return new Window(mainPage)
+            {
+                Title = "Jindal Guest Management"
+            };
         }
     }
 }

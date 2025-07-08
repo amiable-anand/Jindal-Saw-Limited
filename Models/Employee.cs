@@ -8,9 +8,9 @@ namespace Jindal.Models
         public int Id { get; set; }
 
         [Unique, NotNull]
-        public string EmployeeCode { get; set; }
+        public string EmployeeCode { get; set; } = string.Empty;
 
         [NotNull]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
     }
 }

@@ -2,22 +2,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.AddCheckInOutPage"
              Title="Add Check In"
-             BackgroundColor="#0D0D0D">
+             BackgroundColor="#F8FAFC">
 
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="24">
+        <VerticalStackLayout Padding="20" Spacing="20">
 
-            <Label Text="Add Guest Check-In"
-                   FontSize="28"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   TextColor="#E0E0E0" />
+            <!-- Welcome Section -->
+            <Frame BackgroundColor="#1E3A8A" 
+                   CornerRadius="16" 
+                   Padding="20" 
+                   HasShadow="True">
+                <Label Text="🏨 Add Guest Check-In"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       TextColor="White" />
+            </Frame>
 
-            <Frame BackgroundColor="#1A1A1A"
-                   CornerRadius="20"
+            <Frame BackgroundColor="White"
+                   CornerRadius="12"
                    HasShadow="True"
-                   Padding="20"
-                   BorderColor="#2A2A2A">
+                   Padding="20">
 
                 <Grid RowSpacing="20" ColumnSpacing="14">
                     <Grid.RowDefinitions>
@@ -36,8 +41,8 @@
                     <Picker x:Name="RoomPicker"
                             Title="Select Room"
                             Grid.Row="0" Grid.Column="0"
-                            BackgroundColor="#222222"
-                            TextColor="White"
+                            BackgroundColor="#F3F4F6"
+                            TextColor="#374151"
                             FontSize="14"
                             HeightRequest="48"
                             HorizontalTextAlignment="Start" />
@@ -46,8 +51,8 @@
                     <Picker x:Name="IdTypePicker"
                             Title="Select ID Type"
                             Grid.Row="0" Grid.Column="1"
-                            BackgroundColor="#222222"
-                            TextColor="White"
+                            BackgroundColor="#F3F4F6"
+                            TextColor="#374151"
                             FontSize="14"
                             HeightRequest="48">
                         <Picker.ItemsSource>
@@ -62,43 +67,43 @@
 
                     <!-- Guest Info -->
                     <Entry x:Name="IdNumberEntry" Placeholder="ID Number" Grid.Row="1" Grid.Column="0"
-                           BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48"/>
+                           BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48"/>
 
                     <Entry x:Name="GuestNameEntry" Placeholder="Guest Name" Grid.Row="1" Grid.Column="1"
-                           BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48"/>
+                           BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48"/>
 
                     <Entry x:Name="CompanyEntry" Placeholder="Company Name" Grid.Row="2" Grid.Column="0"
-                           BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48"/>
+                           BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48"/>
 
                     <Entry x:Name="MobileEntry" Placeholder="Mobile" Grid.Row="2" Grid.Column="1"
-                           BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48"
+                           BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48"
                            Keyboard="Telephone" />
 
                     <Entry x:Name="NationalityEntry" Placeholder="Nationality" Grid.Row="3" Grid.Column="0"
-                           BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48"/>
+                           BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48"/>
 
                     <Entry x:Name="AddressEntry" Placeholder="Address" Grid.Row="3" Grid.Column="1"
-                           BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48"/>
+                           BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48"/>
 
                     <!-- Check-In Details -->
                     <VerticalStackLayout Grid.Row="4" Grid.ColumnSpan="2" Spacing="8">
 
-                        <Label Text="Check-In Date" TextColor="#AAAAAA" FontSize="13" />
-                        <DatePicker x:Name="CheckInDatePicker" TextColor="#CCCCCC" BackgroundColor="#222222" HeightRequest="48" />
+                        <Label Text="Check-In Date" TextColor="#64748B" FontSize="13" />
+                        <DatePicker x:Name="CheckInDatePicker" TextColor="#374151" BackgroundColor="#F3F4F6" HeightRequest="48" />
 
-                        <Label Text="Check-In Time" TextColor="#AAAAAA" FontSize="13" />
-                        <TimePicker x:Name="CheckInTimePicker" TextColor="#CCCCCC" BackgroundColor="#222222" HeightRequest="48" />
+                        <Label Text="Check-In Time" TextColor="#64748B" FontSize="13" />
+                        <TimePicker x:Name="CheckInTimePicker" TextColor="#374151" BackgroundColor="#F3F4F6" HeightRequest="48" />
 
-                        <Label Text="Mail Received Date" TextColor="#AAAAAA" FontSize="13" />
-                        <DatePicker x:Name="MailReceivedDatePicker" TextColor="#CCCCCC" BackgroundColor="#222222" HeightRequest="48" />
+                        <Label Text="Mail Received Date" TextColor="#64748B" FontSize="13" />
+                        <DatePicker x:Name="MailReceivedDatePicker" TextColor="#374151" BackgroundColor="#F3F4F6" HeightRequest="48" />
 
-                        <Label Text="Department" TextColor="#AAAAAA" FontSize="13" />
+                        <Label Text="Department" TextColor="#64748B" FontSize="13" />
                         <Entry x:Name="DepartmentEntry" Placeholder="Enter Department"
-                               BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48" />
+                               BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48" />
 
-                        <Label Text="Purpose" TextColor="#AAAAAA" FontSize="13" />
+                        <Label Text="Purpose" TextColor="#64748B" FontSize="13" />
                         <Entry x:Name="PurposeEntry" Placeholder="Enter Purpose"
-                               BackgroundColor="#222222" TextColor="#CCCCCC" FontSize="14" HeightRequest="48" />
+                               BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48" />
                     </VerticalStackLayout>
                 </Grid>
             </Frame>
@@ -106,10 +111,9 @@
             <HorizontalStackLayout Spacing="16" HorizontalOptions="Center">
                 <Button Text="+ Add Guest"
                         Clicked="OnAddGuestClicked"
-                        BackgroundColor="#1F2937"
-                        TextColor="#93C5FD"
-                        BorderColor="#3B82F6"
-                        BorderWidth="1"
+                        BackgroundColor="#1E3A8A"
+                        TextColor="White"
+                        FontAttributes="Bold"
                         CornerRadius="12"
                         Padding="16,8"
                         WidthRequest="130"
@@ -117,10 +121,9 @@
 
                 <Button Text="✓ Check In"
                         Clicked="OnCheckInClicked"
-                        BackgroundColor="#1F2937"
-                        TextColor="#10B981"
-                        BorderColor="#10B981"
-                        BorderWidth="1"
+                        BackgroundColor="#059669"
+                        TextColor="White"
+                        FontAttributes="Bold"
                         CornerRadius="12"
                         Padding="20,8"
                         WidthRequest="130"

@@ -24,7 +24,10 @@ namespace Jindal.Views
                 Preferences.Remove("UserName");
 
                 // ?? Navigate to MainPage and remove history
-                Application.Current.MainPage = new NavigationPage(new MainPage());
+                if (Application.Current?.Windows.Count > 0)
+                {
+                    Application.Current.Windows[0].Page = new NavigationPage(new MainPage());
+                }
             }
             else
             {

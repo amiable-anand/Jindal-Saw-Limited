@@ -3,7 +3,7 @@
              xmlns:models="clr-namespace:Jindal.Models"
              x:Class="Jindal.Views.RoomPage"
              Title="Rooms"
-             BackgroundColor="#0D0D0D">
+             BackgroundColor="#F8FAFC">
 
     <!-- Page Layout -->
     <ScrollView>
@@ -17,73 +17,83 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- ? Add Room Button -->
+                <!-- 🏠 Add Room Button -->
                 <Button Text="+ Add Room"
                         Grid.Column="0"
                         Clicked="OnAddRoomClicked"
-                        BackgroundColor="#1F2937"
-                        TextColor="#10B981"
+                        BackgroundColor="#059669"
+                        TextColor="White"
                         FontSize="13"
-                        CornerRadius="6"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
                         Padding="10,4"
                         WidthRequest="110"
-                        HeightRequest="36"
-                        BorderColor="#10B981"
-                        BorderWidth="1" />
+                        HeightRequest="36" />
 
-                <!-- ?? Search Bar -->
+                <!-- 🔍 Search Bar -->
                 <SearchBar x:Name="SearchBar"
                            Grid.Column="1"
                            Placeholder="Search rooms..."
                            SearchButtonPressed="OnSearchPressed"
                            FontSize="13"
-                           BackgroundColor="#1C1C1C"
-                           PlaceholderColor="#B0BEC5"
-                           TextColor="White"
+                           BackgroundColor="#F3F4F6"
+                           PlaceholderColor="#64748B"
+                           TextColor="#374151"
                            Margin="8,0"
                            HeightRequest="40" />
 
-                <!-- ?? Reload Button -->
+                <!-- 🔄 Reload Button -->
                 <Button Text="Reload"
                         Grid.Column="2"
                         Clicked="OnReloadClicked"
-                        BackgroundColor="#1F2937"
-                        TextColor="White"
+                        BackgroundColor="#E5E7EB"
+                        TextColor="#374151"
                         FontSize="13"
-                        CornerRadius="6"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
                         Padding="10,4"
                         WidthRequest="80"
-                        HeightRequest="36"
-                        BorderColor="#D1D5DB"
-                        BorderWidth="0.8" />
+                        HeightRequest="36" />
             </Grid>
 
-            <!-- ?? Table Headers -->
-            <Grid BackgroundColor="#1A1A1A" Padding="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                </Grid.ColumnDefinitions>
+            <!-- 📄 Table Headers -->
+            <Border BackgroundColor="White" Padding="16">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.2" Radius="3" Offset="0,2"/>
+                </Border.Shadow>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
 
-                <Label Text="Room No" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                <Label Text="Availability" Grid.Column="1" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                <Label Text="Location" Grid.Column="2" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                <Label Text="Remark" Grid.Column="3" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-                <Label Text="Action" Grid.Column="4" FontAttributes="Bold" TextColor="#93C5FD" FontSize="13"/>
-            </Grid>
+                    <Label Text="Room No" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+                    <Label Text="Availability" Grid.Column="1" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+                    <Label Text="Location" Grid.Column="2" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+                    <Label Text="Remark" Grid.Column="3" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+                    <Label Text="Action" Grid.Column="4" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+                </Grid>
+            </Border>
 
-            <!-- ?? Room List -->
+            <!-- 📄 Room List -->
             <CollectionView x:Name="RoomCollection" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Room">
-                        <Frame BackgroundColor="#212121"
-                               CornerRadius="6"
-                               Padding="10"
-                               Margin="0,5"
-                               HasShadow="False">
+                        <Border BackgroundColor="White"
+                                Padding="12"
+                                Margin="0,5">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Opacity="0.2" Radius="3" Offset="0,2"/>
+                            </Border.Shadow>
 
                             <Grid ColumnSpacing="8">
                                 <Grid.ColumnDefinitions>
@@ -95,39 +105,37 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!-- ?? Room Details -->
-                                <Label Text="{Binding RoomNumber}" TextColor="White" FontSize="13"/>
-                                <Label Text="{Binding Availability}" Grid.Column="1" TextColor="White" FontSize="13"/>
-                                <Label Text="{Binding LocationName}" Grid.Column="2" TextColor="White" FontSize="13"/>
-                                <Label Text="{Binding Remark}" Grid.Column="3" TextColor="White" FontSize="13"/>
+                                <Label Text="{Binding RoomNumber}" TextColor="#374151" FontSize="13"/>
+                                <Label Text="{Binding Availability}" Grid.Column="1" TextColor="#374151" FontSize="13"/>
+                                <Label Text="{Binding LocationName}" Grid.Column="2" TextColor="#374151" FontSize="13"/>
+                                <Label Text="{Binding Remark}" Grid.Column="3" TextColor="#374151" FontSize="13"/>
 
                                 <!-- ?? Edit & Delete Buttons -->
                                 <HorizontalStackLayout Grid.Column="4" Spacing="4">
                                     <Button Text="Edit"
                                             Clicked="OnEditClicked"
-                                            BackgroundColor="#1F2937"
-                                            TextColor="#93C5FD"
+                                            BackgroundColor="#1E3A8A"
+                                            TextColor="White"
                                             FontSize="12"
-                                            CornerRadius="4"
+                                            FontAttributes="Bold"
+                                            CornerRadius="6"
                                             Padding="8,3"
                                             WidthRequest="60"
-                                            HeightRequest="30"
-                                            BorderColor="#3B82F6"
-                                            BorderWidth="0.8" />
+                                            HeightRequest="30" />
 
                                     <Button Text="Delete"
                                             Clicked="OnDeleteClicked"
-                                            BackgroundColor="#1F2937"
-                                            TextColor="#F87171"
+                                            BackgroundColor="#DC2626"
+                                            TextColor="White"
                                             FontSize="12"
-                                            CornerRadius="4"
+                                            FontAttributes="Bold"
+                                            CornerRadius="6"
                                             Padding="8,3"
                                             WidthRequest="60"
-                                            HeightRequest="30"
-                                            BorderColor="#EF4444"
-                                            BorderWidth="0.8" />
+                                            HeightRequest="30" />
                                 </HorizontalStackLayout>
                             </Grid>
-                        </Frame>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

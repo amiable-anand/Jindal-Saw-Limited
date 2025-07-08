@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Jindal.Views.SettingsPage"
+             Title="⚙️ Settings"
+             BackgroundColor="#F8FAFC">
+
+    <ScrollView>
+        <StackLayout Padding="16" Spacing="16">
+            
+            <!-- App Information -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="16">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,2" Radius="4" Opacity="0.1"/>
+                </Border.Shadow>
+                <StackLayout Spacing="12">
+                    <Label Text="📱 Application Information" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="#1E3A8A"/>
+                    
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <Label Grid.Row="0" Grid.Column="0" Text="Version:" FontAttributes="Bold" TextColor="#374151"/>
+                        <Label Grid.Row="0" Grid.Column="1" Text="2.0.0" TextColor="#6B7280"/>
+                        
+                        <Label Grid.Row="1" Grid.Column="0" Text="Build:" FontAttributes="Bold" TextColor="#374151"/>
+                        <Label Grid.Row="1" Grid.Column="1" Text="3" TextColor="#6B7280"/>
+                        
+                        <Label Grid.Row="2" Grid.Column="0" Text="Platform:" FontAttributes="Bold" TextColor="#374151"/>
+                        <Label Grid.Row="2" Grid.Column="1" x:Name="PlatformLabel" TextColor="#6B7280"/>
+                        
+                        <Label Grid.Row="3" Grid.Column="0" Text="Database:" FontAttributes="Bold" TextColor="#374151"/>
+                        <Label Grid.Row="3" Grid.Column="1" Text="SQLite" TextColor="#6B7280"/>
+                    </Grid>
+                </StackLayout>
+            </Border>
+
+            <!-- Security Settings -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="16">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,2" Radius="4" Opacity="0.1"/>
+                </Border.Shadow>
+                <StackLayout Spacing="12">
+                    <Label Text="🔐 Security Settings" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="#1E3A8A"/>
+                    
+                    <Button Text="🔑 Change Admin Password"
+                            BackgroundColor="#1E3A8A"
+                            TextColor="White"
+                            CornerRadius="8"
+                            Clicked="OnChangePasswordClicked"/>
+                    
+                    <Button Text="🗄️ Backup Database"
+                            BackgroundColor="#059669"
+                            TextColor="White"
+                            CornerRadius="8"
+                            Clicked="OnBackupDatabaseClicked"/>
+                    
+                    <Button Text="📥 Restore Database"
+                            BackgroundColor="#DC2626"
+                            TextColor="White"
+                            CornerRadius="8"
+                            Clicked="OnRestoreDatabaseClicked"/>
+                </StackLayout>
+            </Border>
+
+            <!-- System Information -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="16">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,2" Radius="4" Opacity="0.1"/>
+                </Border.Shadow>
+                <StackLayout Spacing="12">
+                    <Label Text="🖥️ System Information" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="#1E3A8A"/>
+                    
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <Label Grid.Row="0" Grid.Column="0" Text="Device:" FontAttributes="Bold" TextColor="#374151"/>
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="DeviceLabel" TextColor="#6B7280"/>
+                        
+                        <Label Grid.Row="1" Grid.Column="0" Text="OS Version:" FontAttributes="Bold" TextColor="#374151"/>
+                        <Label Grid.Row="1" Grid.Column="1" x:Name="OSVersionLabel" TextColor="#6B7280"/>
+                        
+                        <Label Grid.Row="2" Grid.Column="0" Text="App Data:" FontAttributes="Bold" TextColor="#374151"/>
+                        <Label Grid.Row="2" Grid.Column="1" x:Name="AppDataLabel" TextColor="#6B7280"/>
+                        
+                        <Label Grid.Row="3" Grid.Column="0" Text="Total Users:" FontAttributes="Bold" TextColor="#374151"/>
+                        <Label Grid.Row="3" Grid.Column="1" x:Name="TotalUsersLabel" TextColor="#6B7280"/>
+                    </Grid>
+                </StackLayout>
+            </Border>
+
+            <!-- Danger Zone -->
+            <Border BackgroundColor="#FEF2F2" StrokeShape="RoundRectangle 12" Padding="16" Stroke="#F87171">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,2" Radius="4" Opacity="0.1"/>
+                </Border.Shadow>
+                <StackLayout Spacing="12">
+                    <Label Text="⚠️ Danger Zone" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="#DC2626"/>
+                    
+                    <Label Text="These actions are irreversible. Please be careful!" 
+                           FontSize="14" 
+                           TextColor="#7F1D1D"/>
+                    
+                    <Button Text="🗑️ Clear All Data"
+                            BackgroundColor="#DC2626"
+                            TextColor="White"
+                            CornerRadius="8"
+                            Clicked="OnClearAllDataClicked"/>
+                    
+                    <Button Text="🔄 Reset to Factory Settings"
+                            BackgroundColor="#7F1D1D"
+                            TextColor="White"
+                            CornerRadius="8"
+                            Clicked="OnFactoryResetClicked"/>
+                </StackLayout>
+            </Border>
+
+            <!-- Footer -->
+            <Label Text="© 2025 Jindal Corporation. All rights reserved." 
+                   FontSize="12" 
+                   TextColor="#9CA3AF" 
+                   HorizontalOptions="Center"
+                   Margin="0,20,0,0"/>
+                   
+        </StackLayout>
+    </ScrollView>
+
+</ContentPage>

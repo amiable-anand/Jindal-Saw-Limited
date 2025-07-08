@@ -1,7 +1,7 @@
 ﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.MainPage"
-             BackgroundColor="White"
+             BackgroundColor="#F8FAFC"
              Title="Login">
 
     <Grid>
@@ -27,30 +27,36 @@
                        Margin="0,20" />
 
                 <!-- 🔷 Login Card -->
-                <Frame BackgroundColor="#1A1A1A"
-                       CornerRadius="24"
-                       Padding="24"
-                       HasShadow="True"
-                       BorderColor="#3A3A3A"
-                       WidthRequest="320"
-                       VerticalOptions="Center">
+                <Border BackgroundColor="White"
+                        StrokeShape="RoundRectangle 16"
+                        Padding="24"
+                        WidthRequest="320"
+                        VerticalOptions="Center">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Opacity="0.15" Radius="8" Offset="0,4" />
+                    </Border.Shadow>
 
                     <VerticalStackLayout Spacing="18">
 
-                        <!-- Welcome Title -->
-                        <Label Text="Welcome to Guesthouse"
+                <!-- Welcome Title -->
+                        <Label Text="Welcome to Jindal"
                                FontSize="24"
                                FontAttributes="Bold"
                                HorizontalOptions="Center"
-                               TextColor="White" />
+                               TextColor="#1E3A8A" />
+                        <Label Text="Guest Management System"
+                               FontSize="16"
+                               HorizontalOptions="Center"
+                               TextColor="#64748B"
+                               Margin="0,0,0,10" />
 
                         <!-- 🧑 Username Entry -->
-                        <Entry x:Name="EmployeeCode"
-                               Placeholder="Employee Code"
-                               Keyboard="Numeric"
-                               TextColor="White"
-                               PlaceholderColor="#CCCCCC"
-                               BackgroundColor="#2C2C2C"
+                        <Entry x:Name="UsernameEntry"
+                               Placeholder="Username"
+                               Keyboard="Text"
+                               TextColor="#374151"
+                               PlaceholderColor="#9CA3AF"
+                               BackgroundColor="#F3F4F6"
                                HeightRequest="50"
                                Margin="0" />
 
@@ -58,43 +64,43 @@
                         <Entry x:Name="Password"
                                Placeholder="Password"
                                IsPassword="True"
-                               TextColor="White"
-                               PlaceholderColor="#CCCCCC"
-                               BackgroundColor="#2C2C2C"
+                               TextColor="#374151"
+                               PlaceholderColor="#9CA3AF"
+                               BackgroundColor="#F3F4F6"
                                HeightRequest="50"
                                Margin="0" />
 
                         <!-- 👁 Show Password Option -->
                         <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
                             <CheckBox x:Name="ShowPasswordCheckBox"
-                                      Color="#007AFF"
+                                      Color="#1E3A8A"
                                       CheckedChanged="OnShowPasswordCheckedChanged" />
                             <Label Text="Show Password"
-                                   TextColor="White"
+                                   TextColor="#64748B"
                                    FontSize="14"
                                    VerticalOptions="Center" />
                         </HorizontalStackLayout>
 
                         <!-- ❗ Error Message -->
                         <Label x:Name="ErrorMessage"
-                               TextColor="#FF5C5C"
+                               TextColor="#DC2626"
                                FontSize="13"
                                IsVisible="False"
                                HorizontalOptions="Center" />
 
                         <!-- 🔘 Login Button -->
-                        <Button Text="Login"
+                        <Button Text="🔐 Login"
                                 Clicked="OnLoginClicked"
-                                BackgroundColor="#007AFF"
+                                BackgroundColor="#1E3A8A"
                                 TextColor="White"
                                 FontAttributes="Bold"
                                 HeightRequest="50"
-                                CornerRadius="25"
+                                CornerRadius="12"
                                 HorizontalOptions="Center"
                                 WidthRequest="220" />
 
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

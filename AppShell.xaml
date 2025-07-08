@@ -4,40 +4,90 @@
        xmlns:views="clr-namespace:Jindal.Views"
        x:Class="Jindal.AppShell"
        FlyoutBehavior="Flyout"
-       Shell.FlyoutBackgroundColor="#121212"
+       Shell.FlyoutBackgroundColor="#1E3A8A"
        Shell.TitleColor="White"
-       BackgroundColor="#121212"
-       NavBarHasShadow="False">
+       BackgroundColor="#1E3A8A"
+       NavBarHasShadow="True">
 
     <Shell.FlyoutHeader>
-        <StackLayout Padding="20" BackgroundColor="#1E1E1E">
-            <Label Text="Guesthouse" TextColor="White" FontSize="20" FontAttributes="Bold" />
-        </StackLayout>
+        <Grid Padding="20" BackgroundColor="#1E3A8A">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <Label Grid.Row="0"
+                   Text="🏨 Jindal Guest Management" 
+                   TextColor="White" 
+                   FontSize="18" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" />
+            
+            <Label Grid.Row="1"
+                   x:Name="WelcomeLabel"
+                   Text="Welcome back!" 
+                   TextColor="#93C5FD" 
+                   FontSize="14" 
+                   HorizontalOptions="Center" 
+                   Margin="0,5,0,0" />
+            
+            <Label Grid.Row="2"
+                   x:Name="RoleLabel"
+                   Text="" 
+                   TextColor="#FEF3C7" 
+                   FontSize="12" 
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" 
+                   Margin="0,2,0,0" />
+            
+            <BoxView Grid.Row="3"
+                     Height="1"
+                     BackgroundColor="#3B82F6"
+                     Margin="0,15,0,0"/>
+        </Grid>
     </Shell.FlyoutHeader>
 
-    <!-- Hidden Login Page Route -->
-    <!--  <ShellContent Route="MainPage" ContentTemplate="{DataTemplate views:MainPage}" /> -->
-
     <!-- Main Navigation Items -->
-    <FlyoutItem Title="Location">
-        <ShellContent Title="Location" ContentTemplate="{DataTemplate views:LocationPage}" Route="LocationPage" />
+    <FlyoutItem Title="📊 Dashboard">
+        <ShellContent Title="Dashboard" ContentTemplate="{DataTemplate views:DashboardPage}" Route="DashboardPage" />
+    </FlyoutItem>
+    
+    <FlyoutItem Title="📍 Locations" x:Name="LocationsItem">
+        <ShellContent Title="Locations" ContentTemplate="{DataTemplate views:LocationPage}" Route="LocationPage" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Room">
-        <ShellContent Title="Room" ContentTemplate="{DataTemplate views:RoomPage}" Route="RoomPage" />
+    <FlyoutItem Title="🏠 Rooms" x:Name="RoomsItem">
+        <ShellContent Title="Rooms" ContentTemplate="{DataTemplate views:RoomPage}" Route="RoomPage" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Check In/Out">
+    <FlyoutItem Title="🚪 Check In/Out" x:Name="CheckInOutItem">
         <ShellContent Title="Check In/Out" ContentTemplate="{DataTemplate views:CheckInOutPage}" Route="CheckInOutPage" />
     </FlyoutItem>
 
-    <!-- ✅ NEW REPORT PAGE -->
-    <FlyoutItem Title="Report">
-        <ShellContent Title="Report" ContentTemplate="{DataTemplate views:ReportPage}" Route="ReportPage" />
+    <FlyoutItem Title="📋 Reports" x:Name="ReportsItem">
+        <ShellContent Title="Reports" ContentTemplate="{DataTemplate views:ReportPage}" Route="ReportPage" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Logout">
+    <!-- Admin Only Items -->
+    <FlyoutItem Title="👥 User Management" x:Name="UserManagementItem">
+        <ShellContent Title="User Management" ContentTemplate="{DataTemplate views:UserManagementPage}" Route="UserManagementPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="⚙️ Settings" x:Name="SettingsItem">
+        <ShellContent Title="Settings" ContentTemplate="{DataTemplate views:SettingsPage}" Route="SettingsPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="🚪 Logout">
         <ShellContent Title="Logout" ContentTemplate="{DataTemplate views:LogoutPage}" Route="LogoutPage" />
     </FlyoutItem>
+
+    <!-- Hidden Routes for Navigation -->
+    <Shell.Resources>
+        <DataTemplate x:Key="AddEditUserPageTemplate">
+            <views:AddEditUserPage/>
+        </DataTemplate>
+    </Shell.Resources>
 
 </Shell>

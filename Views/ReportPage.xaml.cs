@@ -39,10 +39,9 @@ namespace Jindal.Views
         private async Task LoadCheckedOutData()
         {
             await DatabaseService.Init();
-            var allRecords = await DatabaseService.GetCheckInOuts();
-
-            allCheckedOutRecords = allRecords
-                .Where(r => r.CheckOutDate != null && r.CheckOutTime != null)
+            
+            // Get only checked out guests
+            allCheckedOutRecords = (await DatabaseService.GetCheckedOutGuests())
                 .OrderByDescending(r => r.CheckOutDate)
                 .ToList();
 
@@ -92,16 +91,18 @@ namespace Jindal.Views
             {
                 ReportTable.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-                AddToGrid(new Label { Text = r.RoomNumber ?? "-", TextColor = Colors.White }, 0, row);
-                AddToGrid(new Label { Text = r.GuestName ?? "-", TextColor = Colors.White }, 1, row);
-                AddToGrid(new Label { Text = r.GuestIdNumber ?? "-", TextColor = Colors.White }, 2, row);
-                AddToGrid(new Label { Text = r.CheckInDate.ToString("dd-MM-yyyy"), TextColor = Colors.White }, 3, row);
-                AddToGrid(new Label { Text = r.CheckInTime.ToString(@"hh\:mm"), TextColor = Colors.White }, 4, row);
-                AddToGrid(new Label { Text = r.CheckOutDate?.ToString("dd-MM-yyyy") ?? "-", TextColor = Colors.White }, 5, row);
-                AddToGrid(new Label { Text = r.CheckOutTime?.ToString(@"hh\:mm") ?? "-", TextColor = Colors.White }, 6, row);
-                AddToGrid(new Label { Text = r.Department ?? "-", TextColor = Colors.White }, 7, row);
-                AddToGrid(new Label { Text = r.Purpose ?? "-", TextColor = Colors.White }, 8, row);
-                AddToGrid(new Label { Text = r.MailReceivedDate.ToString("dd-MM-yyyy"), TextColor = Colors.White }, 9, row);
+                var textColor = Color.FromArgb("#374151"); // Dark text for white background
+                
+                AddToGrid(new Label { Text = r.RoomNumber ?? "-", TextColor = textColor }, 0, row);
+                AddToGrid(new Label { Text = r.GuestName ?? "-", TextColor = textColor }, 1, row);
+                AddToGrid(new Label { Text = r.GuestIdNumber ?? "-", TextColor = textColor }, 2, row);
+                AddToGrid(new Label { Text = r.CheckInDate.ToString("dd-MM-yyyy"), TextColor = textColor }, 3, row);
+                AddToGrid(new Label { Text = r.CheckInTime.ToString(@"hh\:mm"), TextColor = textColor }, 4, row);
+                AddToGrid(new Label { Text = r.CheckOutDate?.ToString("dd-MM-yyyy") ?? "-", TextColor = textColor }, 5, row);
+                AddToGrid(new Label { Text = r.CheckOutTime?.ToString(@"hh\:mm") ?? "-", TextColor = textColor }, 6, row);
+                AddToGrid(new Label { Text = r.Department ?? "-", TextColor = textColor }, 7, row);
+                AddToGrid(new Label { Text = r.Purpose ?? "-", TextColor = textColor }, 8, row);
+                AddToGrid(new Label { Text = r.MailReceivedDate.ToString("dd-MM-yyyy"), TextColor = textColor }, 9, row);
 
                 row++;
             }

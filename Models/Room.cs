@@ -9,15 +9,15 @@ namespace Jindal.Models
 
         public int RoomNumber { get; set; }
 
-        public string Availability { get; set; }
+        public string Availability { get; set; } = "Available";
 
         public int LocationId { get; set; } // 🔄 Replaces old string Location
 
-        public string Remark { get; set; }
+        public string Remark { get; set; } = string.Empty;
 
         // For runtime display only
         [Ignore]
-        public string LocationName { get; set; } // fetched via join in code
+        public string LocationName { get; set; } = string.Empty; // fetched via join in code
 
         public bool IsAvailable
         {

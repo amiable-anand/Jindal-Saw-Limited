@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Jindal.Views.AddEditUserPage"
+             Title="👤 User Details"
+             BackgroundColor="#F8FAFC">
+
+    <ScrollView>
+        <StackLayout Padding="16" Spacing="16">
+            
+            <!-- Header -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="16">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.3" Radius="4" Offset="0,2" />
+                </Border.Shadow>
+                <StackLayout>
+                    <Label x:Name="HeaderLabel" 
+                           Text="Add New User" 
+                           FontSize="24" 
+                           FontAttributes="Bold" 
+                           TextColor="#1E3A8A"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Fill in the user details below" 
+                           FontSize="14" 
+                           TextColor="#6B7280"
+                           HorizontalOptions="Center"/>
+                </StackLayout>
+            </Border>
+
+            <!-- User Information -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="20">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.3" Radius="4" Offset="0,2" />
+                </Border.Shadow>
+                <StackLayout Spacing="20">
+                    <Label Text="👤 User Information" 
+                           FontSize="20" 
+                           FontAttributes="Bold" 
+                           TextColor="#1E3A8A"/>
+                    
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <!-- Full Name -->
+                        <StackLayout Grid.Row="0" Grid.ColumnSpan="2" Spacing="8" Margin="0,0,0,10">
+                            <Label Text="Full Name *" FontAttributes="Bold" TextColor="#374151" FontSize="14"/>
+                            <Entry x:Name="FullNameEntry" 
+                                   Placeholder="Enter full name"
+                                   BackgroundColor="#F9FAFB"
+                                   TextColor="#374151"
+                                   PlaceholderColor="#9CA3AF"
+                                   HeightRequest="50"
+                                   FontSize="16"/>
+                        </StackLayout>
+                        
+                        <!-- Username -->
+                        <StackLayout Grid.Row="1" Grid.Column="0" Spacing="8" Margin="0,0,5,10">
+                            <Label Text="Username *" FontAttributes="Bold" TextColor="#374151" FontSize="14"/>
+                            <Entry x:Name="UsernameEntry" 
+                                   Placeholder="username"
+                                   BackgroundColor="#F9FAFB"
+                                   TextColor="#374151"
+                                   PlaceholderColor="#9CA3AF"
+                                   HeightRequest="50"
+                                   FontSize="16"/>
+                        </StackLayout>
+                        
+                        <!-- Email -->
+                        <StackLayout Grid.Row="1" Grid.Column="1" Spacing="8" Margin="5,0,0,10">
+                            <Label Text="Email" FontAttributes="Bold" TextColor="#374151" FontSize="14"/>
+                            <Entry x:Name="EmailEntry" 
+                                   Placeholder="user@example.com"
+                                   Keyboard="Email"
+                                   BackgroundColor="#F9FAFB"
+                                   TextColor="#374151"
+                                   PlaceholderColor="#9CA3AF"
+                                   HeightRequest="50"
+                                   FontSize="16"/>
+                        </StackLayout>
+                        
+                        <!-- Password -->
+                        <StackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="8" x:Name="PasswordSection">
+                            <Label Text="Password *" FontAttributes="Bold" TextColor="#374151" FontSize="14"/>
+                            <Entry x:Name="PasswordEntry" 
+                                   Placeholder="Enter password (min 6 characters)"
+                                   IsPassword="True"
+                                   BackgroundColor="#F9FAFB"
+                                   TextColor="#374151"
+                                   PlaceholderColor="#9CA3AF"
+                                   HeightRequest="50"
+                                   FontSize="16"/>
+                            <Label Text="Password will be securely encrypted" 
+                                   FontSize="12" 
+                                   TextColor="#6B7280" 
+                                   Margin="0,0,0,10"/>
+                        </StackLayout>
+                    </Grid>
+                </StackLayout>
+            </Border>
+
+            <!-- Role & Permissions -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="20">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.3" Radius="4" Offset="0,2" />
+                </Border.Shadow>
+                <StackLayout Spacing="20">
+                    <Label Text="🔐 Role and Permissions"
+                           FontSize="20" 
+                           FontAttributes="Bold" 
+                           TextColor="#1E3A8A"/>
+                    
+                    <StackLayout Spacing="10">
+                        <Label Text="Role *" FontAttributes="Bold" TextColor="#374151" FontSize="14"/>
+                        <Picker x:Name="RolePicker" 
+                                BackgroundColor="#F9FAFB"
+                                TextColor="#374151"
+                                HeightRequest="50"
+                                FontSize="16"
+                                SelectedIndexChanged="OnRoleChanged"/>
+                        <Label Text="Admin users have access to all features automatically" 
+                               FontSize="12" 
+                               TextColor="#6B7280"/>
+                    </StackLayout>
+                    
+                    <StackLayout x:Name="PermissionsSection" Spacing="15">
+                        <Label Text="Permissions" FontAttributes="Bold" TextColor="#374151" FontSize="16"/>
+                        <Label Text="Select which features this user can access:" 
+                               FontSize="14" 
+                               TextColor="#6B7280"/>
+                        
+                        <Border BackgroundColor="#F8FAFC" 
+                               StrokeShape="RoundRectangle 8" 
+                               Padding="15" 
+                               Stroke="#E5E7EB">
+                            <StackLayout x:Name="PermissionsContainer" Spacing="12">
+                                <!-- Permissions checkboxes will be added dynamically -->
+                            </StackLayout>
+                        </Border>
+                        
+                        <Label Text="* Normal users need at least one permission" 
+                               FontSize="12" 
+                               TextColor="#DC2626" 
+                               FontAttributes="Italic"/>
+                    </StackLayout>
+                </StackLayout>
+            </Border>
+
+            <!-- Status -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="16">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.3" Radius="4" Offset="0,2" />
+                </Border.Shadow>
+                <StackLayout Spacing="12">
+                    <Label Text="📊 Status" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="#1E3A8A"/>
+                    
+                    <HorizontalStackLayout Spacing="12">
+                        <CheckBox x:Name="IsActiveCheckBox" 
+                                  Color="#1E3A8A" 
+                                  IsChecked="True"/>
+                        <Label Text="User is active" 
+                               TextColor="#374151" 
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    
+                    <Label Text="Inactive users cannot log in to the system" 
+                           FontSize="12" 
+                           TextColor="#6B7280"/>
+                </StackLayout>
+            </Border>
+
+            <!-- Action Buttons -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="20">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.3" Radius="4" Offset="0,2" />
+                </Border.Shadow>
+                <StackLayout Spacing="15">
+                    <Label Text="⚙️ Actions" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="#1E3A8A"/>
+                    
+                    <StackLayout Orientation="Horizontal" Spacing="15" HorizontalOptions="Center">
+                        <Button x:Name="SaveButton"
+                                Text="💾 Save User"
+                                BackgroundColor="#059669"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                FontSize="16"
+                                Padding="30,15"
+                                WidthRequest="150"
+                                HeightRequest="50"
+                                Clicked="OnSaveClicked"/>
+                        
+                        <Button Text="❌ Cancel"
+                                BackgroundColor="#6B7280"
+                                TextColor="White"
+                                FontSize="16"
+                                Padding="30,15"
+                                WidthRequest="150"
+                                HeightRequest="50"
+                                Clicked="OnCancelClicked"/>
+                    </StackLayout>
+                    
+                    <Label Text="Make sure all required fields (*) are filled correctly" 
+                           FontSize="12" 
+                           TextColor="#6B7280" 
+                           HorizontalOptions="Center"/>
+                </StackLayout>
+            </Border>
+
+            <!-- Error Message -->
+            <Label x:Name="ErrorLabel"
+                   IsVisible="False"
+                   TextColor="#DC2626"
+                   FontSize="14"
+                   HorizontalOptions="Center"/>
+
+        </StackLayout>
+    </ScrollView>
+
+</ContentPage>

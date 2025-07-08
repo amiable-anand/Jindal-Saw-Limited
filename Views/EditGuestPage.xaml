@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.EditGuestPage"
              Title="Edit Guest"
-             BackgroundColor="#0D0D0D">
+             BackgroundColor="#F8FAFC">
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="18">

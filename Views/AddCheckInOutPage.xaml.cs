@@ -2,6 +2,9 @@ using Jindal.Models;
 using Jindal.Services;
 using Microsoft.Maui.Controls;
 using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Jindal.Views
 {
@@ -10,42 +13,64 @@ namespace Jindal.Views
         public AddCheckInOutPage()
         {
             InitializeComponent();
+            
+            // Set default date and time values
+            CheckInDatePicker.Date = DateTime.Today;
+            CheckInTimePicker.Time = DateTime.Now.TimeOfDay;
+            MailReceivedDatePicker.Date = DateTime.Today;
+        }
 
-            // Load available rooms when the page is initialized
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            
+            // Load available rooms when the page appears
             try
             {
-                LoadAvailableRooms();
+                await LoadAvailableRoomsAsync();
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Constructor Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"OnAppearing Error: {ex.Message}");
+                await DisplayAlert("Error", "Failed to load room data.", "OK");
             }
         }
 
         /// <summary>
         /// Loads rooms that are completely available from the database.
         /// </summary>
-        private async void LoadAvailableRooms()
+        private async Task LoadAvailableRoomsAsync()
         {
             try
             {
                 await DatabaseService.Init();
                 var availableRooms = await DatabaseService.GetCompletelyAvailableRooms();
 
+                if (availableRooms == null || !availableRooms.Any())
+                {
+                    await DisplayAlert("No Rooms Available", 
+                        "No rooms are currently available. Please add rooms in the Rooms section first.", 
+                        "OK");
+                    RoomPicker.ItemsSource = new List<Room>();
+                    return;
+                }
+
                 RoomPicker.ItemsSource = availableRooms;
                 RoomPicker.ItemDisplayBinding = new Binding("RoomNumber");
 
 #if DEBUG
+                System.Diagnostics.Debug.WriteLine($"Loaded {availableRooms.Count} available rooms:");
                 foreach (var room in availableRooms)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Room: {room.RoomNumber}, Available: {room.Availability}");
+                    System.Diagnostics.Debug.WriteLine($"Room: {room.RoomNumber}, Available: {room.Availability}, Location: {room.LocationName}");
                 }
 #endif
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error loading rooms: {ex.Message}");
-                await DisplayAlert("Error", "Failed to load available rooms.", "OK");
+                await DisplayAlert("Error", $"Failed to load available rooms: {ex.Message}", "OK");
+                RoomPicker.ItemsSource = new List<Room>();
             }
         }
 
@@ -54,29 +79,52 @@ namespace Jindal.Views
         /// </summary>
         private async void OnCheckInClicked(object sender, EventArgs e)
         {
-            // Basic validation
-            if (RoomPicker.SelectedItem == null || string.IsNullOrWhiteSpace(GuestNameEntry.Text))
+            // Enhanced validation
+            if (RoomPicker.SelectedItem == null)
             {
-                await DisplayAlert("Missing Information", "Please select a room and enter guest name.", "OK");
+                await DisplayAlert("Missing Information", "Please select a room first.", "OK");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(GuestNameEntry.Text))
+            {
+                await DisplayAlert("Missing Information", "Please enter the guest name.", "OK");
+                return;
+            }
+
+            if (IdTypePicker.SelectedItem == null)
+            {
+                await DisplayAlert("Missing Information", "Please select an ID type.", "OK");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(IdNumberEntry.Text))
+            {
+                await DisplayAlert("Missing Information", "Please enter the ID number.", "OK");
                 return;
             }
 
             try
             {
                 var selectedRoom = RoomPicker.SelectedItem as Room;
+                if (selectedRoom == null)
+                {
+                    await DisplayAlert("Error", "Invalid room selection.", "OK");
+                    return;
+                }
 
                 var newEntry = new CheckInOut
                 {
-                    RoomNumber = selectedRoom?.RoomNumber.ToString(),
-                    IdType = IdTypePicker.SelectedItem?.ToString(),
-                    GuestName = GuestNameEntry.Text?.Trim(),
-                    GuestIdNumber = IdNumberEntry.Text?.Trim(),
-                    CompanyName = CompanyEntry.Text?.Trim(),
-                    Mobile = MobileEntry.Text?.Trim(),
-                    Address = AddressEntry.Text?.Trim(),
-                    Nationality = NationalityEntry.Text?.Trim(),
-                    Department = DepartmentEntry.Text?.Trim(),
-                    Purpose = PurposeEntry.Text?.Trim(),
+                    RoomNumber = selectedRoom.RoomNumber.ToString(),
+                    IdType = IdTypePicker.SelectedItem.ToString() ?? string.Empty,
+                    GuestName = GuestNameEntry.Text?.Trim() ?? string.Empty,
+                    GuestIdNumber = IdNumberEntry.Text?.Trim() ?? string.Empty,
+                    CompanyName = CompanyEntry.Text?.Trim() ?? string.Empty,
+                    Mobile = MobileEntry.Text?.Trim() ?? string.Empty,
+                    Address = AddressEntry.Text?.Trim() ?? string.Empty,
+                    Nationality = NationalityEntry.Text?.Trim() ?? string.Empty,
+                    Department = DepartmentEntry.Text?.Trim() ?? string.Empty,
+                    Purpose = PurposeEntry.Text?.Trim() ?? string.Empty,
                     CheckInDate = CheckInDatePicker.Date,
                     CheckInTime = CheckInTimePicker.Time,
                     MailReceivedDate = MailReceivedDatePicker.Date
