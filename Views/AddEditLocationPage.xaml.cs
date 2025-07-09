@@ -8,10 +8,10 @@ namespace Jindal.Views
     public partial class AddEditLocationPage : ContentPage
     {
         // Holds the current location for edit scenario
-        private readonly LocationModel currentLocation;
+        private readonly LocationModel? currentLocation;
 
         // Constructor: Accepts an optional existing location for editing
-        public AddEditLocationPage(LocationModel location = null)
+        public AddEditLocationPage(LocationModel? location = null)
         {
             InitializeComponent();
             currentLocation = location;
@@ -31,43 +31,54 @@ namespace Jindal.Views
         {
             try
             {
-                string name = NameEntry.Text?.Trim();
-                string code = CodeEntry.Text?.Trim();
-                string address = AddressEntry.Text?.Trim();
-                string remark = RemarkEntry.Text?.Trim();
+                string name = NameEntry.Text?.Trim() ?? string.Empty;
+                string code = CodeEntry.Text?.Trim() ?? string.Empty;
+                string address = AddressEntry.Text?.Trim() ?? string.Empty;
+                string remark = RemarkEntry.Text?.Trim() ?? string.Empty;
 
-                // Validate required fields
-                if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(code))
+                var locationToValidate = currentLocation ?? new LocationModel();
+                locationToValidate.Name = name;
+                locationToValidate.LocationCode = code;
+                locationToValidate.Address = address;
+                locationToValidate.Remark = remark;
+
+                // Validate location data
+                var validationResult = ValidationHelper.ValidateLocationData(locationToValidate);
+                if (!validationResult.IsValid)
                 {
-                    await DisplayAlert("Missing Fields", "Location Name and Code are required.", "OK");
+                    await DisplayAlert("Validation Error", validationResult.GetErrorMessage(), "OK");
                     return;
                 }
 
-                if (currentLocation == null)
+                // Execute with retry logic
+                await ErrorHandlingService.ExecuteWithRetry(async () =>
                 {
-                    // Adding a new location
-                    var newLocation = new LocationModel
+                    if (currentLocation == null)
                     {
-                        Name = name,
-                        LocationCode = code,
-                        Address = address,
-                        Remark = remark
-                    };
+                        // Adding a new location
+                        var newLocation = new LocationModel
+                        {
+                            Name = name,
+                            LocationCode = code,
+                            Address = address,
+                            Remark = remark
+                        };
 
-                    await DatabaseService.AddLocation(newLocation);
-                    System.Diagnostics.Debug.WriteLine("New location added.");
-                }
-                else
-                {
-                    // Updating existing location
-                    currentLocation.Name = name;
-                    currentLocation.LocationCode = code;
-                    currentLocation.Address = address;
-                    currentLocation.Remark = remark;
+                        await DatabaseService.AddLocation(newLocation);
+                        ErrorHandlingService.LogInfo($"New location added: {newLocation.Name}", "LocationManagement");
+                    }
+                    else
+                    {
+                        // Updating existing location
+                        currentLocation.Name = name;
+                        currentLocation.LocationCode = code;
+                        currentLocation.Address = address;
+                        currentLocation.Remark = remark;
 
-                    await DatabaseService.UpdateLocation(currentLocation);
-                    System.Diagnostics.Debug.WriteLine($"Location updated: ID={currentLocation.Id}");
-                }
+                        await DatabaseService.UpdateLocation(currentLocation);
+                        ErrorHandlingService.LogInfo($"Location updated: {currentLocation.Name} (ID={currentLocation.Id})", "LocationManagement");
+                    }
+                }, 3, "Location Save");
 
                 await DisplayAlert("Success", "Location saved successfully.", "OK");
 
@@ -76,8 +87,9 @@ namespace Jindal.Views
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error saving location: {ex.Message}");
-                await DisplayAlert("Error", "Something went wrong while saving the location.", "OK");
+                ErrorHandlingService.LogError("Error saving location", ex, "AddEditLocationPage");
+                var userMessage = ErrorHandlingService.GetUserFriendlyErrorMessage(ex);
+                await DisplayAlert("Error", userMessage, "OK");
             }
         }
     }

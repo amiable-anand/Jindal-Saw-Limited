@@ -10,8 +10,8 @@ namespace Jindal.Views
     [QueryProperty(nameof(GuestId), "guestId")]
     public partial class CheckOutPage : ContentPage
     {
-        private CheckInOut guest;
-        private string guestId;
+        private CheckInOut? guest;
+        private string guestId = string.Empty;
 
         // Bound from query via Shell navigation
         public string GuestId

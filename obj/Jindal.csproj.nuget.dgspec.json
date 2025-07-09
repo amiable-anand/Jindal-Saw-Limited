@@ -332,9 +332,6 @@
         "ios-arm64": {
           "#import": []
         },
-        "ios-x64": {
-          "#import": []
-        },
         "maccatalyst-arm64": {
           "#import": []
         },

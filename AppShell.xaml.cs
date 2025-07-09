@@ -1,6 +1,7 @@
 using Jindal.Views;
 using Jindal.Services;
 using Jindal.Models;
+using Microsoft.Maui.Storage;
 
 namespace Jindal;
 
@@ -22,7 +23,7 @@ public partial class AppShell : Shell
 
     private void SetupUserInterface()
     {
-        var currentUser = UserService.GetCurrentUser();
+        var currentUser = GetCurrentUser();
         if (currentUser != null)
         {
             // Update welcome message
@@ -83,5 +84,33 @@ public partial class AppShell : Shell
     public void RefreshUserInterface()
     {
         SetupUserInterface();
+    }
+
+    // Helper method to get current user from preferences
+    private static User? GetCurrentUser()
+    {
+        if (!Preferences.Get("IsLoggedIn", false))
+            return null;
+
+        return new User
+        {
+            Id = Preferences.Get("CurrentUserId", 0),
+            Role = (UserRole)Preferences.Get("CurrentUserRole", (int)UserRole.Normal),
+            Permissions = Preferences.Get("CurrentUserPermissions", 0),
+            FullName = Preferences.Get("CurrentUserFullName", "Unknown User"),
+            Username = Preferences.Get("CurrentUserUsername", "Unknown")
+        };
+    }
+
+    public static bool HasCurrentUserPermission(Permission permission)
+    {
+        var currentUser = GetCurrentUser();
+        return currentUser?.HasPermission(permission) ?? false;
+    }
+
+    public static bool IsCurrentUserAdmin()
+    {
+        var currentUser = GetCurrentUser();
+        return currentUser?.Role == UserRole.Admin;
     }
 }

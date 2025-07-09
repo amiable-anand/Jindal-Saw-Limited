@@ -29,14 +29,16 @@ namespace Jindal.Services
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, "Jindal.db");
             _database = new SQLiteAsyncConnection(dbPath);
 
-            await _database.CreateTableAsync<Employee>();
-            await _database.CreateTableAsync<Room>();
-            await _database.CreateTableAsync<CheckInOut>();
-            await _database.CreateTableAsync<LocationModel>();
+        await _database.CreateTableAsync<Employee>();
+        await _database.CreateTableAsync<Room>();
+        await _database.CreateTableAsync<CheckInOut>();
+        await _database.CreateTableAsync<LocationModel>();
+        await _database.CreateTableAsync<User>();
 
-            await EnsureDefaultAdminAsync();
-            await EnsureDefaultLocationsAsync();
-            await EnsureDemoRoomsAsync();
+        await EnsureDefaultAdminAsync();
+        await EnsureDefaultUserAsync();
+        await EnsureDefaultLocationsAsync();
+        await EnsureDemoRoomsAsync();
         }
 
         private static async Task EnsureDefaultAdminAsync()
@@ -94,6 +96,29 @@ namespace Jindal.Services
             }
         }
 
+        private static async Task EnsureDefaultUserAsync()
+        {
+            var existingUser = await _database!.Table<User>()
+                .Where(u => u.Role == UserRole.Admin)
+                .FirstOrDefaultAsync();
+
+            if (existingUser == null)
+            {
+                var adminUser = new User
+                {
+                    Username = "admin",
+                    Password = BCrypt.Net.BCrypt.HashPassword("admin123"),
+                    Role = UserRole.Admin,
+                    FullName = "System Administrator",
+                    Email = "admin@jindal.com",
+                    Permissions = (int)Permission.All,
+                    IsActive = true
+                };
+
+                await _database.InsertAsync(adminUser);
+            }
+        }
+
         // Employee
         public static async Task<Employee?> GetEmployee(string username, string password)
         {
@@ -130,28 +155,8 @@ namespace Jindal.Services
 
         public static async Task<List<Room>> GetAvailableRooms()
         {
-            await Init();
-
-            var occupiedRoomNumbers = (await _database!.Table<CheckInOut>()
-                .Where(c => c.CheckOutDate == null && c.CheckOutTime == null)
-                .ToListAsync())
-                .Where(c => !string.IsNullOrWhiteSpace(c.RoomNumber))
-                .Select(c => c.RoomNumber.Trim())
-                .ToHashSet();
-
-            var allRooms = await _database.Table<Room>().ToListAsync();
-
-            var available = allRooms
-                .Where(r => !occupiedRoomNumbers.Contains(r.RoomNumber.ToString()))
-                .ToList();
-
-            var locations = await GetLocations();
-            foreach (var room in available)
-            {
-                room.LocationName = locations.FirstOrDefault(l => l.Id == room.LocationId)?.Name ?? "";
-            }
-
-            return available;
+            // Redirect to the new method with business logic
+            return await GetAvailableRoomsWithLogic();
         }
 
         public static async Task<List<Room>> GetCompletelyAvailableRooms() => await GetAvailableRooms();
@@ -238,6 +243,312 @@ namespace Jindal.Services
             }
         }
         
+        // User Management Methods
+        public static async Task<User?> AuthenticateUser(string username, string password)
+        {
+            try
+            {
+                await Init();
+                
+                var user = await _database!.Table<User>()
+                    .Where(u => u.Username == username && u.IsActive)
+                    .FirstOrDefaultAsync();
+
+                if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
+                {
+                    user.LastLoginAt = DateTime.Now;
+                    await _database.UpdateAsync(user);
+                    return user;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Authentication error: {ex.Message}");
+            }
+            
+            return null;
+        }
+
+        public static async Task<List<User>> GetAllUsers()
+        {
+            await Init();
+            return await _database!.Table<User>().ToListAsync();
+        }
+
+        public static async Task<User?> GetUserById(int id)
+        {
+            await Init();
+            return await _database!.Table<User>()
+                .Where(u => u.Id == id)
+                .FirstOrDefaultAsync();
+        }
+
+        public static async Task<bool> CreateUser(User user)
+        {
+            try
+            {
+                await Init();
+                
+                // Hash password before saving
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                await _database!.InsertAsync(user);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Create user error: {ex.Message}");
+                return false;
+            }
+        }
+
+        public static async Task<bool> UpdateUser(User user)
+        {
+            try
+            {
+                await Init();
+                await _database!.UpdateAsync(user);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Update user error: {ex.Message}");
+                return false;
+            }
+        }
+
+        public static async Task<bool> DeleteUser(int userId)
+        {
+            try
+            {
+                await Init();
+                var user = await GetUserById(userId);
+                if (user != null)
+                {
+                    await _database!.DeleteAsync(user);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Delete user error: {ex.Message}");
+                return false;
+            }
+        }
+
+        public static async Task<bool> ChangePassword(int userId, string oldPassword, string newPassword)
+        {
+            try
+            {
+                await Init();
+                var user = await GetUserById(userId);
+                if (user != null && BCrypt.Net.BCrypt.Verify(oldPassword, user.Password))
+                {
+                    user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+                    await _database!.UpdateAsync(user);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Change password error: {ex.Message}");
+                return false;
+            }
+        }
+
+        // Room Availability Management Methods
+        public static async Task<List<Room>> GetAvailableRoomsWithLogic()
+        {
+            try
+            {
+                await Init();
+                
+                // Get all rooms
+                var allRooms = await GetRooms();
+                
+                // Get active guests (not checked out)
+                var activeGuests = await GetActiveGuests();
+                
+                // Get occupied room numbers
+                var occupiedRoomNumbers = activeGuests
+                    .Where(g => !string.IsNullOrWhiteSpace(g.RoomNumber))
+                    .Select(g => g.RoomNumber.Trim())
+                    .ToHashSet();
+                
+                // Filter available rooms
+                var availableRooms = allRooms
+                    .Where(r => !occupiedRoomNumbers.Contains(r.RoomNumber.ToString()))
+                    .ToList();
+                
+                // Update room availability status in database
+                await UpdateRoomAvailabilityStatus(allRooms, occupiedRoomNumbers);
+                
+                return availableRooms;
+            }
+            catch (Exception ex)
+            {
+                ErrorHandlingService.LogError("Failed to get available rooms", ex, "DatabaseService");
+                throw;
+            }
+        }
+
+        public static async Task<List<(Room Room, List<CheckInOut> Guests)>> GetOccupiedRoomsWithGuests()
+        {
+            try
+            {
+                await Init();
+                
+                // Get all rooms
+                var allRooms = await GetRooms();
+                
+                // Get active guests (not checked out)
+                var activeGuests = await GetActiveGuests();
+                
+                // Group guests by room
+                var guestsByRoom = activeGuests
+                    .Where(g => !string.IsNullOrWhiteSpace(g.RoomNumber))
+                    .GroupBy(g => g.RoomNumber.Trim())
+                    .ToDictionary(g => g.Key, g => g.ToList());
+                
+                // Get occupied rooms with guests
+                var occupiedRooms = new List<(Room Room, List<CheckInOut> Guests)>();
+                
+                foreach (var room in allRooms)
+                {
+                    if (guestsByRoom.TryGetValue(room.RoomNumber.ToString(), out var guests))
+                    {
+                        occupiedRooms.Add((room, guests));
+                    }
+                }
+                
+                return occupiedRooms;
+            }
+            catch (Exception ex)
+            {
+                ErrorHandlingService.LogError("Failed to get occupied rooms with guests", ex, "DatabaseService");
+                throw;
+            }
+        }
+
+        public static async Task<bool> IsRoomAvailableByNumber(int roomNumber)
+        {
+            try
+            {
+                await Init();
+                
+                // Check if there are any active guests in this room
+                var activeGuests = await GetActiveGuests();
+                var hasActiveGuests = activeGuests.Any(g => 
+                    !string.IsNullOrWhiteSpace(g.RoomNumber) && 
+                    g.RoomNumber.Trim() == roomNumber.ToString());
+                
+                return !hasActiveGuests;
+            }
+            catch (Exception ex)
+            {
+                ErrorHandlingService.LogError($"Failed to check room availability for room {roomNumber}", ex, "DatabaseService");
+                throw;
+            }
+        }
+
+        public static async Task<RoomUtilizationStats> GetRoomUtilizationStats()
+        {
+            try
+            {
+                await Init();
+                
+                var allRooms = await GetRooms();
+                var activeGuests = await GetActiveGuests();
+                
+                var occupiedRoomNumbers = activeGuests
+                    .Where(g => !string.IsNullOrWhiteSpace(g.RoomNumber))
+                    .Select(g => g.RoomNumber.Trim())
+                    .ToHashSet();
+                
+                var totalRooms = allRooms.Count;
+                var occupiedRooms = allRooms.Count(r => occupiedRoomNumbers.Contains(r.RoomNumber.ToString()));
+                var availableRooms = totalRooms - occupiedRooms;
+                var totalActiveGuests = activeGuests.Count;
+                
+                return new RoomUtilizationStats
+                {
+                    TotalRooms = totalRooms,
+                    AvailableRooms = availableRooms,
+                    OccupiedRooms = occupiedRooms,
+                    TotalActiveGuests = totalActiveGuests,
+                    UtilizationPercentage = totalRooms > 0 ? (double)occupiedRooms / totalRooms * 100 : 0
+                };
+            }
+            catch (Exception ex)
+            {
+                ErrorHandlingService.LogError("Failed to get room utilization stats", ex, "DatabaseService");
+                throw;
+            }
+        }
+
+        public static async Task UpdateRoomAvailabilityStatus(List<Room>? allRooms = null, HashSet<string>? occupiedRoomNumbers = null)
+        {
+            try
+            {
+                await Init();
+                
+                // Get data if not provided
+                if (allRooms == null)
+                    allRooms = await GetRooms();
+                
+                if (occupiedRoomNumbers == null)
+                {
+                    var activeGuests = await GetActiveGuests();
+                    occupiedRoomNumbers = activeGuests
+                        .Where(g => !string.IsNullOrWhiteSpace(g.RoomNumber))
+                        .Select(g => g.RoomNumber.Trim())
+                        .ToHashSet();
+                }
+                
+                // Update room availability status
+                var roomsToUpdate = new List<Room>();
+                
+                foreach (var room in allRooms)
+                {
+                    var roomNumberStr = room.RoomNumber.ToString();
+                    var shouldBeOccupied = occupiedRoomNumbers.Contains(roomNumberStr);
+                    var currentlyAvailable = room.Availability == "Available";
+                    
+                    // Update if status doesn't match reality
+                    if (shouldBeOccupied && currentlyAvailable)
+                    {
+                        room.Availability = "Booked";
+                        roomsToUpdate.Add(room);
+                    }
+                    else if (!shouldBeOccupied && !currentlyAvailable)
+                    {
+                        room.Availability = "Available";
+                        roomsToUpdate.Add(room);
+                    }
+                }
+                
+                // Update changed rooms in database
+                if (roomsToUpdate.Any())
+                {
+                    await ErrorHandlingService.ExecuteWithRetry(async () =>
+                    {
+                        foreach (var room in roomsToUpdate)
+                        {
+                            await UpdateRoom(room);
+                        }
+                    }, 3, "Room Status Update");
+                    
+                    ErrorHandlingService.LogInfo($"Updated availability status for {roomsToUpdate.Count} rooms", "DatabaseService");
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorHandlingService.LogError("Failed to update room availability status", ex, "DatabaseService");
+                throw;
+            }
+        }
+
         // Get database statistics for debugging
         public static async Task<string> GetDatabaseStats()
         {
@@ -248,13 +559,26 @@ namespace Jindal.Services
                 var roomCount = await _database!.Table<Room>().CountAsync();
                 var locationCount = await _database!.Table<LocationModel>().CountAsync();
                 var guestCount = await _database!.Table<CheckInOut>().CountAsync();
+                var userCount = await _database!.Table<User>().CountAsync();
                 
-                return $"Employees: {employeeCount}, Rooms: {roomCount}, Locations: {locationCount}, Guests: {guestCount}";
+                return $"Employees: {employeeCount}, Rooms: {roomCount}, Locations: {locationCount}, Guests: {guestCount}, Users: {userCount}";
             }
             catch (Exception ex)
             {
                 return $"Error: {ex.Message}";
             }
         }
+    }
+
+    /// <summary>
+    /// Represents room utilization statistics
+    /// </summary>
+    public class RoomUtilizationStats
+    {
+        public int TotalRooms { get; set; }
+        public int AvailableRooms { get; set; }
+        public int OccupiedRooms { get; set; }
+        public int TotalActiveGuests { get; set; }
+        public double UtilizationPercentage { get; set; }
     }
 }

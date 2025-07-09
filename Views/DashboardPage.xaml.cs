@@ -22,6 +22,10 @@ namespace Jindal.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+            
+            // Perform system health check
+            await ErrorHandlingService.ValidateSystemHealth();
+            
             await LoadDashboardData();
             await CreateTestDataIfNeeded();
             UpdateDateTime();
@@ -35,23 +39,20 @@ namespace Jindal.Views
                 // Initialize database first
                 await DatabaseService.Init();
                 
-                // Load room statistics
-                var allRooms = await DatabaseService.GetRooms();
-                var availableRooms = await DatabaseService.GetAvailableRooms();
-                var allGuests = await DatabaseService.GetCheckInOuts();
-                var activeGuests = allGuests.Where(g => g.CheckOutDate == null).ToList();
+                // Load room statistics using DatabaseService
+                var roomStats = await DatabaseService.GetRoomUtilizationStats();
 
-                // Update UI with real data or defaults
-                TotalRoomsLabel.Text = allRooms?.Count.ToString() ?? "0";
-                AvailableRoomsLabel.Text = availableRooms?.Count.ToString() ?? "0";
-                OccupiedRoomsLabel.Text = activeGuests?.Count.ToString() ?? "0";
-                ActiveGuestsLabel.Text = activeGuests?.Count.ToString() ?? "0";
+                // Update UI with real data
+                TotalRoomsLabel.Text = roomStats.TotalRooms.ToString();
+                AvailableRoomsLabel.Text = roomStats.AvailableRooms.ToString();
+                OccupiedRoomsLabel.Text = roomStats.OccupiedRooms.ToString();
+                ActiveGuestsLabel.Text = roomStats.TotalActiveGuests.ToString();
 
                 // Load recent activities
                 await LoadRecentActivities();
                 
                 // Debug info
-                System.Diagnostics.Debug.WriteLine($"Dashboard loaded: {allRooms?.Count} rooms, {activeGuests?.Count} active guests");
+                System.Diagnostics.Debug.WriteLine($"Dashboard loaded: {roomStats.TotalRooms} rooms, {roomStats.TotalActiveGuests} active guests");
             }
             catch (Exception ex)
             {
@@ -61,8 +62,9 @@ namespace Jindal.Views
                 OccupiedRoomsLabel.Text = "Error";
                 ActiveGuestsLabel.Text = "Error";
                 
-                await DisplayAlert("Dashboard Error", $"Failed to load dashboard data: {ex.Message}\n\nPlease check your database connection.", "OK");
-                System.Diagnostics.Debug.WriteLine($"Dashboard error: {ex}");
+                ErrorHandlingService.LogError("Failed to load dashboard data", ex, "DashboardPage");
+                var userMessage = ErrorHandlingService.GetUserFriendlyErrorMessage(ex);
+                await DisplayAlert("Dashboard Error", userMessage, "OK");
             }
         }
 
@@ -103,6 +105,7 @@ namespace Jindal.Views
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Failed to load recent activities: {ex.Message}");
                 RecentActivities.Add(new ActivityItem
                 {
                     Icon = "❌",
@@ -119,8 +122,9 @@ namespace Jindal.Views
 
         private void LoadWelcomeMessage()
         {
-            var userCode = Preferences.Get("UserCode", "Admin");
-            WelcomeUserLabel.Text = $"Welcome back, {userCode}!";
+            var userFullName = Preferences.Get("CurrentUserFullName", "Guest");
+            var username = Preferences.Get("CurrentUserUsername", "Unknown");
+            WelcomeUserLabel.Text = $"Welcome back, {userFullName}!";
         }
 
         // Quick Action Handlers

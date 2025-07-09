@@ -13,7 +13,7 @@ namespace Jindal.Views
     {
         public int GuestId { get; set; }
 
-        private CheckInOut currentGuest;
+        private CheckInOut? currentGuest;
         private List<CheckInOut> roomGuests = new();
 
         public EditGuestPage()
@@ -70,10 +70,10 @@ namespace Jindal.Views
 
             try
             {
-                currentGuest.GuestName = GuestNameEntry.Text?.Trim();
-                currentGuest.GuestIdNumber = GuestIdEntry.Text?.Trim();
-                currentGuest.Department = DepartmentEntry.Text?.Trim();
-                currentGuest.Purpose = PurposeEntry.Text?.Trim();
+                currentGuest.GuestName = GuestNameEntry.Text?.Trim() ?? string.Empty;
+                currentGuest.GuestIdNumber = GuestIdEntry.Text?.Trim() ?? string.Empty;
+                currentGuest.Department = DepartmentEntry.Text?.Trim() ?? string.Empty;
+                currentGuest.Purpose = PurposeEntry.Text?.Trim() ?? string.Empty;
                 currentGuest.CheckInDate = CheckInDatePicker.Date;
                 currentGuest.CheckInTime = CheckInTimePicker.Time;
 

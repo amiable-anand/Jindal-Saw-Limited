@@ -9,7 +9,7 @@ namespace Jindal.Views
 {
     public partial class AddEditRoomPage : ContentPage
     {
-        private Room editingRoom; // Null if adding new
+        private Room? editingRoom; // Null if adding new
         private List<Jindal.Models.Location> allLocations = new();
 
         public AddEditRoomPage()
@@ -73,31 +73,53 @@ namespace Jindal.Views
 
             try
             {
-                if (editingRoom == null)
+                // Create room for validation
+                var roomToValidate = editingRoom ?? new Room();
+                roomToValidate.RoomNumber = roomNumber;
+                roomToValidate.LocationId = selectedLocation.Id;
+                roomToValidate.Remark = remark;
+
+                // Validate room data
+                var validationResult = ValidationHelper.ValidateRoomData(roomToValidate);
+                if (!validationResult.IsValid)
                 {
-                    var newRoom = new Room
+                    await DisplayAlert("Validation Error", validationResult.GetErrorMessage(), "OK");
+                    return;
+                }
+
+                // Execute with retry logic
+                await ErrorHandlingService.ExecuteWithRetry(async () =>
+                {
+                    if (editingRoom == null)
                     {
-                        RoomNumber = roomNumber,
-                        LocationId = selectedLocation.Id,
-                        Remark = remark,
-                        Availability = "Available"
-                    };
-                    await DatabaseService.AddRoom(newRoom);
-                }
-                else
-                {
-                    editingRoom.RoomNumber = roomNumber;
-                    editingRoom.LocationId = selectedLocation.Id;
-                    editingRoom.Remark = remark;
-                    await DatabaseService.UpdateRoom(editingRoom);
-                }
+                        var newRoom = new Room
+                        {
+                            RoomNumber = roomNumber,
+                            LocationId = selectedLocation.Id,
+                            Remark = remark,
+                            Availability = "Available"
+                        };
+                        await DatabaseService.AddRoom(newRoom);
+                        ErrorHandlingService.LogInfo($"New room added: {newRoom.RoomNumber}", "RoomManagement");
+                    }
+                    else
+                    {
+                        editingRoom.RoomNumber = roomNumber;
+                        editingRoom.LocationId = selectedLocation.Id;
+                        editingRoom.Remark = remark;
+                        await DatabaseService.UpdateRoom(editingRoom);
+                        ErrorHandlingService.LogInfo($"Room updated: {editingRoom.RoomNumber} (ID={editingRoom.Id})", "RoomManagement");
+                    }
+                }, 3, "Room Save");
 
                 await DisplayAlert("Success", "Room saved successfully.", "OK");
                 await Navigation.PopAsync();
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Failed to save room: {ex.Message}", "OK");
+                ErrorHandlingService.LogError("Failed to save room", ex, "AddEditRoomPage");
+                var userMessage = ErrorHandlingService.GetUserFriendlyErrorMessage(ex);
+                await DisplayAlert("Error", userMessage, "OK");
             }
         }
     }

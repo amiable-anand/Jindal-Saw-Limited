@@ -2,18 +2,17 @@ using Jindal.Services;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 using System;
+using Jindal.Models;
 
 namespace Jindal.Views
 {
     public partial class MainPage : ContentPage
     {
-        private readonly UserService _userService;
         private bool _isLoggingIn = false;
 
         public MainPage()
         {
             InitializeComponent();
-            _userService = UserService.Instance;
             
             // Hide error message initially
             ErrorMessage.IsVisible = false;
@@ -46,11 +45,19 @@ namespace Jindal.Views
                     return;
                 }
 
-                // 👤 Authenticate user
-                var user = await _userService.AuthenticateAsync(username, password);
+                // 👤 Authenticate user using unified DatabaseService
+                var user = await DatabaseService.AuthenticateUser(username, password);
 
                 if (user != null)
                 {
+                    // Store current user info in preferences
+                    Preferences.Set("IsLoggedIn", true);
+                    Preferences.Set("CurrentUserId", user.Id);
+                    Preferences.Set("CurrentUserRole", (int)user.Role);
+                    Preferences.Set("CurrentUserPermissions", user.Permissions);
+                    Preferences.Set("CurrentUserFullName", user.FullName);
+                    Preferences.Set("CurrentUserUsername", user.Username);
+                    
                     // ✅ Navigate to Dashboard (home page)
                     if (Application.Current?.Windows.Count > 0)
                     {

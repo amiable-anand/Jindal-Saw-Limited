@@ -43,8 +43,7 @@ namespace Jindal.Views
         {
             try
             {
-                await DatabaseService.Init();
-                var availableRooms = await DatabaseService.GetCompletelyAvailableRooms();
+                var availableRooms = await DatabaseService.GetAvailableRoomsWithLogic();
 
                 if (availableRooms == null || !availableRooms.Any())
                 {
@@ -58,18 +57,13 @@ namespace Jindal.Views
                 RoomPicker.ItemsSource = availableRooms;
                 RoomPicker.ItemDisplayBinding = new Binding("RoomNumber");
 
-#if DEBUG
-                System.Diagnostics.Debug.WriteLine($"Loaded {availableRooms.Count} available rooms:");
-                foreach (var room in availableRooms)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Room: {room.RoomNumber}, Available: {room.Availability}, Location: {room.LocationName}");
-                }
-#endif
+                ErrorHandlingService.LogInfo($"Loaded {availableRooms.Count} available rooms for check-in", "AddCheckInOutPage");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error loading rooms: {ex.Message}");
-                await DisplayAlert("Error", $"Failed to load available rooms: {ex.Message}", "OK");
+                ErrorHandlingService.LogError("Error loading available rooms", ex, "AddCheckInOutPage");
+                var userMessage = ErrorHandlingService.GetUserFriendlyErrorMessage(ex);
+                await DisplayAlert("Error", userMessage, "OK");
                 RoomPicker.ItemsSource = new List<Room>();
             }
         }
@@ -130,22 +124,33 @@ namespace Jindal.Views
                     MailReceivedDate = MailReceivedDatePicker.Date
                 };
 
-                await DatabaseService.AddCheckInOut(newEntry);
-
-                // Update room status to Booked
-                if (selectedRoom != null)
+                // Validate guest data
+                var validationResult = ValidationHelper.ValidateGuestData(newEntry);
+                if (!validationResult.IsValid)
                 {
-                    selectedRoom.Availability = "Booked";
-                    await DatabaseService.UpdateRoom(selectedRoom);
+                    await DisplayAlert("Validation Error", validationResult.GetErrorMessage(), "OK");
+                    return;
                 }
 
+                // Execute with retry logic
+                await ErrorHandlingService.ExecuteWithRetry(async () =>
+                {
+                    await DatabaseService.AddCheckInOut(newEntry);
+                    
+                    // Update room status to Booked
+                    selectedRoom.Availability = "Booked";
+                    await DatabaseService.UpdateRoom(selectedRoom);
+                }, 3, "Guest Check-in");
+
+                ErrorHandlingService.LogInfo($"Guest {newEntry.GuestName} checked in to room {newEntry.RoomNumber}", "CheckIn");
                 await DisplayAlert("Success", "Guest checked in successfully.", "OK");
                 await Navigation.PopAsync(); // Go back after success
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Check-in failed: {ex.Message}");
-                await DisplayAlert("Error", "Check-in failed. Please try again.", "OK");
+                ErrorHandlingService.LogError("Check-in failed", ex, "AddCheckInOutPage");
+                var userMessage = ErrorHandlingService.GetUserFriendlyErrorMessage(ex);
+                await DisplayAlert("Error", userMessage, "OK");
             }
         }
 

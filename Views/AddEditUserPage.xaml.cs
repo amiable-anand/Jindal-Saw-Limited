@@ -6,7 +6,7 @@ namespace Jindal.Views;
 [QueryProperty(nameof(UserId), "userId")]
 public partial class AddEditUserPage : ContentPage
 {
-    private readonly UserService _userService;
+    private readonly UserService _userService = UserService.Instance;
     private User? _currentUser;
     private readonly Dictionary<Permission, CheckBox> _permissionCheckBoxes = new();
     private bool _isSaving = false;
@@ -18,7 +18,6 @@ public partial class AddEditUserPage : ContentPage
         try
         {
             InitializeComponent();
-            _userService = UserService.Instance;
             
             if (!CheckPermissions())
                 return;

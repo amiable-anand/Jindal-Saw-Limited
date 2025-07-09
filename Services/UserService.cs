@@ -7,7 +7,6 @@ namespace Jindal.Services
 {
     public class UserService
     {
-        private readonly SQLiteAsyncConnection _database;
         private static UserService? _instance;
         private static readonly object _lock = new();
 
@@ -28,169 +27,75 @@ namespace Jindal.Services
 
         private UserService()
         {
-            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "JindalGuestManagement.db");
-            _database = new SQLiteAsyncConnection(dbPath);
+            // Now using DatabaseService for all database operations
         }
-
-        private static bool _isInitialized = false;
-        private static readonly object _initLock = new();
 
         public async Task<bool> InitializeAsync()
         {
-            if (_isInitialized) return true;
-            
-            lock (_initLock)
-            {
-                if (_isInitialized) return true;
-                _isInitialized = true;
-            }
-
+            // Delegate to DatabaseService for initialization
             try
             {
-                await _database.CreateTableAsync<User>();
-                await CreateDefaultAdminUser();
+                await DatabaseService.Init();
                 return true;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Database initialization error: {ex.Message}");
-                _isInitialized = false;
                 return false;
             }
         }
 
+        // This method is now handled by DatabaseService.EnsureDefaultUserAsync()
+        [Obsolete("Use DatabaseService.EnsureDefaultUserAsync() instead")]
         private async Task CreateDefaultAdminUser()
         {
-            var existingAdmin = await _database.Table<User>()
-                .Where(u => u.Role == UserRole.Admin)
-                .FirstOrDefaultAsync();
-
-            if (existingAdmin == null)
-            {
-                var adminUser = new User
-                {
-                    Username = "admin",
-                    Password = BCrypt.Net.BCrypt.HashPassword("admin123"),
-                    Role = UserRole.Admin,
-                    FullName = "System Administrator",
-                    Email = "admin@jindal.com",
-                    Permissions = (int)Permission.All,
-                    IsActive = true
-                };
-
-                await _database.InsertAsync(adminUser);
-            }
+            // This is now handled in DatabaseService
+            await Task.CompletedTask;
         }
 
         public async Task<User?> AuthenticateAsync(string username, string password)
         {
-            try
-            {
-                await InitializeAsync();
-                
-                var user = await _database.Table<User>()
-                    .Where(u => u.Username == username && u.IsActive)
-                    .FirstOrDefaultAsync();
-
-                if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
-                {
-                    user.LastLoginAt = DateTime.Now;
-                    await _database.UpdateAsync(user);
-                    
-                    // Store current user info in preferences
-                    Preferences.Set("IsLoggedIn", true);
-                    Preferences.Set("CurrentUserId", user.Id);
-                    Preferences.Set("CurrentUserRole", (int)user.Role);
-                    Preferences.Set("CurrentUserPermissions", user.Permissions);
-                    Preferences.Set("CurrentUserFullName", user.FullName);
-                    
-                    return user;
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Authentication error: {ex.Message}");
-            }
-            
-            return null;
+            // Delegate to DatabaseService
+            return await DatabaseService.AuthenticateUser(username, password);
         }
 
-        public async Task<bool> LogoutAsync()
+        public Task<bool> LogoutAsync()
         {
             try
             {
                 Preferences.Clear();
-                return true;
+                return Task.FromResult(true);
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Logout error: {ex.Message}");
-                return false;
+                return Task.FromResult(false);
             }
         }
 
         public async Task<List<User>> GetAllUsersAsync()
         {
-            await InitializeAsync();
-            return await _database.Table<User>().ToListAsync();
+            return await DatabaseService.GetAllUsers();
         }
 
         public async Task<User?> GetUserByIdAsync(int id)
         {
-            return await _database.Table<User>()
-                .Where(u => u.Id == id)
-                .FirstOrDefaultAsync();
+            return await DatabaseService.GetUserById(id);
         }
 
         public async Task<bool> CreateUserAsync(User user)
         {
-            try
-            {
-                await InitializeAsync();
-                
-                // Hash password before saving
-                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-                await _database.InsertAsync(user);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Create user error: {ex.Message}");
-                return false;
-            }
+            return await DatabaseService.CreateUser(user);
         }
 
         public async Task<bool> UpdateUserAsync(User user)
         {
-            try
-            {
-                await _database.UpdateAsync(user);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Update user error: {ex.Message}");
-                return false;
-            }
+            return await DatabaseService.UpdateUser(user);
         }
 
         public async Task<bool> DeleteUserAsync(int userId)
         {
-            try
-            {
-                var user = await GetUserByIdAsync(userId);
-                if (user != null)
-                {
-                    await _database.DeleteAsync(user);
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Delete user error: {ex.Message}");
-                return false;
-            }
+            return await DatabaseService.DeleteUser(userId);
         }
 
         public async Task<bool> UpdateUserPermissionsAsync(int userId, int permissions)
@@ -201,8 +106,7 @@ namespace Jindal.Services
                 if (user != null)
                 {
                     user.Permissions = permissions;
-                    await _database.UpdateAsync(user);
-                    return true;
+                    return await DatabaseService.UpdateUser(user);
                 }
                 return false;
             }
@@ -215,22 +119,7 @@ namespace Jindal.Services
 
         public async Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
         {
-            try
-            {
-                var user = await GetUserByIdAsync(userId);
-                if (user != null && BCrypt.Net.BCrypt.Verify(oldPassword, user.Password))
-                {
-                    user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
-                    await _database.UpdateAsync(user);
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Change password error: {ex.Message}");
-                return false;
-            }
+            return await DatabaseService.ChangePassword(userId, oldPassword, newPassword);
         }
 
         // Helper methods for current user

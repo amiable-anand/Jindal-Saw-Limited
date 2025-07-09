@@ -60,7 +60,7 @@ namespace Jindal.Views
 
         private void ApplyFilters()
         {
-            string selectedRoom = RoomFilterPicker.SelectedItem as string;
+            string? selectedRoom = RoomFilterPicker.SelectedItem as string;
             string search = SearchEntry.Text?.ToLower() ?? "";
             DateTime fromDate = FromDatePicker.Date.Date;
             DateTime toDate = ToDatePicker.Date.Date;
@@ -69,8 +69,8 @@ namespace Jindal.Views
                 .Where(r =>
                     (string.IsNullOrEmpty(selectedRoom) || r.RoomNumber == selectedRoom) &&
                     (string.IsNullOrEmpty(search) || r.GuestName?.ToLower().Contains(search) == true) &&
-                    r.CheckOutDate.Value.Date >= fromDate &&
-                    r.CheckOutDate.Value.Date <= toDate)
+                    r.CheckOutDate?.Date >= fromDate &&
+                    r.CheckOutDate?.Date <= toDate)
                 .ToList();
 
             PopulateTable(filtered);

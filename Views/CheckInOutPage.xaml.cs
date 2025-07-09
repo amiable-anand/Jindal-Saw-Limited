@@ -211,7 +211,7 @@ namespace Jindal.Views
             await LoadData();
         }
 
-        private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+        private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
         {
             string search = e.NewTextValue?.ToLower() ?? "";
 
@@ -222,7 +222,7 @@ namespace Jindal.Views
             PopulateTable(filtered);
         }
 
-        private void OnRoomFilterChanged(object sender, EventArgs e)
+        private void OnRoomFilterChanged(object? sender, EventArgs e)
         {
             if (RoomFilterPicker.SelectedItem is not string selectedRoom)
                 return;
