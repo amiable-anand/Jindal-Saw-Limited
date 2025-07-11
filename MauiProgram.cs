@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
-
 using Jindal;
+using Jindal.Services;
+
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
@@ -16,6 +17,15 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-SemiBold.ttf", "OpenSansSemiBold");
             });
 
-        return builder.Build();
+        // DatabaseService is static, no need to register
+        
+        var app = builder.Build();
+        
+        // Initialize SQLite on Android
+        #if ANDROID
+        SQLitePCL.Batteries_V2.Init();
+        #endif
+        
+        return app;
     }
 }

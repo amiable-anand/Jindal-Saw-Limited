@@ -144,7 +144,7 @@ namespace Jindal.Views
 
                 ErrorHandlingService.LogInfo($"Guest {newEntry.GuestName} checked in to room {newEntry.RoomNumber}", "CheckIn");
                 await DisplayAlert("Success", "Guest checked in successfully.", "OK");
-                await Navigation.PopAsync(); // Go back after success
+                await NavigationService.NavigateToCheckInOut(); // Go back after success
             }
             catch (Exception ex)
             {

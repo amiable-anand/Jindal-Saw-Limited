@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.CheckOutPage"
              Title="Check Out"
-             BackgroundColor="#0D0D0D">
+             BackgroundColor="{StaticResource BackgroundSecondary}">
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="24">
@@ -13,51 +13,50 @@
                    FontSize="28"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
-                   TextColor="#E0E0E0" />
+                   TextColor="{StaticResource OnBackground}" />
 
             <!-- Guest & Room Details -->
-            <Frame BackgroundColor="#1A1A1A"
+            <Frame BackgroundColor="{StaticResource Surface}"
                    CornerRadius="20"
                    HasShadow="True"
                    Padding="20"
-                   BorderColor="#2A2A2A">
+                   BorderColor="{StaticResource InputBorder}">
 
                 <VerticalStackLayout Spacing="18">
 
                     <Label x:Name="GuestNameLabel"
                            FontSize="20"
-                           TextColor="#FFFFFF"
+                           TextColor="{StaticResource OnSurface}"
                            FontAttributes="Bold"
                            LineBreakMode="TailTruncation" />
 
                     <Label x:Name="RoomNumberLabel"
                            FontSize="16"
-                           TextColor="#AAAAAA" />
+                           TextColor="{StaticResource OnSurfaceVariant}" />
 
                     <!-- Checkout Date -->
                     <Label Text="Check-Out Date"
-                           TextColor="#AAAAAA"
+                           TextColor="{StaticResource OnSurfaceVariant}"
                            FontSize="13" />
                     <DatePicker x:Name="CheckOutDatePicker"
-                                TextColor="#CCCCCC"
-                                BackgroundColor="#222222"
+                                TextColor="{StaticResource InputText}"
+                                BackgroundColor="{StaticResource InputBackground}"
                                 HeightRequest="48" />
 
                     <!-- Checkout Time -->
                     <Label Text="Check-Out Time"
-                           TextColor="#AAAAAA"
+                           TextColor="{StaticResource OnSurfaceVariant}"
                            FontSize="13" />
                     <TimePicker x:Name="CheckOutTimePicker"
-                                TextColor="#CCCCCC"
-                                BackgroundColor="#222222"
+                                TextColor="{StaticResource InputText}"
+                                BackgroundColor="{StaticResource InputBackground}"
                                 HeightRequest="48" />
 
                     <!-- Confirm Button -->
                     <Button Text="✓ Confirm Check-Out"
                             Clicked="OnConfirmCheckOutClicked"
-                            BackgroundColor="#DC2626"
-                            TextColor="White"
-                            BorderColor="#DC2626"
+                            BackgroundColor="{StaticResource Error}"
+                            TextColor="{StaticResource OnPrimary}"
                             FontAttributes="Bold"
                             FontSize="16"
                             CornerRadius="12"

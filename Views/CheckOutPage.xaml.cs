@@ -53,18 +53,20 @@ namespace Jindal.Views
                     else
                     {
                         await DisplayAlert("Error", "Guest not found.", "OK");
-                        await Shell.Current.GoToAsync("..");
+                        await NavigationService.NavigateToCheckInOut();
                     }
                 }
                 else
                 {
                     await DisplayAlert("Invalid ID", "Guest ID format is invalid.", "OK");
-                    await Shell.Current.GoToAsync("..");
+                    await NavigationService.NavigateToCheckInOut();
                 }
             }
             catch (Exception ex)
             {
+                ErrorHandlingService.LogError("Failed to load guest details", ex, "CheckOutPage");
                 await DisplayAlert("Error", $"Failed to load guest details: {ex.Message}", "OK");
+                await NavigationService.NavigateToCheckInOut();
             }
         }
 
@@ -75,39 +77,67 @@ namespace Jindal.Views
         private async void OnConfirmCheckOutClicked(object sender, EventArgs e)
         {
             if (guest == null)
+            {
+                await DisplayAlert("Error", "Guest information not loaded.", "OK");
+                return;
+            }
+
+            // Show confirmation dialog
+            bool confirm = await DisplayAlert("Confirm Check-Out", 
+                $"Are you sure you want to check out {guest.GuestName} from Room {guest.RoomNumber}?", 
+                "Yes", "No");
+                
+            if (!confirm)
                 return;
 
             try
             {
-                // Update checkout info
-                guest.CheckOutDate = CheckOutDatePicker.Date;
-                guest.CheckOutTime = CheckOutTimePicker.Time;
-
-                await DatabaseService.UpdateCheckInOut(guest);
-
-                // Check if room can be marked as Available
-                var guestsInSameRoom = await DatabaseService.GetCheckInOutsByRoomNumber(guest.RoomNumber);
-                bool allGuestsCheckedOut = guestsInSameRoom.All(g =>
-                    g.CheckOutDate != null && g.CheckOutTime != null);
-
-                if (allGuestsCheckedOut)
+                // Show loading indicator
+                var button = sender as Button;
+                if (button != null)
                 {
-                    var allRooms = await DatabaseService.GetRooms();
-                    var room = allRooms.FirstOrDefault(r => r.RoomNumber == guest.RoomNumber);
-
-                    if (room != null)
-                    {
-                        room.Availability = "Available";
-                        await DatabaseService.UpdateRoom(room);
-                    }
+                    button.Text = "Processing...";
+                    button.IsEnabled = false;
                 }
 
+                // Validate checkout date/time
+                if (CheckOutDatePicker.Date < guest.CheckInDate.Date)
+                {
+                    await DisplayAlert("Invalid Date", "Check-out date cannot be before check-in date.", "OK");
+                    return;
+                }
+
+                await ErrorHandlingService.ExecuteWithRetry(async () =>
+                {
+                    // Update checkout info
+                    guest.CheckOutDate = CheckOutDatePicker.Date;
+                    guest.CheckOutTime = CheckOutTimePicker.Time;
+
+                    await DatabaseService.UpdateCheckInOut(guest);
+
+                    // Update room availability status
+                    await DatabaseService.UpdateRoomAvailabilityStatus();
+                }, 3, "Guest Check-out");
+
+                ErrorHandlingService.LogInfo($"Guest {guest.GuestName} checked out from room {guest.RoomNumber}", "CheckOut");
                 await DisplayAlert("Success", "Guest checked out successfully.", "OK");
-                await Shell.Current.GoToAsync("..");
+                await NavigationService.NavigateToCheckInOut();
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Check-out failed: {ex.Message}", "OK");
+                ErrorHandlingService.LogError("Check-out failed", ex, "CheckOutPage");
+                var userMessage = ErrorHandlingService.GetUserFriendlyErrorMessage(ex);
+                await DisplayAlert("Error", userMessage, "OK");
+            }
+            finally
+            {
+                // Restore button state
+                var button = sender as Button;
+                if (button != null)
+                {
+                    button.Text = "✓ Confirm Check-Out";
+                    button.IsEnabled = true;
+                }
             }
         }
     }

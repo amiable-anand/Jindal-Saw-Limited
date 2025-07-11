@@ -26,17 +26,53 @@ namespace Jindal.Services
             if (_database != null)
                 return;
 
-            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "Jindal.db");
-            _database = new SQLiteAsyncConnection(dbPath);
+            try
+            {
+                System.Diagnostics.Debug.WriteLine("DatabaseService.Init - Starting database initialization");
+                
+                var dbPath = Path.Combine(FileSystem.AppDataDirectory, "Jindal.db");
+                System.Diagnostics.Debug.WriteLine($"DatabaseService.Init - Database path: {dbPath}");
+                
+                // Ensure the directory exists
+                var dbDirectory = Path.GetDirectoryName(dbPath);
+                if (!string.IsNullOrEmpty(dbDirectory) && !Directory.Exists(dbDirectory))
+                {
+                    Directory.CreateDirectory(dbDirectory);
+                }
+                
+                _database = new SQLiteAsyncConnection(dbPath);
+                System.Diagnostics.Debug.WriteLine("DatabaseService.Init - SQLite connection created");
 
-        await _database.CreateTableAsync<Room>();
-        await _database.CreateTableAsync<CheckInOut>();
-        await _database.CreateTableAsync<LocationModel>();
-        await _database.CreateTableAsync<User>();
+                await _database.CreateTableAsync<Room>();
+                System.Diagnostics.Debug.WriteLine("DatabaseService.Init - Room table created");
+                
+                await _database.CreateTableAsync<CheckInOut>();
+                System.Diagnostics.Debug.WriteLine("DatabaseService.Init - CheckInOut table created");
+                
+                await _database.CreateTableAsync<LocationModel>();
+                System.Diagnostics.Debug.WriteLine("DatabaseService.Init - Location table created");
+                
+                await _database.CreateTableAsync<User>();
+                System.Diagnostics.Debug.WriteLine("DatabaseService.Init - User table created");
 
-        await EnsureDefaultUserAsync();
-        await EnsureDefaultLocationsAsync();
-        await EnsureDemoRoomsAsync();
+                await EnsureDefaultUserAsync();
+                System.Diagnostics.Debug.WriteLine("DatabaseService.Init - Default user ensured");
+                
+                await EnsureDefaultLocationsAsync();
+                System.Diagnostics.Debug.WriteLine("DatabaseService.Init - Default locations ensured");
+                
+                await EnsureDemoRoomsAsync();
+                System.Diagnostics.Debug.WriteLine("DatabaseService.Init - Demo rooms ensured");
+                
+                System.Diagnostics.Debug.WriteLine("DatabaseService.Init - Database initialization completed successfully");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"DatabaseService.Init - Error during initialization: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"DatabaseService.Init - Stack trace: {ex.StackTrace}");
+                _database = null; // Reset database connection
+                throw new Exception($"Database initialization failed: {ex.Message}", ex);
+            }
         }
 
 

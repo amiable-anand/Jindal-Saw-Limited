@@ -51,7 +51,7 @@ namespace Jindal.Views
             }
             catch (Exception ex)
             {
-                DisplayAlert("Error", $"Failed to initialize page: {ex.Message}", "OK");
+                await DisplayAlert("Error", $"Failed to initialize page: {ex.Message}", "OK");
                 Debug.WriteLine($"AddGuestToSameRoomPage.OnAppearing error: {ex}");
 
                 if (RoomNumberLabel != null)
