@@ -39,7 +39,7 @@ namespace Jindal.Views
             if (currentGuest == null)
             {
                 await DisplayAlert("Error", "Guest not found", "OK");
-                await Shell.Current.GoToAsync("//CheckInOutPage");
+                await NavigationService.NavigateToCheckInOut();
                 return;
             }
 
@@ -50,7 +50,7 @@ namespace Jindal.Views
             PurposeEntry.Text = currentGuest.Purpose;
             CheckInDatePicker.Date = currentGuest.CheckInDate;
             CheckInTimePicker.Time = currentGuest.CheckInTime;
-            RoomLabel.Text = currentGuest.RoomNumber;
+            RoomLabel.Text = currentGuest.RoomNumber.ToString();
 
             // Load guests in the same room
             roomGuests = await DatabaseService.GetCheckInOutsByRoomNumber(currentGuest.RoomNumber);
@@ -79,7 +79,7 @@ namespace Jindal.Views
 
                 await DatabaseService.UpdateCheckInOut(currentGuest);
                 await DisplayAlert("Success", "Guest updated successfully.", "OK");
-                await Shell.Current.GoToAsync("//CheckInOutPage");
+                await NavigationService.NavigateToCheckInOut();
             }
             catch (Exception ex)
             {
@@ -98,22 +98,22 @@ namespace Jindal.Views
             // Add header row
             RoomGuestsTable.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-            AddToGrid(new Label { Text = "Name", FontAttributes = FontAttributes.Bold, TextColor = Colors.White }, 0, 0);
-            AddToGrid(new Label { Text = "Date", FontAttributes = FontAttributes.Bold, TextColor = Colors.White }, 1, 0);
-            AddToGrid(new Label { Text = "Time", FontAttributes = FontAttributes.Bold, TextColor = Colors.White }, 2, 0);
-            AddToGrid(new Label { Text = "Purpose", FontAttributes = FontAttributes.Bold, TextColor = Colors.White }, 3, 0);
-            AddToGrid(new Label { Text = "Department", FontAttributes = FontAttributes.Bold, TextColor = Colors.White }, 4, 0);
+            AddToGrid(new Label { Text = "Name", FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#1E3A8A") }, 0, 0);
+            AddToGrid(new Label { Text = "Date", FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#1E3A8A") }, 1, 0);
+            AddToGrid(new Label { Text = "Time", FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#1E3A8A") }, 2, 0);
+            AddToGrid(new Label { Text = "Purpose", FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#1E3A8A") }, 3, 0);
+            AddToGrid(new Label { Text = "Department", FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#1E3A8A") }, 4, 0);
 
             int row = 1;
             foreach (var guest in guests)
             {
                 RoomGuestsTable.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-                AddToGrid(new Label { Text = guest.GuestName ?? "-", TextColor = Colors.LightGray }, 0, row);
-                AddToGrid(new Label { Text = guest.CheckInDate.ToString("dd-MM-yyyy"), TextColor = Colors.LightGray }, 1, row);
-                AddToGrid(new Label { Text = guest.CheckInTime.ToString(@"hh\:mm"), TextColor = Colors.LightGray }, 2, row);
-                AddToGrid(new Label { Text = string.IsNullOrWhiteSpace(guest.Purpose) ? "-" : guest.Purpose, TextColor = Colors.LightGray }, 3, row);
-                AddToGrid(new Label { Text = string.IsNullOrWhiteSpace(guest.Department) ? "-" : guest.Department, TextColor = Colors.LightGray }, 4, row);
+                AddToGrid(new Label { Text = guest.GuestName ?? "-", TextColor = Color.FromArgb("#1E293B") }, 0, row);
+                AddToGrid(new Label { Text = guest.CheckInDate.ToString("dd-MM-yyyy"), TextColor = Color.FromArgb("#1E293B") }, 1, row);
+                AddToGrid(new Label { Text = guest.CheckInTime.ToString(@"hh\:mm"), TextColor = Color.FromArgb("#1E293B") }, 2, row);
+                AddToGrid(new Label { Text = string.IsNullOrWhiteSpace(guest.Purpose) ? "-" : guest.Purpose, TextColor = Color.FromArgb("#1E293B") }, 3, row);
+                AddToGrid(new Label { Text = string.IsNullOrWhiteSpace(guest.Department) ? "-" : guest.Department, TextColor = Color.FromArgb("#1E293B") }, 4, row);
 
                 row++;
             }
@@ -144,7 +144,7 @@ namespace Jindal.Views
             if (currentGuest == null)
                 return;
 
-            await Shell.Current.GoToAsync($"{nameof(AddGuestToSameRoomPage)}?roomNumber={currentGuest.RoomNumber}&guestId={currentGuest.Id}&sourcePage={nameof(EditGuestPage)}");
+            await NavigationService.NavigateToAddGuestToSameRoom(currentGuest.RoomNumber, currentGuest.Id);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Jindal.Views
         {
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                await Shell.Current.GoToAsync("//CheckInOutPage");
+                await NavigationService.NavigateToCheckInOut();
             });
             return true; // Prevent default back navigation
         }

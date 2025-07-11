@@ -29,8 +29,8 @@ namespace Jindal.Services
             if (string.IsNullOrWhiteSpace(guest.GuestIdNumber))
                 result.AddError("Guest ID number is required");
 
-            if (string.IsNullOrWhiteSpace(guest.RoomNumber))
-                result.AddError("Room number is required");
+            if (guest.RoomNumber <= 0)
+                result.AddError("Room number is required and must be greater than 0");
 
             if (string.IsNullOrWhiteSpace(guest.IdType))
                 result.AddError("ID type is required");
@@ -298,7 +298,12 @@ namespace Jindal.Services
 
         public string GetErrorMessage()
         {
-            return string.Join("\n", _errors);
+            return string.Join(Environment.NewLine, _errors);
+        }
+        
+        public void Clear()
+        {
+            _errors.Clear();
         }
     }
 }

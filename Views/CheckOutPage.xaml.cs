@@ -93,8 +93,7 @@ namespace Jindal.Views
                 if (allGuestsCheckedOut)
                 {
                     var allRooms = await DatabaseService.GetRooms();
-                    var room = allRooms.FirstOrDefault(r =>
-                        r.RoomNumber.ToString() == guest.RoomNumber);
+                    var room = allRooms.FirstOrDefault(r => r.RoomNumber == guest.RoomNumber);
 
                     if (room != null)
                     {

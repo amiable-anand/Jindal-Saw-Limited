@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.AddGuestToSameRoomPage"
              Title="Add Guest to Same Room"
-             BackgroundColor="#0D0D0D">
+             BackgroundColor="{StaticResource BackgroundSecondary}">
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="20">
@@ -12,37 +12,44 @@
                    FontSize="26"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
-                   TextColor="#E0E0E0" />
+                   TextColor="{StaticResource OnBackground}" />
 
             <!-- Room Info -->
             <Label x:Name="RoomNumberLabel"
                    Text="Room: "
                    FontSize="18"
                    FontAttributes="Bold"
-                   TextColor="#CCCCCC"
+                   TextColor="{StaticResource OnSurface}"
                    Margin="0,0,0,10" />
 
             <!-- Form Inputs -->
-            <Frame BackgroundColor="#1A1A1A"
+            <Frame BackgroundColor="{StaticResource Surface}"
                    CornerRadius="20"
                    Padding="20"
                    HasShadow="True"
-                   BorderColor="#2A2A2A">
+                   BorderColor="{StaticResource InputBorder}">
 
                 <VerticalStackLayout Spacing="16">
 
                     <!-- Guest Details -->
-                    <Entry x:Name="GuestNameEntry" Placeholder="Guest Name"
-                           BackgroundColor="#222222" TextColor="#FFFFFF" />
-                    <Entry x:Name="GuestIdEntry" Placeholder="Guest ID Number"
-                           BackgroundColor="#222222" TextColor="#FFFFFF" />
+                    <Entry x:Name="GuestNameEntry"
+                           Placeholder="Guest Name"
+                           BackgroundColor="{StaticResource InputBackground}"
+                           TextColor="{StaticResource InputText}"
+                           PlaceholderColor="{StaticResource InputPlaceholder}" />
+
+                    <Entry x:Name="GuestIdEntry"
+                           Placeholder="Guest ID Number"
+                           BackgroundColor="{StaticResource InputBackground}"
+                           TextColor="{StaticResource InputText}"
+                           PlaceholderColor="{StaticResource InputPlaceholder}" />
 
                     <!-- ID Type -->
                     <Picker x:Name="IdTypePicker"
                             Title="Select ID Type"
-                            BackgroundColor="#222222"
-                            TextColor="#FFFFFF"
-                            TitleColor="#888">
+                            BackgroundColor="{StaticResource InputBackground}"
+                            TextColor="{StaticResource InputText}"
+                            TitleColor="{StaticResource InputPlaceholder}">
                         <Picker.Items>
                             <x:String>Aadhaar Card</x:String>
                             <x:String>Driving License</x:String>
@@ -52,51 +59,78 @@
                     </Picker>
 
                     <!-- More Details -->
-                    <Entry x:Name="CompanyEntry" Placeholder="Company Name"
-                           BackgroundColor="#222222" TextColor="#FFFFFF" />
-                    <Entry x:Name="MobileEntry" Placeholder="Mobile"
-                           Keyboard="Telephone" BackgroundColor="#222222"
-                           TextColor="#FFFFFF" />
-                    <Entry x:Name="NationalityEntry" Placeholder="Nationality"
-                           BackgroundColor="#222222" TextColor="#FFFFFF" />
-                    <Entry x:Name="AddressEntry" Placeholder="Address"
-                           BackgroundColor="#222222" TextColor="#FFFFFF" />
+                    <Entry x:Name="CompanyEntry"
+                           Placeholder="Company Name"
+                           BackgroundColor="{StaticResource InputBackground}"
+                           TextColor="{StaticResource InputText}"
+                           PlaceholderColor="{StaticResource InputPlaceholder}" />
+
+                    <Entry x:Name="MobileEntry"
+                           Placeholder="Mobile"
+                           Keyboard="Telephone"
+                           BackgroundColor="{StaticResource InputBackground}"
+                           TextColor="{StaticResource InputText}"
+                           PlaceholderColor="{StaticResource InputPlaceholder}" />
+
+                    <Entry x:Name="NationalityEntry"
+                           Placeholder="Nationality"
+                           BackgroundColor="{StaticResource InputBackground}"
+                           TextColor="{StaticResource InputText}"
+                           PlaceholderColor="{StaticResource InputPlaceholder}" />
+
+                    <Entry x:Name="AddressEntry"
+                           Placeholder="Address"
+                           BackgroundColor="{StaticResource InputBackground}"
+                           TextColor="{StaticResource InputText}"
+                           PlaceholderColor="{StaticResource InputPlaceholder}" />
 
                     <!-- Check-In Info -->
-                    <Label Text="Check-In Date" TextColor="#AAAAAA" FontSize="13" />
+                    <Label Text="Check-In Date"
+                           TextColor="{StaticResource OnSurfaceVariant}"
+                           FontSize="13" />
                     <DatePicker x:Name="CheckInDatePicker"
-                                BackgroundColor="#222222"
-                                TextColor="#FFFFFF" />
+                                BackgroundColor="{StaticResource InputBackground}"
+                                TextColor="{StaticResource InputText}" />
 
-                    <Label Text="Check-In Time" TextColor="#AAAAAA" FontSize="13" />
+                    <Label Text="Check-In Time"
+                           TextColor="{StaticResource OnSurfaceVariant}"
+                           FontSize="13" />
                     <TimePicker x:Name="CheckInTimePicker"
-                                BackgroundColor="#222222"
-                                TextColor="#FFFFFF" />
+                                BackgroundColor="{StaticResource InputBackground}"
+                                TextColor="{StaticResource InputText}" />
 
-                    <Entry x:Name="DepartmentEntry" Placeholder="Department"
-                           BackgroundColor="#222222" TextColor="#FFFFFF" />
-                    <Entry x:Name="PurposeEntry" Placeholder="Purpose"
-                           BackgroundColor="#222222" TextColor="#FFFFFF" />
+                    <Entry x:Name="DepartmentEntry"
+                           Placeholder="Department"
+                           BackgroundColor="{StaticResource InputBackground}"
+                           TextColor="{StaticResource InputText}"
+                           PlaceholderColor="{StaticResource InputPlaceholder}" />
 
-                    <Label Text="Mail Received Date" TextColor="#AAAAAA" FontSize="13" />
+                    <Entry x:Name="PurposeEntry"
+                           Placeholder="Purpose"
+                           BackgroundColor="{StaticResource InputBackground}"
+                           TextColor="{StaticResource InputText}"
+                           PlaceholderColor="{StaticResource InputPlaceholder}" />
+
+                    <Label Text="Mail Received Date"
+                           TextColor="{StaticResource OnSurfaceVariant}"
+                           FontSize="13" />
                     <DatePicker x:Name="MailReceivedDatePicker"
-                                BackgroundColor="#222222"
-                                TextColor="#FFFFFF" />
+                                BackgroundColor="{StaticResource InputBackground}"
+                                TextColor="{StaticResource InputText}" />
                 </VerticalStackLayout>
             </Frame>
 
             <!-- Action Button -->
-            <Button Text="? Check In"
+            <Button Text="Check In"
                     Clicked="OnSaveClicked"
-                    BackgroundColor="#1F2937"
-                    TextColor="#10B981"
-                    BorderColor="#10B981"
-                    BorderWidth="1"
+                    BackgroundColor="{StaticResource Success}"
+                    TextColor="{StaticResource OnPrimary}"
                     CornerRadius="12"
                     Padding="20,8"
                     HeightRequest="46"
                     WidthRequest="150"
                     HorizontalOptions="Center" />
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

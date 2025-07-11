@@ -24,7 +24,6 @@
         ],
         "originalTargetFrameworks": [
           "net9.0-android",
-          "net9.0-ios",
           "net9.0-maccatalyst",
           "net9.0-windows10.0.19041.0"
         ],
@@ -36,10 +35,6 @@
         "frameworks": {
           "net9.0-android35.0": {
             "targetAlias": "net9.0-android",
-            "projectReferences": {}
-          },
-          "net9.0-ios18.5": {
-            "targetAlias": "net9.0-ios",
             "projectReferences": {}
           },
           "net9.0-maccatalyst18.5": {
@@ -119,65 +114,6 @@
           "warn": true,
           "frameworkReferences": {
             "Microsoft.Android": {
-              "privateAssets": "all"
-            },
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
-        },
-        "net9.0-ios18.5": {
-          "targetAlias": "net9.0-ios",
-          "dependencies": {
-            "BCrypt.Net-Next": {
-              "target": "Package",
-              "version": "[4.0.3, )"
-            },
-            "ClosedXML": {
-              "target": "Package",
-              "version": "[0.105.0, )"
-            },
-            "CommunityToolkit.Maui": {
-              "target": "Package",
-              "version": "[12.0.0, )"
-            },
-            "Microsoft.Extensions.Logging.Debug": {
-              "target": "Package",
-              "version": "[9.0.6, )"
-            },
-            "Microsoft.Maui.Controls": {
-              "target": "Package",
-              "version": "[9.0.70, )"
-            },
-            "Microsoft.NET.ILLink.Tasks": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[9.0.6, )",
-              "autoReferenced": true
-            },
-            "SQLitePCLRaw.bundle_e_sqlite3": {
-              "target": "Package",
-              "version": "[2.1.10, )"
-            },
-            "sqlite-net-pcl": {
-              "target": "Package",
-              "version": "[1.9.172, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.iOS": {
               "privateAssets": "all"
             },
             "Microsoft.NETCore.App": {
@@ -327,9 +263,6 @@
           "#import": []
         },
         "android-x64": {
-          "#import": []
-        },
-        "ios-arm64": {
           "#import": []
         },
         "maccatalyst-arm64": {

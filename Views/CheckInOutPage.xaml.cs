@@ -23,19 +23,21 @@ namespace Jindal.Views
 
             try
             {
-                // Ensure event handlers are not duplicated
-                RoomFilterPicker.SelectedIndexChanged -= OnRoomFilterChanged;
-                RoomFilterPicker.SelectedIndexChanged += OnRoomFilterChanged;
-
-                SearchEntry.TextChanged -= OnSearchTextChanged;
-                SearchEntry.TextChanged += OnSearchTextChanged;
-
                 await LoadData();
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Error", ex.Message, "OK");
             }
+        }
+        
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            
+            // Clean up event handlers to prevent memory leaks
+            RoomFilterPicker.SelectedIndexChanged -= OnRoomFilterChanged;
+            SearchEntry.TextChanged -= OnSearchTextChanged;
         }
 
         /// <summary>
@@ -45,10 +47,24 @@ namespace Jindal.Views
         {
             try
             {
+                // Initialize database connection
                 await DatabaseService.Init();
+
+                // Set up event handlers first
+                RoomFilterPicker.SelectedIndexChanged -= OnRoomFilterChanged;
+                RoomFilterPicker.SelectedIndexChanged += OnRoomFilterChanged;
+
+                SearchEntry.TextChanged -= OnSearchTextChanged;
+                SearchEntry.TextChanged += OnSearchTextChanged;
 
                 // Get ONLY active guests (those who haven't checked out yet)
                 allRecords = await DatabaseService.GetActiveGuests();
+                
+                // Validate data
+                if (allRecords == null)
+                {
+                    allRecords = new List<CheckInOut>();
+                }
                 
                 // Debug: Check if we have any data
                 if (!allRecords.Any())
@@ -56,18 +72,27 @@ namespace Jindal.Views
                     await DisplayAlert("Info", "No active guests found. Checked out guests can be viewed in the Reports section.", "OK");
                 }
 
-                RoomFilterPicker.ItemsSource = allRecords
+                // Populate room filter with validation
+                var roomNumbers = allRecords
+                    .Where(r => r.RoomNumber > 0)
                     .Select(r => r.RoomNumber)
-                    .Where(r => !string.IsNullOrWhiteSpace(r))
                     .Distinct()
                     .OrderBy(r => r)
+                    .Select(r => r.ToString())
                     .ToList();
+                    
+                RoomFilterPicker.ItemsSource = roomNumbers;
 
                 PopulateTable(allRecords);
             }
             catch (Exception ex)
             {
+                Services.ErrorHandlingService.LogError("Failed to load check-in data", ex, "CheckInOutPage");
                 await DisplayAlert("Database Error", $"Failed to load guest data: {ex.Message}", "OK");
+                
+                // Initialize empty data to prevent crashes
+                allRecords = new List<CheckInOut>();
+                PopulateTable(allRecords);
             }
         }
 
@@ -76,15 +101,23 @@ namespace Jindal.Views
         /// </summary>
         private void PopulateTable(List<CheckInOut> records)
         {
-            // Clear existing rows beyond header
-            while (CheckInOutTable.RowDefinitions.Count > 1)
-                CheckInOutTable.RowDefinitions.RemoveAt(CheckInOutTable.RowDefinitions.Count - 1);
+            try
+            {
+                // Validate input
+                if (records == null)
+                {
+                    records = new List<CheckInOut>();
+                }
 
-            var oldContent = CheckInOutTable.Children.Skip(11).ToList(); // Skip header cells
-            foreach (var view in oldContent)
-                CheckInOutTable.Children.Remove(view);
+                // Clear existing rows beyond header
+                while (CheckInOutTable.RowDefinitions.Count > 1)
+                    CheckInOutTable.RowDefinitions.RemoveAt(CheckInOutTable.RowDefinitions.Count - 1);
 
-            int row = 1;
+                var oldContent = CheckInOutTable.Children.Skip(11).ToList(); // Skip header cells
+                foreach (var view in oldContent)
+                    CheckInOutTable.Children.Remove(view);
+
+                int row = 1;
 
             foreach (var group in records.GroupBy(r => r.RoomNumber))
             {
@@ -114,7 +147,7 @@ namespace Jindal.Views
                     var textColor = Color.FromArgb("#374151"); // Dark text for white background
                     
                     // Guest Data Row
-                    AddToGrid(new Label { Text = r.RoomNumber ?? "-", TextColor = textColor }, 0, row);
+                    AddToGrid(new Label { Text = r.RoomNumber > 0 ? r.RoomNumber.ToString() : "-", TextColor = textColor }, 0, row);
                     AddToGrid(new Label { Text = r.GuestName ?? "-", TextColor = textColor }, 1, row);
                     AddToGrid(new Label { Text = r.GuestIdNumber ?? "-", TextColor = textColor }, 2, row);
                     AddToGrid(new Label { Text = r.CheckInDate != default ? r.CheckInDate.ToString("dd-MM-yyyy") : "-", TextColor = textColor }, 3, row);
@@ -147,7 +180,7 @@ namespace Jindal.Views
                     };
                     editButton.Clicked += async (s, e) =>
                     {
-                        await Shell.Current.GoToAsync($"{nameof(EditGuestPage)}?guestId={r.Id}");
+                        await NavigationService.NavigateToEditGuest(r.Id);
                     };
                     buttonStack.Children.Add(editButton);
 
@@ -166,7 +199,7 @@ namespace Jindal.Views
                     {
                         try
                         {
-                            await Shell.Current.GoToAsync($"{nameof(CheckOutPage)}?guestId={r.Id}");
+                            await NavigationService.NavigateToCheckOut(r.Id);
                         }
                         catch (Exception ex)
                         {
@@ -183,6 +216,13 @@ namespace Jindal.Views
                 // Add spacing row after group
                 CheckInOutTable.RowDefinitions.Add(new RowDefinition { Height = new GridLength(10) });
                 row++;
+            }
+            }
+            catch (Exception ex)
+            {
+                Services.ErrorHandlingService.LogError("Failed to populate table", ex, "CheckInOutPage");
+                System.Diagnostics.Debug.WriteLine($"PopulateTable error: {ex.Message}");
+                // Don't show alert for table population errors as it might be called frequently
             }
         }
 
@@ -201,7 +241,7 @@ namespace Jindal.Views
 
         private async void OnAddClicked(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync(nameof(AddCheckInOutPage));
+            await NavigationService.NavigateToAddGuest();
         }
 
         private async void OnReloadClicked(object sender, EventArgs e)
@@ -213,25 +253,59 @@ namespace Jindal.Views
 
         private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
         {
-            string search = e.NewTextValue?.ToLower() ?? "";
+            try
+            {
+                string search = e.NewTextValue?.ToLower()?.Trim() ?? "";
 
-            var filtered = allRecords
-                .Where(r => r.GuestName?.ToLower().Contains(search) ?? false)
-                .ToList();
+                if (string.IsNullOrEmpty(search))
+                {
+                    PopulateTable(allRecords);
+                    return;
+                }
 
-            PopulateTable(filtered);
+                var filtered = allRecords
+                    .Where(r => !string.IsNullOrEmpty(r.GuestName) && 
+                               r.GuestName.ToLower().Contains(search))
+                    .ToList();
+
+                PopulateTable(filtered);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Search error: {ex.Message}");
+                // Don't show alert for search errors, just log them
+            }
         }
 
         private void OnRoomFilterChanged(object? sender, EventArgs e)
         {
-            if (RoomFilterPicker.SelectedItem is not string selectedRoom)
-                return;
+            try
+            {
+                if (RoomFilterPicker.SelectedItem is not string selectedRoomStr)
+                {
+                    // If no selection, show all records
+                    PopulateTable(allRecords);
+                    return;
+                }
 
-            var filtered = allRecords
-                .Where(r => r.RoomNumber == selectedRoom)
-                .ToList();
+                if (!int.TryParse(selectedRoomStr, out int selectedRoom))
+                {
+                    PopulateTable(allRecords);
+                    return;
+                }
 
-            PopulateTable(filtered);
+                var filtered = allRecords
+                    .Where(r => r.RoomNumber == selectedRoom)
+                    .ToList();
+
+                PopulateTable(filtered);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Room filter error: {ex.Message}");
+                // Don't show alert for filter errors, just log them
+                PopulateTable(allRecords); // Show all records if filter fails
+            }
         }
     }
 }

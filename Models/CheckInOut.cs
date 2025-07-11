@@ -9,7 +9,7 @@ namespace Jindal.Models
         public int Id { get; set; }
 
         // Main Guest and Room Info
-        public string RoomNumber { get; set; } = string.Empty;
+        public int RoomNumber { get; set; }
         public string GuestName { get; set; } = string.Empty;
         public string GuestIdNumber { get; set; } = string.Empty;
         public string IdType { get; set; } = string.Empty;

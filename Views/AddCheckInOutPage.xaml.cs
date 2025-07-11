@@ -109,7 +109,7 @@ namespace Jindal.Views
 
                 var newEntry = new CheckInOut
                 {
-                    RoomNumber = selectedRoom.RoomNumber.ToString(),
+                    RoomNumber = selectedRoom.RoomNumber,
                     IdType = IdTypePicker.SelectedItem.ToString() ?? string.Empty,
                     GuestName = GuestNameEntry.Text?.Trim() ?? string.Empty,
                     GuestIdNumber = IdNumberEntry.Text?.Trim() ?? string.Empty,
@@ -154,30 +154,5 @@ namespace Jindal.Views
             }
         }
 
-        /// <summary>
-        /// Navigate to add additional guests to the same room.
-        /// </summary>
-        private async void OnAddGuestClicked(object sender, EventArgs e)
-        {
-            if (RoomPicker.SelectedItem == null)
-            {
-                await DisplayAlert("Select Room", "Please select a room first.", "OK");
-                return;
-            }
-
-            try
-            {
-                var selectedRoom = RoomPicker.SelectedItem as Room;
-                if (selectedRoom != null)
-                {
-                    await Shell.Current.GoToAsync($"{nameof(AddGuestToSameRoomPage)}?roomNumber={selectedRoom.RoomNumber}&sourcePage={nameof(AddCheckInOutPage)}");
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Navigation error: {ex.Message}");
-                await DisplayAlert("Error", "Unable to navigate to guest form.", "OK");
-            }
-        }
     }
 }

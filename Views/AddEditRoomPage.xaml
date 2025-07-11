@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Jindal.Models"
              x:Class="Jindal.Views.AddEditRoomPage"
              Title="Add/Edit Room"
              BackgroundColor="#F8FAFC">
@@ -43,6 +44,7 @@
                            TextColor="#64748B"
                            FontSize="14" />
                     <Picker x:Name="LocationPicker"
+                            x:DataType="models:Location"
                             Title="Select Location"
                             BackgroundColor="#F3F4F6"
                             TextColor="#374151"

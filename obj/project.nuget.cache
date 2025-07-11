@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "0U0T7gTMINs=",
+  "dgSpecHash": "IVzctd/ernM=",
   "success": true,
   "projectFilePath": "C:\\Users\\Anand\\source\\repos\\Jindal\\Jindal.csproj",
   "expectedPackageFiles": [
@@ -45,15 +45,11 @@
     "C:\\Users\\Anand\\.nuget\\packages\\sqlitepclraw.core\\2.1.10\\sqlitepclraw.core.2.1.10.nupkg.sha512",
     "C:\\Users\\Anand\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.10\\sqlitepclraw.lib.e_sqlite3.2.1.10.nupkg.sha512",
     "C:\\Users\\Anand\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3.android\\2.1.10\\sqlitepclraw.lib.e_sqlite3.android.2.1.10.nupkg.sha512",
-    "C:\\Users\\Anand\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3.ios\\2.1.10\\sqlitepclraw.lib.e_sqlite3.ios.2.1.10.nupkg.sha512",
     "C:\\Users\\Anand\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\2.1.10\\sqlitepclraw.provider.e_sqlite3.2.1.10.nupkg.sha512",
-    "C:\\Users\\Anand\\.nuget\\packages\\sqlitepclraw.provider.internal\\2.1.10\\sqlitepclraw.provider.internal.2.1.10.nupkg.sha512",
-    "C:\\Users\\Anand\\.nuget\\packages\\sqlitepclraw.provider.sqlite3\\2.1.2\\sqlitepclraw.provider.sqlite3.2.1.2.nupkg.sha512",
     "C:\\Users\\Anand\\.nuget\\packages\\system.buffers\\4.4.0\\system.buffers.4.4.0.nupkg.sha512",
     "C:\\Users\\Anand\\.nuget\\packages\\system.io.packaging\\8.0.1\\system.io.packaging.8.0.1.nupkg.sha512",
     "C:\\Users\\Anand\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
     "C:\\Users\\Anand\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.2\\system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512",
-    "C:\\Users\\Anand\\.nuget\\packages\\system.runtime.interopservices.nfloat.internal\\6.0.1\\system.runtime.interopservices.nfloat.internal.6.0.1.nupkg.sha512",
     "C:\\Users\\Anand\\.nuget\\packages\\system.speech\\9.0.5\\system.speech.9.0.5.nupkg.sha512",
     "C:\\Users\\Anand\\.nuget\\packages\\xamarin.android.glide\\4.16.0.11\\xamarin.android.glide.4.16.0.11.nupkg.sha512",
     "C:\\Users\\Anand\\.nuget\\packages\\xamarin.android.glide.annotations\\4.16.0.11\\xamarin.android.glide.annotations.4.16.0.11.nupkg.sha512",

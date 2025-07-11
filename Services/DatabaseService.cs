@@ -29,41 +29,27 @@ namespace Jindal.Services
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, "Jindal.db");
             _database = new SQLiteAsyncConnection(dbPath);
 
-        await _database.CreateTableAsync<Employee>();
         await _database.CreateTableAsync<Room>();
         await _database.CreateTableAsync<CheckInOut>();
         await _database.CreateTableAsync<LocationModel>();
         await _database.CreateTableAsync<User>();
 
-        await EnsureDefaultAdminAsync();
         await EnsureDefaultUserAsync();
         await EnsureDefaultLocationsAsync();
         await EnsureDemoRoomsAsync();
         }
 
-        private static async Task EnsureDefaultAdminAsync()
-        {
-            var existing = await _database!.Table<Employee>().FirstOrDefaultAsync();
-            if (existing == null)
-            {
-                // Create secure default admin with hashed password
-                // Default password is "JindalAdmin2024!" - change this after first login
-                var hashedPassword = BCrypt.Net.BCrypt.HashPassword("JindalAdmin2024!");
-                await _database!.InsertAsync(new Employee
-                {
-                    EmployeeCode = "admin",
-                    Password = hashedPassword
-                });
-            }
-        }
 
         private static async Task EnsureDefaultLocationsAsync()
         {
-            var existingLocations = await _database!.Table<LocationModel>().CountAsync();
+            if (_database == null)
+                throw new InvalidOperationException("Database not initialized");
+                
+            var existingLocations = await _database.Table<LocationModel>().CountAsync();
             if (existingLocations == 0)
             {
                 // Add some demo locations for testing
-                await _database!.InsertAllAsync(new[]
+                await _database.InsertAllAsync(new[]
                 {
                     new LocationModel { Name = "Main Building", LocationCode = "MB", Address = "123 Main St" },
                     new LocationModel { Name = "Guest House", LocationCode = "GH", Address = "456 Guest Ave" },
@@ -74,17 +60,20 @@ namespace Jindal.Services
 
         private static async Task EnsureDemoRoomsAsync()
         {
-            var existingRooms = await _database!.Table<Room>().CountAsync();
+            if (_database == null)
+                throw new InvalidOperationException("Database not initialized");
+                
+            var existingRooms = await _database.Table<Room>().CountAsync();
             if (existingRooms == 0)
             {
                 // Ensure we have locations first
-                var locations = await _database!.Table<LocationModel>().ToListAsync();
+                var locations = await _database.Table<LocationModel>().ToListAsync();
                 if (locations.Any())
                 {
                     var mainBuildingId = locations.First().Id;
                     
                     // Add some demo rooms for testing
-                    await _database!.InsertAllAsync(new[]
+                    await _database.InsertAllAsync(new[]
                     {
                         new Room { RoomNumber = 101, Availability = "Available", LocationId = mainBuildingId, Remark = "Standard room" },
                         new Room { RoomNumber = 102, Availability = "Available", LocationId = mainBuildingId, Remark = "Standard room" },
@@ -98,7 +87,10 @@ namespace Jindal.Services
 
         private static async Task EnsureDefaultUserAsync()
         {
-            var existingUser = await _database!.Table<User>()
+            if (_database == null)
+                throw new InvalidOperationException("Database not initialized");
+                
+            var existingUser = await _database.Table<User>()
                 .Where(u => u.Role == UserRole.Admin)
                 .FirstOrDefaultAsync();
 
@@ -119,26 +111,15 @@ namespace Jindal.Services
             }
         }
 
-        // Employee
-        public static async Task<Employee?> GetEmployee(string username, string password)
-        {
-            await Init();
-            var employee = await _database!.Table<Employee>()
-                .FirstOrDefaultAsync(e => e.EmployeeCode == username);
-            
-            if (employee != null && BCrypt.Net.BCrypt.Verify(password, employee.Password))
-            {
-                return employee;
-            }
-            
-            return null;
-        }
 
         // Room
         public static async Task<List<Room>> GetRooms()
         {
             await Init();
-            var rooms = await _database!.Table<Room>().ToListAsync();
+            if (_database == null)
+                throw new InvalidOperationException("Database not initialized");
+                
+            var rooms = await _database.Table<Room>().ToListAsync();
             var locations = await GetLocations();
 
             foreach (var room in rooms)
@@ -149,9 +130,29 @@ namespace Jindal.Services
             return rooms;
         }
 
-        public static async Task AddRoom(Room room) => await _database!.InsertAsync(room);
-        public static async Task UpdateRoom(Room room) => await _database!.UpdateAsync(room);
-        public static async Task DeleteRoom(Room room) => await _database!.DeleteAsync(room);
+        public static async Task AddRoom(Room room) 
+        {
+            await Init();
+            if (_database == null)
+                throw new InvalidOperationException("Database not initialized");
+            await _database.InsertAsync(room);
+        }
+        
+        public static async Task UpdateRoom(Room room) 
+        {
+            await Init();
+            if (_database == null)
+                throw new InvalidOperationException("Database not initialized");
+            await _database.UpdateAsync(room);
+        }
+        
+        public static async Task DeleteRoom(Room room) 
+        {
+            await Init();
+            if (_database == null)
+                throw new InvalidOperationException("Database not initialized");
+            await _database.DeleteAsync(room);
+        }
 
         public static async Task<List<Room>> GetAvailableRooms()
         {
@@ -165,7 +166,9 @@ namespace Jindal.Services
         public static async Task<List<CheckInOut>> GetCheckInOuts()
         {
             await Init();
-            return await _database!.Table<CheckInOut>().ToListAsync();
+            if (_database == null)
+                throw new InvalidOperationException("Database not initialized");
+            return await _database.Table<CheckInOut>().ToListAsync();
         }
         
         /// <summary>
@@ -174,7 +177,9 @@ namespace Jindal.Services
         public static async Task<List<CheckInOut>> GetActiveGuests()
         {
             await Init();
-            return await _database!.Table<CheckInOut>()
+            if (_database == null)
+                throw new InvalidOperationException("Database not initialized");
+            return await _database.Table<CheckInOut>()
                 .Where(c => c.CheckOutDate == null && c.CheckOutTime == null)
                 .ToListAsync();
         }
@@ -185,7 +190,9 @@ namespace Jindal.Services
         public static async Task<List<CheckInOut>> GetCheckedOutGuests()
         {
             await Init();
-            return await _database!.Table<CheckInOut>()
+            if (_database == null)
+                throw new InvalidOperationException("Database not initialized");
+            return await _database.Table<CheckInOut>()
                 .Where(c => c.CheckOutDate != null && c.CheckOutTime != null)
                 .ToListAsync();
         }
@@ -196,7 +203,7 @@ namespace Jindal.Services
             return await _database!.Table<CheckInOut>().FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public static async Task<List<CheckInOut>> GetCheckInOutsByRoomNumber(string roomNumber)
+        public static async Task<List<CheckInOut>> GetCheckInOutsByRoomNumber(int roomNumber)
         {
             await Init();
             return await _database!.Table<CheckInOut>()
@@ -234,7 +241,7 @@ namespace Jindal.Services
             {
                 await Init();
                 // Try a simple query to test connectivity
-                await _database!.Table<Employee>().CountAsync();
+                await _database!.Table<User>().CountAsync();
                 return true;
             }
             catch
@@ -372,13 +379,13 @@ namespace Jindal.Services
                 
                 // Get occupied room numbers
                 var occupiedRoomNumbers = activeGuests
-                    .Where(g => !string.IsNullOrWhiteSpace(g.RoomNumber))
-                    .Select(g => g.RoomNumber.Trim())
+                    .Where(g => g.RoomNumber > 0)
+                    .Select(g => g.RoomNumber)
                     .ToHashSet();
                 
                 // Filter available rooms
                 var availableRooms = allRooms
-                    .Where(r => !occupiedRoomNumbers.Contains(r.RoomNumber.ToString()))
+                    .Where(r => !occupiedRoomNumbers.Contains(r.RoomNumber))
                     .ToList();
                 
                 // Update room availability status in database
@@ -407,8 +414,8 @@ namespace Jindal.Services
                 
                 // Group guests by room
                 var guestsByRoom = activeGuests
-                    .Where(g => !string.IsNullOrWhiteSpace(g.RoomNumber))
-                    .GroupBy(g => g.RoomNumber.Trim())
+                    .Where(g => g.RoomNumber > 0)
+                    .GroupBy(g => g.RoomNumber)
                     .ToDictionary(g => g.Key, g => g.ToList());
                 
                 // Get occupied rooms with guests
@@ -416,7 +423,7 @@ namespace Jindal.Services
                 
                 foreach (var room in allRooms)
                 {
-                    if (guestsByRoom.TryGetValue(room.RoomNumber.ToString(), out var guests))
+                    if (guestsByRoom.TryGetValue(room.RoomNumber, out var guests))
                     {
                         occupiedRooms.Add((room, guests));
                     }
@@ -439,9 +446,7 @@ namespace Jindal.Services
                 
                 // Check if there are any active guests in this room
                 var activeGuests = await GetActiveGuests();
-                var hasActiveGuests = activeGuests.Any(g => 
-                    !string.IsNullOrWhiteSpace(g.RoomNumber) && 
-                    g.RoomNumber.Trim() == roomNumber.ToString());
+                var hasActiveGuests = activeGuests.Any(g => g.RoomNumber == roomNumber);
                 
                 return !hasActiveGuests;
             }
@@ -462,12 +467,12 @@ namespace Jindal.Services
                 var activeGuests = await GetActiveGuests();
                 
                 var occupiedRoomNumbers = activeGuests
-                    .Where(g => !string.IsNullOrWhiteSpace(g.RoomNumber))
-                    .Select(g => g.RoomNumber.Trim())
+                    .Where(g => g.RoomNumber > 0)
+                    .Select(g => g.RoomNumber)
                     .ToHashSet();
                 
                 var totalRooms = allRooms.Count;
-                var occupiedRooms = allRooms.Count(r => occupiedRoomNumbers.Contains(r.RoomNumber.ToString()));
+                var occupiedRooms = allRooms.Count(r => occupiedRoomNumbers.Contains(r.RoomNumber));
                 var availableRooms = totalRooms - occupiedRooms;
                 var totalActiveGuests = activeGuests.Count;
                 
@@ -487,7 +492,7 @@ namespace Jindal.Services
             }
         }
 
-        public static async Task UpdateRoomAvailabilityStatus(List<Room>? allRooms = null, HashSet<string>? occupiedRoomNumbers = null)
+        public static async Task UpdateRoomAvailabilityStatus(List<Room>? allRooms = null, HashSet<int>? occupiedRoomNumbers = null)
         {
             try
             {
@@ -501,8 +506,8 @@ namespace Jindal.Services
                 {
                     var activeGuests = await GetActiveGuests();
                     occupiedRoomNumbers = activeGuests
-                        .Where(g => !string.IsNullOrWhiteSpace(g.RoomNumber))
-                        .Select(g => g.RoomNumber.Trim())
+                        .Where(g => g.RoomNumber > 0)
+                        .Select(g => g.RoomNumber)
                         .ToHashSet();
                 }
                 
@@ -511,8 +516,7 @@ namespace Jindal.Services
                 
                 foreach (var room in allRooms)
                 {
-                    var roomNumberStr = room.RoomNumber.ToString();
-                    var shouldBeOccupied = occupiedRoomNumbers.Contains(roomNumberStr);
+                    var shouldBeOccupied = occupiedRoomNumbers.Contains(room.RoomNumber);
                     var currentlyAvailable = room.Availability == "Available";
                     
                     // Update if status doesn't match reality
@@ -555,13 +559,12 @@ namespace Jindal.Services
             try
             {
                 await Init();
-                var employeeCount = await _database!.Table<Employee>().CountAsync();
                 var roomCount = await _database!.Table<Room>().CountAsync();
                 var locationCount = await _database!.Table<LocationModel>().CountAsync();
                 var guestCount = await _database!.Table<CheckInOut>().CountAsync();
                 var userCount = await _database!.Table<User>().CountAsync();
                 
-                return $"Employees: {employeeCount}, Rooms: {roomCount}, Locations: {locationCount}, Guests: {guestCount}, Users: {userCount}";
+                return $"Rooms: {roomCount}, Locations: {locationCount}, Guests: {guestCount}, Users: {userCount}";
             }
             catch (Exception ex)
             {

@@ -6,75 +6,82 @@ using System.Diagnostics;
 
 namespace Jindal.Views
 {
-    // Receives parameters from Shell navigation
-    [QueryProperty(nameof(RoomNumber), "roomNumber")]
-    [QueryProperty(nameof(GuestId), "guestId")]
-    [QueryProperty(nameof(SourcePage), "sourcePage")]
+[QueryProperty(nameof(RoomNumber), "roomNumber")]
     public partial class AddGuestToSameRoomPage : ContentPage
     {
-        // Properties for navigation and room identification
-        public string RoomNumber { get; set; } = string.Empty;
-        public int GuestId { get; set; } // Used if returning to EditGuestPage
-        public string SourcePage { get; set; } = string.Empty;
+        public int RoomNumber { get; set; }
 
         public AddGuestToSameRoomPage()
         {
-            InitializeComponent();
-            
-            // Set default date and time values
+            try
+            {
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"XAML init error: {ex}");
+                throw;
+            }
+
             CheckInDatePicker.Date = DateTime.Today;
             CheckInTimePicker.Time = DateTime.Now.TimeOfDay;
             MailReceivedDatePicker.Date = DateTime.Today;
         }
 
         /// <summary>
-        /// Triggered when page navigation completes.
-        /// Sets the Room Number label dynamically.
+        /// Triggered when page is shown to user. Replaces OnNavigatedTo for reliability with query parameters.
         /// </summary>
-        protected override void OnNavigatedTo(NavigatedToEventArgs args)
+        protected override async void OnAppearing()
         {
-            base.OnNavigatedTo(args);
+            base.OnAppearing();
 
             try
             {
-                if (!string.IsNullOrEmpty(RoomNumber))
-                {
-                    RoomNumberLabel.Text = $"Room: {RoomNumber}";
-                    Debug.WriteLine($"AddGuestToSameRoomPage: Room Number set to {RoomNumber}");
-                }
-                else
-                {
-                    RoomNumberLabel.Text = "Room: Not specified";
-                    Debug.WriteLine("AddGuestToSameRoomPage: Room Number is empty");
-                }
+            if (RoomNumber <= 0)
+            {
+                ErrorHandlingService.LogError("Invalid room number in navigation context", null, "AddGuestToSameRoomPage");
+                await NavigationService.NavigateToCheckInOut(); // Fallback to Check In/Out page
+                return;
+            }
 
-                Debug.WriteLine($"AddGuestToSameRoomPage: SourcePage = {SourcePage}, GuestId = {GuestId}");
+                if (RoomNumberLabel != null)
+                    RoomNumberLabel.Text = $"Room: {RoomNumber}";
+
+                Debug.WriteLine($"[AddGuestToSameRoomPage] RoomNumber: {RoomNumber}");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"OnNavigatedTo error: {ex.Message}");
-                RoomNumberLabel.Text = "Room: Error loading";
+                DisplayAlert("Error", $"Failed to initialize page: {ex.Message}", "OK");
+                Debug.WriteLine($"AddGuestToSameRoomPage.OnAppearing error: {ex}");
+
+                if (RoomNumberLabel != null)
+                    RoomNumberLabel.Text = "Room: Error loading";
             }
         }
 
-        /// <summary>
-        /// Saves a new guest entry for the existing room.
-        /// </summary>
         private async void OnSaveClicked(object sender, EventArgs e)
         {
-            // Basic validation
-            if (string.IsNullOrWhiteSpace(GuestNameEntry.Text) ||
-                string.IsNullOrWhiteSpace(GuestIdEntry.Text) ||
-                IdTypePicker.SelectedItem == null)
+            if (string.IsNullOrWhiteSpace(GuestNameEntry?.Text))
             {
-                await DisplayAlert("Validation Error", "Please fill all required fields (Name, ID Type, ID Number).", "OK");
+                await DisplayAlert("Missing Information", "Please enter the guest name.", "OK");
+                return;
+            }
+
+            if (IdTypePicker?.SelectedItem == null)
+            {
+                await DisplayAlert("Missing Information", "Please select an ID type.", "OK");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(GuestIdEntry?.Text))
+            {
+                await DisplayAlert("Missing Information", "Please enter the ID number.", "OK");
                 return;
             }
 
             try
             {
-                // Additional validation for RoomNumber
-                if (string.IsNullOrWhiteSpace(RoomNumber))
+                if (RoomNumber <= 0)
                 {
                     await DisplayAlert("Error", "Room number is missing. Please go back and select a room.", "OK");
                     return;
@@ -86,62 +93,51 @@ namespace Jindal.Views
                     GuestName = GuestNameEntry.Text?.Trim() ?? string.Empty,
                     GuestIdNumber = GuestIdEntry.Text?.Trim() ?? string.Empty,
                     IdType = IdTypePicker.SelectedItem?.ToString() ?? string.Empty,
-                    CompanyName = CompanyEntry.Text?.Trim() ?? string.Empty,
-                    Nationality = NationalityEntry.Text?.Trim() ?? string.Empty,
-                    Address = AddressEntry.Text?.Trim() ?? string.Empty,
-                    Mobile = MobileEntry.Text?.Trim() ?? string.Empty,
+                    CompanyName = CompanyEntry?.Text?.Trim() ?? string.Empty,
+                    Nationality = NationalityEntry?.Text?.Trim() ?? string.Empty,
+                    Address = AddressEntry?.Text?.Trim() ?? string.Empty,
+                    Mobile = MobileEntry?.Text?.Trim() ?? string.Empty,
                     CheckInDate = CheckInDatePicker.Date,
                     CheckInTime = CheckInTimePicker.Time,
-                    Department = DepartmentEntry.Text?.Trim() ?? string.Empty,
-                    Purpose = PurposeEntry.Text?.Trim() ?? string.Empty,
+                    Department = DepartmentEntry?.Text?.Trim() ?? string.Empty,
+                    Purpose = PurposeEntry?.Text?.Trim() ?? string.Empty,
                     MailReceivedDate = MailReceivedDatePicker.Date
                 };
 
-                await DatabaseService.AddCheckInOut(guest);
+                var validationResult = ValidationHelper.ValidateGuestData(guest);
+                if (!validationResult.IsValid)
+                {
+                    await DisplayAlert("Validation Error", validationResult.GetErrorMessage(), "OK");
+                    return;
+                }
 
+                await ErrorHandlingService.ExecuteWithRetry(async () =>
+                {
+                    await DatabaseService.AddCheckInOut(guest);
+                }, 3, "Add Guest to Same Room");
+
+                ErrorHandlingService.LogInfo($"Guest {guest.GuestName} added to room {guest.RoomNumber}", "AddGuestToSameRoom");
                 await DisplayAlert("Success", "Guest added successfully!", "OK");
 
-                // Navigate back to appropriate page
-                NavigateBack();
+                await NavigationService.NavigateBack();
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Add guest error: {ex.Message}");
-                await DisplayAlert("Error", "Failed to add guest. Please try again.", "OK");
+                ErrorHandlingService.LogError("Add guest to same room failed", ex, "AddGuestToSameRoomPage");
+                var userMessage = ErrorHandlingService.GetUserFriendlyErrorMessage(ex);
+                await DisplayAlert("Error", userMessage, "OK");
             }
         }
 
-        /// <summary>
-        /// Overrides physical back button to ensure correct navigation.
-        /// </summary>
         protected override bool OnBackButtonPressed()
         {
             NavigateBack();
-            return true; // Block default back behavior
+            return true;
         }
 
-        /// <summary>
-        /// Handles navigation back to appropriate source page (EditGuestPage or previous).
-        /// </summary>
         private async void NavigateBack()
         {
-            try
-            {
-                if (!string.IsNullOrEmpty(SourcePage) && SourcePage == nameof(EditGuestPage) && GuestId > 0)
-                {
-                    await Shell.Current.GoToAsync($"{nameof(EditGuestPage)}?guestId={GuestId}");
-                }
-                else
-                {
-                    await Shell.Current.GoToAsync(".."); // Go back in navigation stack
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Navigation back error: {ex.Message}");
-                // Fallback: try to pop the current page
-                await Navigation.PopAsync();
-            }
+            await NavigationService.NavigateBack();
         }
     }
 }

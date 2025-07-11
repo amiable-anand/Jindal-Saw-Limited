@@ -47,9 +47,10 @@ namespace Jindal.Views
 
             RoomFilterPicker.ItemsSource = allCheckedOutRecords
                 .Select(r => r.RoomNumber)
-                .Where(r => !string.IsNullOrWhiteSpace(r))
+                .Where(r => r > 0)
                 .Distinct()
                 .OrderBy(r => r)
+                .Select(r => r.ToString())
                 .ToList();
 
             FromDatePicker.Date = DateTime.Today.AddDays(-7);
@@ -67,7 +68,7 @@ namespace Jindal.Views
 
             var filtered = allCheckedOutRecords
                 .Where(r =>
-                    (string.IsNullOrEmpty(selectedRoom) || r.RoomNumber == selectedRoom) &&
+                    (string.IsNullOrEmpty(selectedRoom) || r.RoomNumber.ToString() == selectedRoom) &&
                     (string.IsNullOrEmpty(search) || r.GuestName?.ToLower().Contains(search) == true) &&
                     r.CheckOutDate?.Date >= fromDate &&
                     r.CheckOutDate?.Date <= toDate)
@@ -93,7 +94,7 @@ namespace Jindal.Views
 
                 var textColor = Color.FromArgb("#374151"); // Dark text for white background
                 
-                AddToGrid(new Label { Text = r.RoomNumber ?? "-", TextColor = textColor }, 0, row);
+                AddToGrid(new Label { Text = r.RoomNumber > 0 ? r.RoomNumber.ToString() : "-", TextColor = textColor }, 0, row);
                 AddToGrid(new Label { Text = r.GuestName ?? "-", TextColor = textColor }, 1, row);
                 AddToGrid(new Label { Text = r.GuestIdNumber ?? "-", TextColor = textColor }, 2, row);
                 AddToGrid(new Label { Text = r.CheckInDate.ToString("dd-MM-yyyy"), TextColor = textColor }, 3, row);
@@ -201,7 +202,7 @@ namespace Jindal.Views
                 {
                     var r = filtered[i];
                     int row = i + 2;
-                    ws.Cell(row, 1).Value = r.RoomNumber;
+                    ws.Cell(row, 1).Value = r.RoomNumber > 0 ? r.RoomNumber.ToString() : "-";
                     ws.Cell(row, 2).Value = r.GuestName;
                     ws.Cell(row, 3).Value = r.GuestIdNumber;
                     ws.Cell(row, 4).Value = r.CheckInDate.ToString("dd-MM-yyyy");
@@ -219,8 +220,8 @@ namespace Jindal.Views
                 string filePath;
 
 #if ANDROID
-                var downloads = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).AbsolutePath;
-                filePath = Path.Combine(downloads, fileName);
+                var downloads = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)?.AbsolutePath;
+                filePath = Path.Combine(downloads ?? "/storage/emulated/0/Download", fileName);
 #else
                 filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
 #endif

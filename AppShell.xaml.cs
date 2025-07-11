@@ -17,6 +17,9 @@ public partial class AppShell : Shell
         // Register hidden or additional navigation routes
         RegisterRoutes();
         
+        // Clear navigation context on app start
+        NavigationService.ClearContext();
+        
         // Navigate to Dashboard as default page
         _ = GoToAsync("//DashboardPage");
     }

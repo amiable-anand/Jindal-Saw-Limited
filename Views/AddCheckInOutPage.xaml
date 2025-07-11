@@ -108,27 +108,16 @@
                 </Grid>
             </Frame>
 
-            <HorizontalStackLayout Spacing="16" HorizontalOptions="Center">
-                <Button Text="+ Add Guest"
-                        Clicked="OnAddGuestClicked"
-                        BackgroundColor="#1E3A8A"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        CornerRadius="12"
-                        Padding="16,8"
-                        WidthRequest="130"
-                        HeightRequest="46" />
-
-                <Button Text="✓ Check In"
-                        Clicked="OnCheckInClicked"
-                        BackgroundColor="#059669"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        CornerRadius="12"
-                        Padding="20,8"
-                        WidthRequest="130"
-                        HeightRequest="46" />
-            </HorizontalStackLayout>
+            <Button Text="✓ Check In"
+                    Clicked="OnCheckInClicked"
+                    BackgroundColor="#059669"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="12"
+                    Padding="20,8"
+                    WidthRequest="130"
+                    HeightRequest="46"
+                    HorizontalOptions="Center" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
