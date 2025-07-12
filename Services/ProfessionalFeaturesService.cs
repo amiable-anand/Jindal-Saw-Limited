@@ -1,5 +1,8 @@
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Shapes;
+using Microsoft.Maui.Graphics;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Jindal.Services
@@ -15,11 +18,14 @@ namespace Jindal.Services
         public static async Task<T> ExecuteWithLoading<T>(Func<Task<T>> operation, string message = "Loading...")
         {
             var loadingPage = new LoadingPage(message);
+            var mainPage = GetMainPage();
+            
+            if (mainPage == null) return await operation();
             
             try
             {
                 // Show loading page
-                await Application.Current.MainPage.Navigation.PushModalAsync(loadingPage);
+                await mainPage.Navigation.PushModalAsync(loadingPage);
                 
                 // Execute operation
                 var result = await operation();
@@ -29,7 +35,7 @@ namespace Jindal.Services
             finally
             {
                 // Hide loading page
-                await Application.Current.MainPage.Navigation.PopModalAsync();
+                await mainPage.Navigation.PopModalAsync();
             }
         }
 
@@ -39,11 +45,18 @@ namespace Jindal.Services
         public static async Task ExecuteWithLoading(Func<Task> operation, string message = "Loading...")
         {
             var loadingPage = new LoadingPage(message);
+            var mainPage = GetMainPage();
+            
+            if (mainPage == null)
+            {
+                await operation();
+                return;
+            }
             
             try
             {
                 // Show loading page
-                await Application.Current.MainPage.Navigation.PushModalAsync(loadingPage);
+                await mainPage.Navigation.PushModalAsync(loadingPage);
                 
                 // Execute operation
                 await operation();
@@ -51,7 +64,7 @@ namespace Jindal.Services
             finally
             {
                 // Hide loading page
-                await Application.Current.MainPage.Navigation.PopModalAsync();
+                await mainPage.Navigation.PopModalAsync();
             }
         }
 
@@ -60,7 +73,8 @@ namespace Jindal.Services
         /// </summary>
         public static async Task<bool> ShowConfirmationDialog(string title, string message, string acceptText = "Yes", string cancelText = "No")
         {
-            return await Application.Current.MainPage.DisplayAlert(title, message, acceptText, cancelText);
+            var mainPage = GetMainPage();
+            return mainPage != null && await mainPage.DisplayAlert(title, message, acceptText, cancelText);
         }
 
         /// <summary>
@@ -68,7 +82,9 @@ namespace Jindal.Services
         /// </summary>
         public static async Task ShowAlert(string title, string message, string buttonText = "OK")
         {
-            await Application.Current.MainPage.DisplayAlert(title, message, buttonText);
+            var mainPage = GetMainPage();
+            if (mainPage != null)
+                await mainPage.DisplayAlert(title, message, buttonText);
         }
 
         /// <summary>
@@ -160,8 +176,16 @@ namespace Jindal.Services
         public static async Task ShowToast(string message, int durationMs = 3000)
         {
             // For now, use DisplayAlert. In a real app, you'd implement a custom toast
-            await Application.Current.MainPage.DisplayAlert("", message, "OK");
+            var mainPage = GetMainPage();
+            if (mainPage != null)
+                await mainPage.DisplayAlert("", message, "OK");
         }
+        
+        /// <summary>
+        /// Get the current MainPage using the modern .NET 9 approach.
+        /// </summary>
+        private static Page? GetMainPage() =>
+            Application.Current?.Windows?.FirstOrDefault()?.Page;
     }
 
     /// <summary>
@@ -180,12 +204,12 @@ namespace Jindal.Services
                 HorizontalOptions = LayoutOptions.Center,
                 Children =
                 {
-                    new Frame
+                    new Border
                     {
                         BackgroundColor = Colors.White,
-                        CornerRadius = 20,
+                        StrokeShape = new RoundRectangle { CornerRadius = 20 },
                         Padding = 30,
-                        HasShadow = true,
+                        Shadow = new Shadow { Brush = Brush.Black, Opacity = 0.2f, Offset = new Point(0, 4) },
                         Content = new StackLayout
                         {
                             Spacing = 20,

@@ -86,76 +86,86 @@
                            FontAttributes="Bold" 
                            TextColor="#1E3A8A" />
 
-                    <!-- Table Header -->
-                    <Grid BackgroundColor="#F8FAFC" 
-                          Padding="12" 
-                          ColumnSpacing="8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="1.5*" />
-                            <ColumnDefinition Width="3*" />
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="2*" />
-                        </Grid.ColumnDefinitions>
+                    <!-- Add horizontal ScrollView for table header -->
+                    <ScrollView Orientation="Horizontal" 
+                               HorizontalScrollBarVisibility="Always">
+                        <Grid BackgroundColor="#F8FAFC" 
+                              Padding="12" 
+                              ColumnSpacing="8"
+                              MinimumWidthRequest="800">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="250" />
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="130" />
+                            </Grid.ColumnDefinitions>
 
-                        <Label Text="Name" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
-                        <Label Text="Code" Grid.Column="1" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
-                        <Label Text="Address" Grid.Column="2" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
-                        <Label Text="Remark" Grid.Column="3" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
-                        <Label Text="Actions" Grid.Column="4" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
-                    </Grid>
+                            <Label Text="Name" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
+                            <Label Text="Code" Grid.Column="1" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
+                            <Label Text="Address" Grid.Column="2" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
+                            <Label Text="Remark" Grid.Column="3" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
+                            <Label Text="Actions" Grid.Column="4" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
+                        </Grid>
+                    </ScrollView>
 
-                    <!-- Location Items -->
-                    <CollectionView x:Name="LocationCollection" SelectionMode="None">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:Location">
-                                <Frame BackgroundColor="#F8FAFC" 
-                                       CornerRadius="8" 
-                                       Padding="12" 
-                                       Margin="0,2" 
-                                       HasShadow="False">
-                                    <Grid ColumnSpacing="8">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="2*" />
-                                            <ColumnDefinition Width="1.5*" />
-                                            <ColumnDefinition Width="3*" />
-                                            <ColumnDefinition Width="2*" />
-                                            <ColumnDefinition Width="2*" />
-                                        </Grid.ColumnDefinitions>
+                    <!-- Location Items in a Table-wide Scrolling Container -->
+                    <ScrollView Orientation="Horizontal" 
+                               HorizontalScrollBarVisibility="Always">
+                        <StackLayout MinimumWidthRequest="800">
+                            <!-- Table Data Rows -->
+                            <CollectionView x:Name="LocationCollection" SelectionMode="None">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:Location">
+                                        <Frame BackgroundColor="#F8FAFC" 
+                                               CornerRadius="8" 
+                                               Padding="12" 
+                                               Margin="0,2" 
+                                               HasShadow="False">
+                                            <Grid ColumnSpacing="8">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="150" />
+                                                    <ColumnDefinition Width="120" />
+                                                    <ColumnDefinition Width="250" />
+                                                    <ColumnDefinition Width="150" />
+                                                    <ColumnDefinition Width="130" />
+                                                </Grid.ColumnDefinitions>
 
-                                        <Label Text="{Binding Name}" TextColor="#374151" FontSize="14" VerticalOptions="Center"/>
-                                        <Label Text="{Binding LocationCode}" Grid.Column="1" TextColor="#374151" FontSize="14" VerticalOptions="Center"/>
-                                        <Label Text="{Binding Address}" Grid.Column="2" TextColor="#374151" FontSize="14" VerticalOptions="Center"/>
-                                        <Label Text="{Binding Remark}" Grid.Column="3" TextColor="#374151" FontSize="14" VerticalOptions="Center"/>
+                                                <Label Text="{Binding Name}" TextColor="#374151" FontSize="14" VerticalOptions="Center"/>
+                                                <Label Text="{Binding LocationCode}" Grid.Column="1" TextColor="#374151" FontSize="14" VerticalOptions="Center"/>
+                                                <Label Text="{Binding Address}" Grid.Column="2" TextColor="#374151" FontSize="14" VerticalOptions="Center"/>
+                                                <Label Text="{Binding Remark}" Grid.Column="3" TextColor="#374151" FontSize="14" VerticalOptions="Center"/>
 
-                                        <HorizontalStackLayout Grid.Column="4" Spacing="6">
-                                            <Button Text="Edit"
-                                                    Clicked="OnEditClicked"
-                                                    BackgroundColor="#1E3A8A"
-                                                    TextColor="White"
-                                                    FontSize="12"
-                                                    FontAttributes="Bold"
-                                                    CornerRadius="6"
-                                                    Padding="8,4"
-                                                    WidthRequest="50"
-                                                    HeightRequest="32" />
+                                                <HorizontalStackLayout Grid.Column="4" Spacing="6">
+                                                    <Button Text="Edit"
+                                                            Clicked="OnEditClicked"
+                                                            BackgroundColor="#1E3A8A"
+                                                            TextColor="White"
+                                                            FontSize="12"
+                                                            FontAttributes="Bold"
+                                                            CornerRadius="6"
+                                                            Padding="8,4"
+                                                            WidthRequest="50"
+                                                            HeightRequest="32" />
 
-                                            <Button Text="Delete"
-                                                    Clicked="OnDeleteClicked"
-                                                    BackgroundColor="#DC2626"
-                                                    TextColor="White"
-                                                    FontSize="12"
-                                                    FontAttributes="Bold"
-                                                    CornerRadius="6"
-                                                    Padding="8,4"
-                                                    WidthRequest="50"
-                                                    HeightRequest="32" />
-                                        </HorizontalStackLayout>
-                                    </Grid>
-                                </Frame>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
+                                                    <Button Text="Delete"
+                                                            Clicked="OnDeleteClicked"
+                                                            BackgroundColor="#DC2626"
+                                                            TextColor="White"
+                                                            FontSize="12"
+                                                            FontAttributes="Bold"
+                                                            CornerRadius="6"
+                                                            Padding="8,4"
+                                                            WidthRequest="50"
+                                                            HeightRequest="32" />
+                                                </HorizontalStackLayout>
+                                            </Grid>
+                                        </Frame>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </StackLayout>
+                    </ScrollView>
                 </VerticalStackLayout>
             </Frame>
 
