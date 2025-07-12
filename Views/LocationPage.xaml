@@ -86,33 +86,29 @@
                            FontAttributes="Bold" 
                            TextColor="#1E3A8A" />
 
-                    <!-- Add horizontal ScrollView for table header -->
+                    <!-- Unified horizontal ScrollView for entire table content -->
                     <ScrollView Orientation="Horizontal" 
                                HorizontalScrollBarVisibility="Always">
-                        <Grid BackgroundColor="#F8FAFC" 
-                              Padding="12" 
-                              ColumnSpacing="8"
-                              MinimumWidthRequest="800">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="150" />
-                                <ColumnDefinition Width="120" />
-                                <ColumnDefinition Width="250" />
-                                <ColumnDefinition Width="150" />
-                                <ColumnDefinition Width="130" />
-                            </Grid.ColumnDefinitions>
+                        <VerticalStackLayout MinimumWidthRequest="800" Spacing="8">
+                            <!-- Table Header -->
+                            <Grid BackgroundColor="#F8FAFC" 
+                                  Padding="12" 
+                                  ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="250" />
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="130" />
+                                </Grid.ColumnDefinitions>
 
-                            <Label Text="Name" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
-                            <Label Text="Code" Grid.Column="1" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
-                            <Label Text="Address" Grid.Column="2" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
-                            <Label Text="Remark" Grid.Column="3" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
-                            <Label Text="Actions" Grid.Column="4" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
-                        </Grid>
-                    </ScrollView>
+                                <Label Text="Name" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
+                                <Label Text="Code" Grid.Column="1" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
+                                <Label Text="Address" Grid.Column="2" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
+                                <Label Text="Remark" Grid.Column="3" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
+                                <Label Text="Actions" Grid.Column="4" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="14"/>
+                            </Grid>
 
-                    <!-- Location Items in a Table-wide Scrolling Container -->
-                    <ScrollView Orientation="Horizontal" 
-                               HorizontalScrollBarVisibility="Always">
-                        <StackLayout MinimumWidthRequest="800">
                             <!-- Table Data Rows -->
                             <CollectionView x:Name="LocationCollection" SelectionMode="None">
                                 <CollectionView.ItemTemplate>
@@ -164,7 +160,7 @@
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
-                        </StackLayout>
+                        </VerticalStackLayout>
                     </ScrollView>
                 </VerticalStackLayout>
             </Frame>

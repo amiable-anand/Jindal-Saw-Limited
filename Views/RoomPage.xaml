@@ -26,146 +26,147 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Action Controls -->
-            <Frame BackgroundColor="White" 
-                   CornerRadius="12" 
-                   Padding="16" 
-                   HasShadow="True">
-                <Grid ColumnSpacing="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+            <!-- Unified Horizontal Scrolling for Filters and Table -->
+            <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Always">
+                <VerticalStackLayout MinimumWidthRequest="700" Spacing="20">
+                    
+                    <!-- Action Controls -->
+                    <Frame BackgroundColor="White" 
+                           CornerRadius="12" 
+                           Padding="16" 
+                           HasShadow="True">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
 
-                    <Button Text="🏠 Add Room"
-                            Grid.Column="0"
-                            Clicked="OnAddRoomClicked"
-                            BackgroundColor="#059669"
-                            TextColor="White"
-                            FontSize="14"
-                            FontAttributes="Bold"
-                            CornerRadius="8"
-                            Padding="12,8"
-                            WidthRequest="120"
-                            HeightRequest="42" />
+                            <Button Text="🏠 Add Room"
+                                    Grid.Column="0"
+                                    Clicked="OnAddRoomClicked"
+                                    BackgroundColor="#059669"
+                                    TextColor="White"
+                                    FontSize="14"
+                                    FontAttributes="Bold"
+                                    CornerRadius="8"
+                                    Padding="12,8"
+                                    WidthRequest="120"
+                                    HeightRequest="42" />
 
-                    <SearchBar x:Name="SearchBar"
-                               Grid.Column="1"
-                               Placeholder="Search rooms..."
-                               SearchButtonPressed="OnSearchPressed"
-                               FontSize="14"
-                               BackgroundColor="#F3F4F6"
-                               PlaceholderColor="#64748B"
-                               TextColor="#374151"
-                               Margin="8,0"
-                               HeightRequest="42" />
+                            <SearchBar x:Name="SearchBar"
+                                       Grid.Column="1"
+                                       Placeholder="Search rooms..."
+                                       SearchButtonPressed="OnSearchPressed"
+                                       FontSize="14"
+                                       BackgroundColor="#F3F4F6"
+                                       PlaceholderColor="#64748B"
+                                       TextColor="#374151"
+                                       Margin="8,0"
+                                       HeightRequest="42" />
 
-                    <Button Text="🔄 Reload"
-                            Grid.Column="2"
-                            Clicked="OnReloadClicked"
-                            BackgroundColor="#E5E7EB"
-                            TextColor="#374151"
-                            FontSize="14"
-                            FontAttributes="Bold"
-                            CornerRadius="8"
-                            Padding="12,8"
-                            WidthRequest="90"
-                            HeightRequest="42" />
-                </Grid>
-            </Frame>
+                            <Button Text="🔄 Reload"
+                                    Grid.Column="2"
+                                    Clicked="OnReloadClicked"
+                                    BackgroundColor="#E5E7EB"
+                                    TextColor="#374151"
+                                    FontSize="14"
+                                    FontAttributes="Bold"
+                                    CornerRadius="8"
+                                    Padding="12,8"
+                                    WidthRequest="90"
+                                    HeightRequest="42" />
+                        </Grid>
+                    </Frame>
 
-            <!-- 📄 Table Headers with Horizontal Scrolling -->
-            <Border BackgroundColor="White" Padding="16">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="12"/>
-                </Border.StrokeShape>
-                <Border.Shadow>
-                    <Shadow Brush="Black" Opacity="0.2" Radius="3" Offset="0,2"/>
-                </Border.Shadow>
-                <ScrollView Orientation="Horizontal" 
-                           HorizontalScrollBarVisibility="Always">
-                    <Grid MinimumWidthRequest="700">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120" />
-                            <ColumnDefinition Width="140" />
-                            <ColumnDefinition Width="200" />
-                            <ColumnDefinition Width="150" />
-                            <ColumnDefinition Width="130" />
-                        </Grid.ColumnDefinitions>
+                    <!-- 📄 Table Headers -->
+                    <Border BackgroundColor="White" Padding="16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Opacity="0.2" Radius="3" Offset="0,2"/>
+                        </Border.Shadow>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="140" />
+                                <ColumnDefinition Width="200" />
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="130" />
+                            </Grid.ColumnDefinitions>
 
-                        <Label Text="Room No" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
-                        <Label Text="Availability" Grid.Column="1" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
-                        <Label Text="Location" Grid.Column="2" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
-                        <Label Text="Remark" Grid.Column="3" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
-                        <Label Text="Action" Grid.Column="4" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
-                    </Grid>
-                </ScrollView>
-            </Border>
+                            <Label Text="Room No" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+                            <Label Text="Availability" Grid.Column="1" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+                            <Label Text="Location" Grid.Column="2" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+                            <Label Text="Remark" Grid.Column="3" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+                            <Label Text="Action" Grid.Column="4" FontAttributes="Bold" TextColor="#1E3A8A" FontSize="13"/>
+                        </Grid>
+                    </Border>
 
-            <!-- 📄 Room List with Table-wide Scrolling -->
-            <ScrollView Orientation="Horizontal" 
-                       HorizontalScrollBarVisibility="Always">
-                <StackLayout MinimumWidthRequest="700">
-                    <CollectionView x:Name="RoomCollection" SelectionMode="None">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:Room">
-                                <Border BackgroundColor="White"
-                                        Padding="12"
-                                        Margin="0,5">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="8"/>
-                                    </Border.StrokeShape>
-                                    <Border.Shadow>
-                                        <Shadow Brush="Black" Radius="3" Offset="0,2"/>
+                    <!-- 📄 Room List -->
+                    <StackLayout>
+                        <CollectionView x:Name="RoomCollection" SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:Room">
+                                    <Border BackgroundColor="White"
+                                            Padding="12"
+                                            Margin="0,5">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8"/>
+                                        </Border.StrokeShape>
+                                        <Border.Shadow>
+                                            <Shadow Brush="Black" Radius="3" Offset="0,2"/>
 
-                                    </Border.Shadow>
+                                        </Border.Shadow>
 
-                                    <Grid ColumnSpacing="8">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="120" />
-                                            <ColumnDefinition Width="140" />
-                                            <ColumnDefinition Width="200" />
-                                            <ColumnDefinition Width="150" />
-                                            <ColumnDefinition Width="130" />
-                                        </Grid.ColumnDefinitions>
+                                        <Grid ColumnSpacing="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="120" />
+                                                <ColumnDefinition Width="140" />
+                                                <ColumnDefinition Width="200" />
+                                                <ColumnDefinition Width="150" />
+                                                <ColumnDefinition Width="130" />
+                                            </Grid.ColumnDefinitions>
 
-                                        <!-- ?? Room Details -->
-                                        <Label Text="{Binding RoomNumber}" TextColor="#374151" FontSize="13"/>
-                                        <Label Text="{Binding Availability}" Grid.Column="1" TextColor="#374151" FontSize="13"/>
-                                        <Label Text="{Binding LocationName}" Grid.Column="2" TextColor="#374151" FontSize="13"/>
-                                        <Label Text="{Binding Remark}" Grid.Column="3" TextColor="#374151" FontSize="13"/>
+                                            <!-- ?? Room Details -->
+                                            <Label Text="{Binding RoomNumber}" TextColor="#374151" FontSize="13"/>
+                                            <Label Text="{Binding Availability}" Grid.Column="1" TextColor="#374151" FontSize="13"/>
+                                            <Label Text="{Binding LocationName}" Grid.Column="2" TextColor="#374151" FontSize="13"/>
+                                            <Label Text="{Binding Remark}" Grid.Column="3" TextColor="#374151" FontSize="13"/>
 
-                                        <!-- ?? Edit & Delete Buttons -->
-                                        <HorizontalStackLayout Grid.Column="4" Spacing="4">
-                                            <Button Text="Edit"
-                                                    Clicked="OnEditClicked"
-                                                    BackgroundColor="#1E3A8A"
-                                                    TextColor="White"
-                                                    FontSize="12"
-                                                    FontAttributes="Bold"
-                                                    CornerRadius="6"
-                                                    Padding="8,3"
-                                                    WidthRequest="60"
-                                                    HeightRequest="30" />
+                                            <!-- ?? Edit & Delete Buttons -->
+                                            <HorizontalStackLayout Grid.Column="4" Spacing="4">
+                                                <Button Text="Edit"
+                                                        Clicked="OnEditClicked"
+                                                        BackgroundColor="#1E3A8A"
+                                                        TextColor="White"
+                                                        FontSize="12"
+                                                        FontAttributes="Bold"
+                                                        CornerRadius="6"
+                                                        Padding="8,3"
+                                                        WidthRequest="60"
+                                                        HeightRequest="30" />
 
-                                            <Button Text="Delete"
-                                                    Clicked="OnDeleteClicked"
-                                                    BackgroundColor="#DC2626"
-                                                    TextColor="White"
-                                                    FontSize="12"
-                                                    FontAttributes="Bold"
-                                                    CornerRadius="6"
-                                                    Padding="8,3"
-                                                    WidthRequest="60"
-                                                    HeightRequest="30" />
-                                        </HorizontalStackLayout>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </StackLayout>
+                                                <Button Text="Delete"
+                                                        Clicked="OnDeleteClicked"
+                                                        BackgroundColor="#DC2626"
+                                                        TextColor="White"
+                                                        FontSize="12"
+                                                        FontAttributes="Bold"
+                                                        CornerRadius="6"
+                                                        Padding="8,3"
+                                                        WidthRequest="60"
+                                                        HeightRequest="30" />
+                                            </HorizontalStackLayout>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </StackLayout>
+                    
+                </VerticalStackLayout>
             </ScrollView>
         </VerticalStackLayout>
     </ScrollView>
