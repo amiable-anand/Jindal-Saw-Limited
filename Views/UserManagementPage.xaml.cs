@@ -141,7 +141,14 @@ public partial class UserManagementPage : ContentPage
         userInfoStack.Children.Add(statusLabel);
         userInfoStack.Children.Add(lastLoginLabel);
 
-        // Actions Section
+        // Actions Section with ScrollView for horizontal scrolling
+        var actionsScrollView = new ScrollView
+        {
+            Orientation = ScrollOrientation.Horizontal,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Never,
+            VerticalOptions = LayoutOptions.Center
+        };
+        
         var actionsStack = new StackLayout
         {
             Orientation = StackOrientation.Horizontal,
@@ -155,7 +162,9 @@ public partial class UserManagementPage : ContentPage
             TextColor = Color.FromArgb("#374151"),
             CornerRadius = 8,
             FontSize = 12,
-            Padding = new Thickness(12, 6)
+            Padding = new Thickness(12, 6),
+            HeightRequest = 36,
+            WidthRequest = 80
         };
         editButton.Clicked += async (s, e) => await OnEditUserClicked(user);
 
@@ -166,7 +175,9 @@ public partial class UserManagementPage : ContentPage
             TextColor = Color.FromArgb("#92400E"),
             CornerRadius = 8,
             FontSize = 12,
-            Padding = new Thickness(12, 6)
+            Padding = new Thickness(12, 6),
+            HeightRequest = 36,
+            WidthRequest = 110
         };
         permissionsButton.Clicked += async (s, e) => await OnManagePermissionsClicked(user);
 
@@ -177,7 +188,9 @@ public partial class UserManagementPage : ContentPage
             TextColor = Colors.White,
             CornerRadius = 8,
             FontSize = 12,
-            Padding = new Thickness(12, 6)
+            Padding = new Thickness(12, 6),
+            HeightRequest = 36,
+            WidthRequest = 80
         };
         deleteButton.Clicked += async (s, e) => await OnDeleteUserClicked(user);
 
@@ -187,9 +200,12 @@ public partial class UserManagementPage : ContentPage
             actionsStack.Children.Add(permissionsButton);
         }
         actionsStack.Children.Add(deleteButton);
+        
+        // Add the actions stack to the scroll view
+        actionsScrollView.Content = actionsStack;
 
         grid.Add(userInfoStack, 0, 0);
-        grid.Add(actionsStack, 1, 0);
+        grid.Add(actionsScrollView, 1, 0);
 
         border.Content = grid;
         return border;

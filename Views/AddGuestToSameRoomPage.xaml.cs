@@ -132,11 +132,17 @@ namespace Jindal.Views
 
         protected override bool OnBackButtonPressed()
         {
-            MainThread.BeginInvokeOnMainThread(async () =>
+            // Handle hardware back button
+            _ = Task.Run(async () =>
             {
                 await NavigateBack();
             });
             return true;
+        }
+        
+        private async void OnBackClicked(object sender, EventArgs e)
+        {
+            await NavigateBack();
         }
 
         private async Task NavigateBack()
