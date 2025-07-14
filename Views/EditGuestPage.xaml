@@ -3,7 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Jindal.Views.EditGuestPage"
              Title="Edit Guest"
-             BackgroundColor="{StaticResource BackgroundSecondary}">
+             BackgroundColor="{StaticResource BackgroundSecondary}"
+             Shell.BackButtonBehavior="{BackButtonBehavior IsEnabled=False}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="← Back" 
+                     Order="Primary" 
+                     Priority="0"
+                     Clicked="OnBackClicked" />
+    </ContentPage.ToolbarItems>
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="18">

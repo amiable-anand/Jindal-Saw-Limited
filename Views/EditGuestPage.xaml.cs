@@ -148,6 +148,14 @@ namespace Jindal.Views
         }
 
         /// <summary>
+        /// Handle custom back button click - navigate to Check In/Out page
+        /// </summary>
+        private async void OnBackClicked(object sender, EventArgs e)
+        {
+            await NavigationService.NavigateToCheckInOut();
+        }
+
+        /// <summary>
         /// Override back button to navigate explicitly to CheckInOutPage.
         /// </summary>
         protected override bool OnBackButtonPressed()
