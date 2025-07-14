@@ -3,6 +3,7 @@ using Jindal.Services;
 using Microsoft.Maui.Controls;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Jindal.Views
 {
@@ -119,7 +120,7 @@ namespace Jindal.Views
                 ErrorHandlingService.LogInfo($"Guest {guest.GuestName} added to room {guest.RoomNumber}", "AddGuestToSameRoom");
                 await DisplayAlert("Success", "Guest added successfully!", "OK");
 
-                await NavigationService.NavigateBack();
+                await NavigateBack();
             }
             catch (Exception ex)
             {
@@ -131,13 +132,26 @@ namespace Jindal.Views
 
         protected override bool OnBackButtonPressed()
         {
-            NavigateBack();
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await NavigateBack();
+            });
             return true;
         }
 
-        private async void NavigateBack()
+        private async Task NavigateBack()
         {
-            await NavigationService.NavigateBack();
+            try
+            {
+                // Use Shell's built-in navigation to go back to previous page
+                await Shell.Current.GoToAsync("..");
+            }
+            catch (Exception ex)
+            {
+                ErrorHandlingService.LogError("Failed to navigate back from AddGuestToSameRoom", ex, "AddGuestToSameRoomPage");
+                // Fallback to NavigationService
+                await NavigationService.NavigateBack();
+            }
         }
     }
 }

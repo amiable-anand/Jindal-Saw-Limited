@@ -1,5 +1,6 @@
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Controls.Shapes;
 using System;
 using System.Collections.Generic;
 
@@ -124,18 +125,35 @@ namespace Jindal.Services
         }
 
         /// <summary>
-        /// Create a standardized Frame control
+        /// Create a standardized Border control (Frame replacement for .NET 9)
         /// </summary>
-        public static Frame CreateStandardFrame(bool hasShadow = true)
+        public static Border CreateStandardBorder(bool hasShadow = true)
         {
-            return new Frame
+            var border = new Border
             {
                 BackgroundColor = SurfaceColor,
-                CornerRadius = (float)StandardCornerRadius,
-                HasShadow = hasShadow,
-                BorderColor = InputBorderColor,
+                StrokeThickness = 1,
+                Stroke = InputBorderColor,
                 Padding = new Thickness(StandardPadding)
             };
+            
+            border.StrokeShape = new RoundRectangle
+            {
+                CornerRadius = new CornerRadius(StandardCornerRadius)
+            };
+            
+            if (hasShadow)
+            {
+                border.Shadow = new Shadow
+                {
+                    Brush = new SolidColorBrush(Colors.Black),
+                    Opacity = 0.1f,
+                    Radius = 8,
+                    Offset = new Point(0, 2)
+                };
+            }
+            
+            return border;
         }
 
         /// <summary>
@@ -218,12 +236,22 @@ namespace Jindal.Services
                     button.Padding = new Thickness(StandardPadding, 8);
                     break;
                     
-                case Frame frame:
-                    frame.BackgroundColor = SurfaceColor;
-                    frame.CornerRadius = (float)StandardCornerRadius;
-                    frame.HasShadow = true;
-                    frame.BorderColor = InputBorderColor;
-                    frame.Padding = new Thickness(StandardPadding);
+                case Border border:
+                    border.BackgroundColor = SurfaceColor;
+                    border.StrokeThickness = 1;
+                    border.Stroke = InputBorderColor;
+                    border.Padding = new Thickness(StandardPadding);
+                    border.StrokeShape = new RoundRectangle
+                    {
+                        CornerRadius = new CornerRadius(StandardCornerRadius)
+                    };
+                    border.Shadow = new Shadow
+                    {
+                        Brush = new SolidColorBrush(Colors.Black),
+                        Opacity = 0.1f,
+                        Radius = 8,
+                        Offset = new Point(0, 2)
+                    };
                     break;
                     
                 case DatePicker datePicker:
