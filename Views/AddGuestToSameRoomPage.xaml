@@ -4,13 +4,6 @@
              Title="Add Guest to Same Room"
              BackgroundColor="{StaticResource BackgroundSecondary}">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Back" 
-                     Order="Primary" 
-                     Priority="0"
-                     Clicked="OnBackClicked" />
-    </ContentPage.ToolbarItems>
-
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="20">
 

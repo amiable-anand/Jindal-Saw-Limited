@@ -80,11 +80,14 @@
             </Grid>
         </Border>
 
-        <!-- User List -->
-        <ScrollView Grid.Row="1">
-            <StackLayout x:Name="UsersContainer" Padding="16,0,16,16">
-                <!-- Users will be loaded here dynamically -->
-            </StackLayout>
+        <!-- User List with Horizontal Scrolling -->
+        <ScrollView Grid.Row="1" Orientation="Horizontal" 
+                   HorizontalScrollBarVisibility="Always">
+            <ScrollView Orientation="Vertical" MinimumWidthRequest="1200">
+                <StackLayout x:Name="UsersContainer" Padding="16,0,16,16">
+                    <!-- Users will be loaded here dynamically -->
+                </StackLayout>
+            </ScrollView>
         </ScrollView>
 
         <!-- Loading Indicator -->

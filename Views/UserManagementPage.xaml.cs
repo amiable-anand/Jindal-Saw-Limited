@@ -66,6 +66,7 @@ public partial class UserManagementPage : ContentPage
             StrokeShape = new RoundRectangle { CornerRadius = 12 },
             Padding = 16,
             Margin = new Thickness(0, 8),
+            MinimumWidthRequest = 1150, // Fixed width for horizontal scrolling
             Shadow = new Shadow
             {
                 Brush = Colors.Black,

@@ -120,7 +120,8 @@ namespace Jindal.Views
                 ErrorHandlingService.LogInfo($"Guest {guest.GuestName} added to room {guest.RoomNumber}", "AddGuestToSameRoom");
                 await DisplayAlert("Success", "Guest added successfully!", "OK");
 
-                await NavigateBack();
+                // Navigate back using Shell's default navigation
+                await Shell.Current.GoToAsync("..");
             }
             catch (Exception ex)
             {
@@ -130,34 +131,8 @@ namespace Jindal.Views
             }
         }
 
-        protected override bool OnBackButtonPressed()
-        {
-            // Handle hardware back button
-            _ = Task.Run(async () =>
-            {
-                await NavigateBack();
-            });
-            return true;
-        }
-        
-        private async void OnBackClicked(object sender, EventArgs e)
-        {
-            await NavigateBack();
-        }
-
-        private async Task NavigateBack()
-        {
-            try
-            {
-                // Use Shell's built-in navigation to go back to previous page
-                await Shell.Current.GoToAsync("..");
-            }
-            catch (Exception ex)
-            {
-                ErrorHandlingService.LogError("Failed to navigate back from AddGuestToSameRoom", ex, "AddGuestToSameRoomPage");
-                // Fallback to NavigationService
-                await NavigationService.NavigateBack();
-            }
-        }
+        // Let Shell handle the default back navigation
+        // The issue was that we were overriding the back button behavior
+        // By removing the override, the default Shell back navigation will work
     }
 }
