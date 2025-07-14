@@ -120,8 +120,8 @@ namespace Jindal.Views
                 ErrorHandlingService.LogInfo($"Guest {guest.GuestName} added to room {guest.RoomNumber}", "AddGuestToSameRoom");
                 await DisplayAlert("Success", "Guest added successfully!", "OK");
 
-                // Navigate back using Shell's default navigation
-                await Shell.Current.GoToAsync("..");
+                // Navigate back using NavigationService which has proper context
+                await NavigationService.NavigateBack();
             }
             catch (Exception ex)
             {
@@ -131,8 +131,25 @@ namespace Jindal.Views
             }
         }
 
-        // Let Shell handle the default back navigation
-        // The issue was that we were overriding the back button behavior
-        // By removing the override, the default Shell back navigation will work
+        /// <summary>
+        /// Handle custom back button click
+        /// </summary>
+        private async void OnBackClicked(object sender, EventArgs e)
+        {
+            await NavigationService.NavigateBack();
+        }
+        
+        /// <summary>
+        /// Override hardware back button to use NavigationService which has the proper context
+        /// to navigate back to EditGuestPage
+        /// </summary>
+        protected override bool OnBackButtonPressed()
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await NavigationService.NavigateBack();
+            });
+            return true; // Prevent default back navigation to use our custom logic
+        }
     }
 }

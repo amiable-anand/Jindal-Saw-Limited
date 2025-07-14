@@ -106,9 +106,15 @@ namespace Jindal.Services
         {
             try
             {
+                // Check for primary guest ID first (from EditGuest or CheckOut)
                 if (_currentContext.HasGuestId)
                 {
                     await NavigateToEditGuest(_currentContext.GuestId!.Value);
+                }
+                // Check for associated guest ID (from AddGuestToSameRoom)
+                else if (_currentContext.HasAssociatedGuestId)
+                {
+                    await NavigateToEditGuest(_currentContext.AssociatedGuestId!.Value);
                 }
                 else
                 {
