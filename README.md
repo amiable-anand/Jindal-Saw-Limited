@@ -1,16 +1,18 @@
-# 🏨 **Jindal Guest House Management System - Enterprise Edition**
+# 🏨 **Jindal Guest Management System - Complete Enterprise Solution**
 
 <div align="center">
 
 ![Version](https://img.shields.io/badge/version-2.0.0-blue.svg?cacheSeconds=2592000)
 ![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Android%20%7C%20iOS%20%7C%20macOS-green.svg)
+![API](https://img.shields.io/badge/API-ASP.NET%20Core%209.0-orange.svg)
+![Database](https://img.shields.io/badge/Database-SQL%20Server%20%7C%20SQLite-red.svg)
 ![License](https://img.shields.io/badge/license-Enterprise-blue.svg)
 ![Status](https://img.shields.io/badge/status-Production%20Ready-brightgreen.svg)
 
-**A comprehensive, enterprise-grade .NET MAUI cross-platform application for hospitality guest management**
+**Complete enterprise-grade hospitality management solution with cross-platform client and REST API backend**
 
-*Professional • Secure • Cross-Platform • Scalable*
+*Professional • Secure • Cross-Platform • Scalable • API-First*
 
 </div>
 
