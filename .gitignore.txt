@@ -1,9 +1,0 @@
-# Ignore build artifacts and Visual Studio files
-.vs/
-bin/
-obj/
-*.user
-*.suo
-*.db
-*.apk
-*.aab

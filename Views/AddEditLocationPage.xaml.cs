@@ -50,35 +50,31 @@ namespace Jindal.Views
                     return;
                 }
 
-                // Execute with retry logic
-                await ErrorHandlingService.ExecuteWithRetry(async () =>
+                if (currentLocation == null)
                 {
-                    if (currentLocation == null)
+                    // Adding a new location
+                    var newLocation = new LocationModel
                     {
-                        // Adding a new location
-                        var newLocation = new LocationModel
-                        {
-                            Name = name,
-                            LocationCode = code,
-                            Address = address,
-                            Remark = remark
-                        };
+                        Name = name,
+                        LocationCode = code,
+                        Address = address,
+                        Remark = remark
+                    };
 
-                        await DatabaseService.AddLocation(newLocation);
-                        ErrorHandlingService.LogInfo($"New location added: {newLocation.Name}", "LocationManagement");
-                    }
-                    else
-                    {
-                        // Updating existing location
-                        currentLocation.Name = name;
-                        currentLocation.LocationCode = code;
-                        currentLocation.Address = address;
-                        currentLocation.Remark = remark;
+                    await DatabaseService.AddLocation(newLocation);
+                    System.Diagnostics.Debug.WriteLine($"New location added: {newLocation.Name}");
+                }
+                else
+                {
+                    // Updating existing location
+                    currentLocation.Name = name;
+                    currentLocation.LocationCode = code;
+                    currentLocation.Address = address;
+                    currentLocation.Remark = remark;
 
-                        await DatabaseService.UpdateLocation(currentLocation);
-                        ErrorHandlingService.LogInfo($"Location updated: {currentLocation.Name} (ID={currentLocation.Id})", "LocationManagement");
-                    }
-                }, 3, "Location Save");
+                    await DatabaseService.UpdateLocation(currentLocation);
+                    System.Diagnostics.Debug.WriteLine($"Location updated: {currentLocation.Name} (ID={currentLocation.Id})");
+                }
 
                 await DisplayAlert("Success", "Location saved successfully.", "OK");
 
@@ -87,9 +83,8 @@ namespace Jindal.Views
             }
             catch (Exception ex)
             {
-                ErrorHandlingService.LogError("Error saving location", ex, "AddEditLocationPage");
-                var userMessage = ErrorHandlingService.GetUserFriendlyErrorMessage(ex);
-                await DisplayAlert("Error", userMessage, "OK");
+                System.Diagnostics.Debug.WriteLine($"Error saving location: {ex.Message}");
+                await DisplayAlert("Error", "Failed to save location. Please try again.", "OK");
             }
         }
     }

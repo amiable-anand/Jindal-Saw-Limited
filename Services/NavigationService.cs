@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Jindal.Models;
 using Microsoft.Maui.Controls;
@@ -26,7 +27,7 @@ namespace Jindal.Services
             }
             catch (Exception ex)
             {
-                ErrorHandlingService.LogError("Failed to navigate to Add Guest page", ex, "NavigationService");
+                Debug.WriteLine($"NavigationService: Failed to navigate to Add Guest page - {ex.Message}");
                 throw;
             }
         }
@@ -43,7 +44,7 @@ namespace Jindal.Services
             }
             catch (Exception ex)
             {
-                ErrorHandlingService.LogError("Failed to navigate to Edit Guest page", ex, "NavigationService");
+                Debug.WriteLine($"NavigationService: Failed to navigate to Edit Guest page - {ex.Message}");
                 throw;
             }
         }
@@ -60,7 +61,7 @@ namespace Jindal.Services
             }
             catch (Exception ex)
             {
-                ErrorHandlingService.LogError("Failed to navigate to Add Guest to Same Room page", ex, "NavigationService");
+                Debug.WriteLine($"NavigationService: Failed to navigate to Add Guest to Same Room page - {ex.Message}");
                 throw;
             }
         }
@@ -77,7 +78,7 @@ namespace Jindal.Services
             }
             catch (Exception ex)
             {
-                ErrorHandlingService.LogError("Failed to navigate to Check Out page", ex, "NavigationService");
+                Debug.WriteLine($"NavigationService: Failed to navigate to Check Out page - {ex.Message}");
                 throw;
             }
         }
@@ -94,7 +95,7 @@ namespace Jindal.Services
             }
             catch (Exception ex)
             {
-                ErrorHandlingService.LogError("Failed to navigate to Check In/Out page", ex, "NavigationService");
+                Debug.WriteLine($"NavigationService: Failed to navigate to Check In/Out page - {ex.Message}");
                 throw;
             }
         }
@@ -123,7 +124,7 @@ namespace Jindal.Services
             }
             catch (Exception ex)
             {
-                ErrorHandlingService.LogError("Failed to navigate back", ex, "NavigationService");
+                Debug.WriteLine($"NavigationService: Failed to navigate back - {ex.Message}");
                 await NavigateToCheckInOut(); // Fallback
             }
         }

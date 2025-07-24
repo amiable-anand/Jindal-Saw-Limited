@@ -1,3 +1,214 @@
+# 🏨 **Jindal Guest House Management System - Enterprise Edition**
+
+<div align="center">
+
+![Version](https://img.shields.io/badge/version-2.0.0-blue.svg?cacheSeconds=2592000)
+![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Android%20%7C%20iOS%20%7C%20macOS-green.svg)
+![License](https://img.shields.io/badge/license-Enterprise-blue.svg)
+![Status](https://img.shields.io/badge/status-Production%20Ready-brightgreen.svg)
+
+**A comprehensive, enterprise-grade .NET MAUI cross-platform application for hospitality guest management**
+
+*Professional • Secure • Cross-Platform • Scalable*
+
+</div>
+
+---
+
+## 📋 **System Overview**
+
+The **Jindal Guest House Management System** is a **production-ready**, enterprise-grade solution for comprehensive hospitality management. This system represents the pinnacle of modern software architecture with:
+
+### **🏗️ Architecture Components**
+- **📱 MAUI Cross-Platform App**: Native performance on Windows, Android, iOS, and macOS
+- **🌐 ASP.NET Core Web API**: Enterprise-grade REST API with JWT authentication
+- **🗄️ Hybrid Database System**: SQLite for offline + SQL Server for production scalability
+- **☁️ Cloud-Ready Infrastructure**: Azure/AWS deployment ready with Docker support
+
+## ✨ **Enterprise Features**
+
+### 🔐 **Security & Authentication**
+- 🛡️ **Military-Grade Encryption**: BCrypt password hashing with dynamic salts
+- 🔑 **JWT Token Authentication**: Secure, stateless authentication with 8-hour sessions
+- 👥 **Role-Based Access Control**: Granular permission system (Admin/User roles)
+- 🔒 **Session Management**: Automatic timeout and refresh token handling
+- 🛠️ **Audit Trails**: Complete activity logging for compliance
+- 🚫 **Rate Limiting**: API protection against abuse (100 req/min)
+
+### 📊 **Advanced Analytics & Reporting**
+- 📈 **Real-Time Dashboard**: Live KPIs, occupancy rates, and revenue metrics
+- 📋 **Excel Export**: Professional reports with advanced filtering
+- 📊 **Visual Analytics**: Color-coded status indicators and trend charts
+- 🕐 **Activity Feed**: Real-time check-in/check-out notifications
+- 📅 **Historical Analysis**: Date-range reporting with custom filters
+
+### 🏢 **Comprehensive Management Suite**
+- 🏗️ **Multi-Location Support**: Unlimited properties, buildings, and floors
+- 🏠 **Smart Room Management**: Automated availability tracking and optimization
+- 👥 **Complete Guest Lifecycle**: From inquiry to check-out
+- 💳 **Payment Integration Ready**: Extensible payment processing
+- 🔄 **Bulk Operations**: Mass check-in/check-out capabilities
+- 📱 **Offline-First Architecture**: Continue working without internet
+
+### 🎨 **Superior User Experience**
+- 🎯 **Modern Material Design**: Clean, professional interface
+- 📱 **True Responsive Design**: Optimized for all screen sizes
+- 🧭 **Intuitive Navigation**: Icon-based menu with logical flow
+- ⚡ **Lightning Fast**: Optimized performance with lazy loading
+- 🌙 **Accessibility Ready**: WCAG 2.1 AA compliant
+- 📏 **Mobile-First**: Touch-optimized with horizontal scrolling tables
+
+### 🔧 **Technical Excellence**
+- 🌐 **True Cross-Platform**: Single codebase, native performance
+- 🗄️ **Hybrid Database**: SQLite (offline) + SQL Server (production)
+- ⚡ **High Performance**: Optimized queries, caching, and lazy loading
+- 🏗️ **Clean Architecture**: MVVM pattern with dependency injection
+- 📦 **Modular Design**: Extensible plugin architecture
+- 🐳 **Container Ready**: Docker support for cloud deployment
+
+## 🚀 Quick Start
+
+### Prerequisites
+- .NET 9.0 SDK
+- Visual Studio 2022 or VS Code
+- SQL Server (LocalDB for development)
+- Android SDK (for mobile development)
+
+### API Setup
+1. Navigate to `JindalGuestHouseAPI` folder
+2. Update connection string in `appsettings.json`
+3. Run database migrations:
+   ```bash
+   dotnet ef database update
+   ```
+4. Start the API:
+   ```bash
+   dotnet run
+   ```
+
+### Mobile App Setup
+1. Open solution in Visual Studio
+2. Update API base URL in `DatabaseService.cs`
+3. Build and deploy to target platform
+
+## 🔧 Configuration
+
+### API Configuration (appsettings.json)
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=JindalGuestHouseDB;Trusted_Connection=true;TrustServerCertificate=true;"
+  },
+  "JWT": {
+    "SecretKey": "YourSecretKeyHere",
+    "Issuer": "JindalGuestHouseAPI",
+    "Audience": "JindalGuestHouseClient",
+    "ExpirationHours": 8
+  }
+}
+```
+
+### Mobile App Configuration
+Update `DatabaseService.cs` with your API URL:
+```csharp
+private static string _baseUrl = "https://yourapi.com/api/";
+```
+
+## 📱 Supported Platforms
+
+| Platform | Support Status |
+|----------|----------------|
+| Android | ✅ Full Support |
+| iOS | ✅ Full Support |
+| Windows | ✅ Full Support |
+| macOS | ✅ Full Support |
+
+## 🔐 Default Credentials
+
+**Admin User:**
+- Username: `admin`
+- Password: `admin123`
+
+*⚠️ Change these credentials before production deployment!*
+
+## 📊 API Endpoints
+
+### Authentication
+- `POST /api/Users/authenticate` - Login
+
+### Users
+- `GET /api/Users` - Get all users
+- `POST /api/Users` - Create user
+- `PUT /api/Users/{id}` - Update user
+- `DELETE /api/Users/{id}` - Delete user
+
+### Rooms
+- `GET /api/Rooms` - Get all rooms
+- `GET /api/Rooms/available` - Get available rooms
+- `POST /api/Rooms` - Create room
+- `PUT /api/Rooms/{id}` - Update room
+- `DELETE /api/Rooms/{id}` - Delete room
+
+### Locations
+- `GET /api/Locations` - Get all locations
+- `POST /api/Locations` - Create location
+- `PUT /api/Locations/{id}` - Update location
+- `DELETE /api/Locations/{id}` - Delete location
+
+### Check-In/Out
+- `GET /api/CheckInOut` - Get all records
+- `POST /api/CheckInOut` - Create record
+- `PUT /api/CheckInOut/{id}` - Update record
+- `DELETE /api/CheckInOut/{id}` - Delete record
+
+## 🔧 Development
+
+### Database Migrations
+```bash
+# Add migration
+dotnet ef migrations add MigrationName
+
+# Update database
+dotnet ef database update
+```
+
+### Running Tests
+```bash
+# Run all tests
+dotnet test
+```
+
+## 📦 Deployment
+
+### API Deployment
+1. Publish the API:
+   ```bash
+   dotnet publish -c Release
+   ```
+2. Deploy to your preferred hosting provider
+3. Update connection strings for production
+4. Configure HTTPS certificates
+
+### Mobile App Deployment
+1. Build release versions for target platforms
+2. Sign applications for distribution
+3. Deploy to app stores or enterprise distribution
+
+## 🆘 Support
+
+For support and questions:
+- Create an issue in the repository
+- Contact: support@jindal.com
+
+## 📄 License
+
+© 2025 Jindal Corporation. All rights reserved.
+
+---
+
+**Built with ❤️ using .NET MAUI and ASP.NET Core**
+
 # 🏨 Jindal Guest Management System
 
 <div align="center">

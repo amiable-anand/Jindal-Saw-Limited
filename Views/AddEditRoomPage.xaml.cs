@@ -87,39 +87,35 @@ namespace Jindal.Views
                     return;
                 }
 
-                // Execute with retry logic
-                await ErrorHandlingService.ExecuteWithRetry(async () =>
+                // Save room
+                if (editingRoom == null)
                 {
-                    if (editingRoom == null)
+                    var newRoom = new Room
                     {
-                        var newRoom = new Room
-                        {
-                            RoomNumber = roomNumber,
-                            LocationId = selectedLocation.Id,
-                            Remark = remark,
-                            Availability = "Available"
-                        };
-                        await DatabaseService.AddRoom(newRoom);
-                        ErrorHandlingService.LogInfo($"New room added: {newRoom.RoomNumber}", "RoomManagement");
-                    }
-                    else
-                    {
-                        editingRoom.RoomNumber = roomNumber;
-                        editingRoom.LocationId = selectedLocation.Id;
-                        editingRoom.Remark = remark;
-                        await DatabaseService.UpdateRoom(editingRoom);
-                        ErrorHandlingService.LogInfo($"Room updated: {editingRoom.RoomNumber} (ID={editingRoom.Id})", "RoomManagement");
-                    }
-                }, 3, "Room Save");
+                        RoomNumber = roomNumber,
+                        LocationId = selectedLocation.Id,
+                        Remark = remark,
+                        Availability = "Available"
+                    };
+                    await DatabaseService.AddRoom(newRoom);
+                    System.Diagnostics.Debug.WriteLine($"New room added: {newRoom.RoomNumber}");
+                }
+                else
+                {
+                    editingRoom.RoomNumber = roomNumber;
+                    editingRoom.LocationId = selectedLocation.Id;
+                    editingRoom.Remark = remark;
+                    await DatabaseService.UpdateRoom(editingRoom);
+                    System.Diagnostics.Debug.WriteLine($"Room updated: {editingRoom.RoomNumber} (ID={editingRoom.Id})");
+                }
 
                 await DisplayAlert("Success", "Room saved successfully.", "OK");
                 await Navigation.PopAsync();
             }
             catch (Exception ex)
             {
-                ErrorHandlingService.LogError("Failed to save room", ex, "AddEditRoomPage");
-                var userMessage = ErrorHandlingService.GetUserFriendlyErrorMessage(ex);
-                await DisplayAlert("Error", userMessage, "OK");
+                System.Diagnostics.Debug.WriteLine($"Failed to save room: {ex.Message}");
+                await DisplayAlert("Error", $"Failed to save room: {ex.Message}", "OK");
             }
         }
     }

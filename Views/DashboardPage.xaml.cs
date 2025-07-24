@@ -1,6 +1,8 @@
 using Jindal.Services;
+using Jindal.Models;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,12 +13,51 @@ namespace Jindal.Views
     public partial class DashboardPage : ContentPage
     {
         public ObservableCollection<ActivityItem> RecentActivities { get; set; }
+        private readonly ILogger<DashboardPage>? _logger;
+        private readonly ConnectivityService _connectivityService;
+        private System.Timers.Timer? _refreshTimer;
+        private bool _isRefreshing = false;
 
         public DashboardPage()
         {
             InitializeComponent();
+            
+            // Logger will be injected when available, otherwise use null
+            _logger = null;
+            _connectivityService = new ConnectivityService();
+            
             RecentActivities = new ObservableCollection<ActivityItem>();
             RecentActivityCollection.ItemsSource = RecentActivities;
+            
+            // Setup connectivity monitoring
+            _connectivityService.ConnectivityChanged += OnConnectivityChanged;
+            
+            // Setup auto-refresh timer (every 5 minutes)
+            SetupRefreshTimer();
+        }
+
+        private void SetupRefreshTimer()
+        {
+            _refreshTimer = new System.Timers.Timer(300000); // 5 minutes
+            _refreshTimer.Elapsed += async (sender, e) =>
+            {
+                if (!_isRefreshing)
+                {
+                    await MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        try
+                        {
+                            await LoadDashboardData();
+                            _logger?.LogDebug("Dashboard auto-refreshed successfully");
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger?.LogError(ex, "Auto-refresh failed");
+                        }
+                    });
+                }
+            };
+            _refreshTimer.Start();
         }
 
         protected override async void OnAppearing()
@@ -24,7 +65,7 @@ namespace Jindal.Views
             base.OnAppearing();
             
             // Perform system health check
-            await ErrorHandlingService.ValidateSystemHealth();
+            System.Diagnostics.Debug.WriteLine("Dashboard appearing - performing health check");
             
             await LoadDashboardData();
             await CreateTestDataIfNeeded();
@@ -62,9 +103,8 @@ namespace Jindal.Views
                 OccupiedRoomsLabel.Text = "Error";
                 ActiveGuestsLabel.Text = "Error";
                 
-                ErrorHandlingService.LogError("Failed to load dashboard data", ex, "DashboardPage");
-                var userMessage = ErrorHandlingService.GetUserFriendlyErrorMessage(ex);
-                await DisplayAlert("Dashboard Error", userMessage, "OK");
+                System.Diagnostics.Debug.WriteLine($"Failed to load dashboard data: {ex.Message}");
+                await DisplayAlert("Dashboard Error", "Unable to load dashboard data. Please try refreshing.", "OK");
             }
         }
 
@@ -89,7 +129,7 @@ namespace Jindal.Views
                         Message = isCheckOut 
                             ? $"{checkIn.GuestName} checked out from Room {checkIn.RoomNumber}"
                             : $"{checkIn.GuestName} checked in to Room {checkIn.RoomNumber}",
-                        Time = checkIn.CheckInDate.ToString("HH:mm")
+                        Time = checkIn.CheckInDate
                     });
                 }
 
@@ -99,7 +139,7 @@ namespace Jindal.Views
                     {
                         Icon = "ℹ️",
                         Message = "No recent activity today",
-                        Time = "—"
+                        Time = DateTime.Now
                     });
                 }
             }
@@ -110,7 +150,7 @@ namespace Jindal.Views
                 {
                     Icon = "❌",
                     Message = "Failed to load recent activities",
-                    Time = DateTime.Now.ToString("HH:mm")
+                    Time = DateTime.Now
                 });
             }
         }
@@ -218,12 +258,42 @@ namespace Jindal.Views
                 System.Diagnostics.Debug.WriteLine($"Error creating test data: {ex}");
             }
         }
-    }
 
-    public class ActivityItem
-    {
-        public string Icon { get; set; } = string.Empty;
-        public string Message { get; set; } = string.Empty;
-        public string Time { get; set; } = string.Empty;
+        private void OnConnectivityChanged(bool isConnected)
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                try
+                {
+                    if (isConnected)
+                    {
+                        await ProfessionalFeaturesService.ShowInfo("Network connection restored. Refreshing data...");
+                        await LoadDashboardData();
+                    }
+                    else
+                    {
+                        await ProfessionalFeaturesService.ShowWarning("Network connection lost. Some features may not work properly.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error handling connectivity change: {ex.Message}");
+                }
+            });
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            _refreshTimer?.Stop();
+            _connectivityService?.Dispose();
+        }
+
+        protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
+        {
+            base.OnNavigatedFrom(args);
+            _refreshTimer?.Dispose();
+            _refreshTimer = null;
+        }
     }
 }

@@ -40,7 +40,7 @@ namespace Jindal.Views
             {
             if (RoomNumber <= 0)
             {
-                ErrorHandlingService.LogError("Invalid room number in navigation context", null, "AddGuestToSameRoomPage");
+                Debug.WriteLine("[AddGuestToSameRoomPage] Invalid room number in navigation context");
                 await NavigationService.NavigateToCheckInOut(); // Fallback to Check In/Out page
                 return;
             }
@@ -112,12 +112,10 @@ namespace Jindal.Views
                     return;
                 }
 
-                await ErrorHandlingService.ExecuteWithRetry(async () =>
-                {
-                    await DatabaseService.AddCheckInOut(guest);
-                }, 3, "Add Guest to Same Room");
+                // Add guest to database
+                await DatabaseService.AddCheckInOut(guest);
 
-                ErrorHandlingService.LogInfo($"Guest {guest.GuestName} added to room {guest.RoomNumber}", "AddGuestToSameRoom");
+                Debug.WriteLine($"[AddGuestToSameRoomPage] Guest {guest.GuestName} added to room {guest.RoomNumber}");
                 await DisplayAlert("Success", "Guest added successfully!", "OK");
 
                 // Navigate back using NavigationService which has proper context
@@ -125,9 +123,8 @@ namespace Jindal.Views
             }
             catch (Exception ex)
             {
-                ErrorHandlingService.LogError("Add guest to same room failed", ex, "AddGuestToSameRoomPage");
-                var userMessage = ErrorHandlingService.GetUserFriendlyErrorMessage(ex);
-                await DisplayAlert("Error", userMessage, "OK");
+                Debug.WriteLine($"[AddGuestToSameRoomPage] Add guest to same room failed: {ex}");
+                await DisplayAlert("Error", $"Failed to add guest: {ex.Message}", "OK");
             }
         }
 

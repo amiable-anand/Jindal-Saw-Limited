@@ -64,7 +64,7 @@ namespace Jindal.Views
             }
             catch (Exception ex)
             {
-                ErrorHandlingService.LogError("Failed to load guest details", ex, "CheckOutPage");
+                System.Diagnostics.Debug.WriteLine($"Failed to load guest details: {ex.Message}");
                 await DisplayAlert("Error", $"Failed to load guest details: {ex.Message}", "OK");
                 await NavigationService.NavigateToCheckInOut();
             }
@@ -107,7 +107,7 @@ namespace Jindal.Views
                     return;
                 }
 
-                await ErrorHandlingService.ExecuteWithRetry(async () =>
+                try
                 {
                     // Update checkout info
                     guest.CheckOutDate = CheckOutDatePicker.Date;
@@ -117,17 +117,22 @@ namespace Jindal.Views
 
                     // Update room availability status
                     await DatabaseService.UpdateRoomAvailabilityStatus();
-                }, 3, "Guest Check-out");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to check-out guest: {ex.Message}");
+                    await DisplayAlert("Error", "Failed to check-out guest.", "OK");
+                    return;
+                }
 
-                ErrorHandlingService.LogInfo($"Guest {guest.GuestName} checked out from room {guest.RoomNumber}", "CheckOut");
+                System.Diagnostics.Debug.WriteLine($"Guest {guest.GuestName} checked out from room {guest.RoomNumber}");
                 await DisplayAlert("Success", "Guest checked out successfully.", "OK");
                 await NavigationService.NavigateToCheckInOut();
             }
             catch (Exception ex)
             {
-                ErrorHandlingService.LogError("Check-out failed", ex, "CheckOutPage");
-                var userMessage = ErrorHandlingService.GetUserFriendlyErrorMessage(ex);
-                await DisplayAlert("Error", userMessage, "OK");
+                System.Diagnostics.Debug.WriteLine($"Check-out failed: {ex.Message}");
+                await DisplayAlert("Error", "Check-out failed.", "OK");
             }
             finally
             {

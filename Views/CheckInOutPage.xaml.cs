@@ -87,7 +87,7 @@ namespace Jindal.Views
             }
             catch (Exception ex)
             {
-                Services.ErrorHandlingService.LogError("Failed to load check-in data", ex, "CheckInOutPage");
+                System.Diagnostics.Debug.WriteLine($"Failed to load check-in data: {ex.Message}");
                 await DisplayAlert("Database Error", $"Failed to load guest data: {ex.Message}", "OK");
                 
                 // Initialize empty data to prevent crashes
@@ -220,8 +220,7 @@ namespace Jindal.Views
             }
             catch (Exception ex)
             {
-                Services.ErrorHandlingService.LogError("Failed to populate table", ex, "CheckInOutPage");
-                System.Diagnostics.Debug.WriteLine($"PopulateTable error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Failed to populate table: {ex.Message}");
                 // Don't show alert for table population errors as it might be called frequently
             }
         }

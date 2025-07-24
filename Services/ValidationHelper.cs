@@ -7,7 +7,7 @@ namespace Jindal.Services
     /// <summary>
     /// Provides comprehensive validation methods for the application
     /// </summary>
-    public static class ValidationHelper
+    public class ValidationHelper
     {
         /// <summary>
         /// Validates guest check-in data

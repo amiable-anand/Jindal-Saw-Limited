@@ -32,7 +32,7 @@ namespace Jindal.Views
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"OnAppearing Error: {ex.Message}");
-                await DisplayAlert("Error", "Failed to load room data.", "OK");
+                await ProfessionalFeaturesService.ShowError("Failed to load room data.");
             }
         }
 
@@ -47,9 +47,8 @@ namespace Jindal.Views
 
                 if (availableRooms == null || !availableRooms.Any())
                 {
-                    await DisplayAlert("No Rooms Available", 
-                        "No rooms are currently available. Please add rooms in the Rooms section first.", 
-                        "OK");
+                    await ProfessionalFeaturesService.ShowWarning(
+                        "No rooms are currently available. Please add rooms in the Rooms section first.");
                     RoomPicker.ItemsSource = new List<Room>();
                     return;
                 }
@@ -57,13 +56,12 @@ namespace Jindal.Views
                 RoomPicker.ItemsSource = availableRooms;
                 RoomPicker.ItemDisplayBinding = new Binding("RoomNumber");
 
-                ErrorHandlingService.LogInfo($"Loaded {availableRooms.Count} available rooms for check-in", "AddCheckInOutPage");
+                System.Diagnostics.Debug.WriteLine($"Loaded {availableRooms.Count} available rooms for check-in");
             }
             catch (Exception ex)
             {
-                ErrorHandlingService.LogError("Error loading available rooms", ex, "AddCheckInOutPage");
-                var userMessage = ErrorHandlingService.GetUserFriendlyErrorMessage(ex);
-                await DisplayAlert("Error", userMessage, "OK");
+                System.Diagnostics.Debug.WriteLine($"Error loading available rooms: {ex.Message}");
+                await DisplayAlert("Error", "Failed to load available rooms. Please try again.", "OK");
                 RoomPicker.ItemsSource = new List<Room>();
             }
         }
@@ -73,37 +71,38 @@ namespace Jindal.Views
         /// </summary>
         private async void OnCheckInClicked(object sender, EventArgs e)
         {
-            // Enhanced validation
-            if (RoomPicker.SelectedItem == null)
+            // Use ProfessionalFeaturesService for loading and validation
+            await ProfessionalFeaturesService.ExecuteWithLoading(async () =>
             {
-                await DisplayAlert("Missing Information", "Please select a room first.", "OK");
-                return;
-            }
+                // Enhanced validation
+                if (RoomPicker.SelectedItem == null)
+                {
+                    await ProfessionalFeaturesService.ShowWarning("Please select a room first.");
+                    return;
+                }
 
-            if (string.IsNullOrWhiteSpace(GuestNameEntry.Text))
-            {
-                await DisplayAlert("Missing Information", "Please enter the guest name.", "OK");
-                return;
-            }
+                if (string.IsNullOrWhiteSpace(GuestNameEntry.Text))
+                {
+                    await ProfessionalFeaturesService.ShowWarning("Please enter the guest name.");
+                    return;
+                }
 
-            if (IdTypePicker.SelectedItem == null)
-            {
-                await DisplayAlert("Missing Information", "Please select an ID type.", "OK");
-                return;
-            }
+                if (IdTypePicker.SelectedItem == null)
+                {
+                    await ProfessionalFeaturesService.ShowWarning("Please select an ID type.");
+                    return;
+                }
 
-            if (string.IsNullOrWhiteSpace(IdNumberEntry.Text))
-            {
-                await DisplayAlert("Missing Information", "Please enter the ID number.", "OK");
-                return;
-            }
+                if (string.IsNullOrWhiteSpace(IdNumberEntry.Text))
+                {
+                    await ProfessionalFeaturesService.ShowWarning("Please enter the ID number.");
+                    return;
+                }
 
-            try
-            {
                 var selectedRoom = RoomPicker.SelectedItem as Room;
                 if (selectedRoom == null)
                 {
-                    await DisplayAlert("Error", "Invalid room selection.", "OK");
+                    await ProfessionalFeaturesService.ShowError("Invalid room selection.");
                     return;
                 }
 
@@ -124,34 +123,25 @@ namespace Jindal.Views
                     MailReceivedDate = MailReceivedDatePicker.Date
                 };
 
-                // Validate guest data
+                // Validate guest data using ProfessionalFeaturesService
                 var validationResult = ValidationHelper.ValidateGuestData(newEntry);
                 if (!validationResult.IsValid)
                 {
-                    await DisplayAlert("Validation Error", validationResult.GetErrorMessage(), "OK");
+                    await ProfessionalFeaturesService.ShowValidationErrors(validationResult);
                     return;
                 }
 
-                // Execute with retry logic
-                await ErrorHandlingService.ExecuteWithRetry(async () =>
-                {
-                    await DatabaseService.AddCheckInOut(newEntry);
-                    
-                    // Update room status to Booked
-                    selectedRoom.Availability = "Booked";
-                    await DatabaseService.UpdateRoom(selectedRoom);
-                }, 3, "Guest Check-in");
+                // Add check-in entry and update room status
+                await DatabaseService.AddCheckInOut(newEntry);
+                
+                // Update room status to Booked
+                selectedRoom.Availability = "Booked";
+                await DatabaseService.UpdateRoom(selectedRoom);
 
-                ErrorHandlingService.LogInfo($"Guest {newEntry.GuestName} checked in to room {newEntry.RoomNumber}", "CheckIn");
-                await DisplayAlert("Success", "Guest checked in successfully.", "OK");
+                System.Diagnostics.Debug.WriteLine($"Guest {newEntry.GuestName} checked in to room {newEntry.RoomNumber}");
+                await ProfessionalFeaturesService.ShowSuccess("Guest checked in successfully.");
                 await NavigationService.NavigateToCheckInOut(); // Go back after success
-            }
-            catch (Exception ex)
-            {
-                ErrorHandlingService.LogError("Check-in failed", ex, "AddCheckInOutPage");
-                var userMessage = ErrorHandlingService.GetUserFriendlyErrorMessage(ex);
-                await DisplayAlert("Error", userMessage, "OK");
-            }
+            }, "Processing check-in...");
         }
 
     }

@@ -1,366 +1,276 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Controls;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-using Microsoft.Maui.Storage;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Jindal.Services
 {
     /// <summary>
-    /// Provides comprehensive error handling, logging, and retry mechanisms
+    /// Centralized error handling service for consistent error management across the application
     /// </summary>
-    public static class ErrorHandlingService
+    public class ErrorHandlingService
     {
-        private static readonly string LogFilePath = Path.Combine(FileSystem.AppDataDirectory, "app_errors.log");
-        private static readonly int MaxLogFileSize = 5 * 1024 * 1024; // 5MB
-        // Removed unused field - retry attempts are now configurable per method call
+        private readonly ILogger<ErrorHandlingService>? _logger;
+        private readonly Dictionary<Type, string> _errorMessages;
+
+        public ErrorHandlingService(ILogger<ErrorHandlingService>? logger = null)
+        {
+            _logger = logger;
+            _errorMessages = InitializeErrorMessages();
+        }
+
+        private Dictionary<Type, string> InitializeErrorMessages()
+        {
+            return new Dictionary<Type, string>
+            {
+                { typeof(UnauthorizedAccessException), "You don't have permission to perform this action." },
+                { typeof(HttpRequestException), "Network connection error. Please check your internet connection." },
+                { typeof(TimeoutException), "The operation took too long to complete. Please try again." },
+                { typeof(SQLite.SQLiteException), "Database error occurred. Please try again or contact support." },
+                { typeof(System.IO.IOException), "File operation failed. Please ensure the app has necessary permissions." },
+                { typeof(ArgumentNullException), "Invalid input provided. Please check your data and try again." },
+                { typeof(ArgumentException), "Invalid input provided. Please check your data and try again." },
+                { typeof(InvalidOperationException), "Operation cannot be performed at this time. Please try again later." }
+            };
+        }
 
         /// <summary>
-        /// Logs an error with context information
+        /// Handles exceptions and shows user-friendly error messages
         /// </summary>
-        public static void LogError(string message, Exception? ex = null, string context = "", Dictionary<string, object>? additionalData = null)
+        public async Task<bool> HandleErrorAsync(Exception exception, string context = "", Page? page = null)
         {
             try
             {
-                var logEntry = new ErrorLogEntry
-                {
-                    Timestamp = DateTime.Now,
-                    Message = message,
-                    Exception = ex?.ToString() ?? string.Empty,
-                    Context = context,
-                    AdditionalData = additionalData ?? new Dictionary<string, object>()
-                };
+                // Log the error
+                _logger?.LogError(exception, "Error in context: {Context}", context);
 
-                // Log to debug console
-                System.Diagnostics.Debug.WriteLine($"[ERROR] {logEntry.Timestamp:yyyy-MM-dd HH:mm:ss} - {message}");
-                if (ex != null)
+                // Get user-friendly message
+                var userMessage = GetUserFriendlyMessage(exception);
+                var title = GetErrorTitle(exception);
+
+                // Show error to user
+                if (page != null)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Exception: {ex}");
+                    await page.DisplayAlert(title, userMessage, "OK");
                 }
-
-                // Log to file
-                WriteToLogFile(logEntry);
-            }
-            catch (Exception logEx)
-            {
-                System.Diagnostics.Debug.WriteLine($"Failed to log error: {logEx.Message}");
-            }
-        }
-
-        /// <summary>
-        /// Logs an informational message
-        /// </summary>
-        public static void LogInfo(string message, string context = "")
-        {
-            try
-            {
-                var logEntry = new ErrorLogEntry
+                else if (Application.Current?.Windows?.Count > 0)
                 {
-                    Timestamp = DateTime.Now,
-                    Message = message,
-                    Context = context,
-                    LogLevel = "INFO"
-                };
-
-                System.Diagnostics.Debug.WriteLine($"[INFO] {logEntry.Timestamp:yyyy-MM-dd HH:mm:ss} - {message}");
-                WriteToLogFile(logEntry);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Failed to log info: {ex.Message}");
-            }
-        }
-
-        /// <summary>
-        /// Logs a warning message
-        /// </summary>
-        public static void LogWarning(string message, string context = "")
-        {
-            try
-            {
-                var logEntry = new ErrorLogEntry
-                {
-                    Timestamp = DateTime.Now,
-                    Message = message,
-                    Context = context,
-                    LogLevel = "WARNING"
-                };
-
-                System.Diagnostics.Debug.WriteLine($"[WARNING] {logEntry.Timestamp:yyyy-MM-dd HH:mm:ss} - {message}");
-                WriteToLogFile(logEntry);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Failed to log warning: {ex.Message}");
-            }
-        }
-
-        /// <summary>
-        /// Executes an operation with retry logic
-        /// </summary>
-        public static async Task<T> ExecuteWithRetry<T>(Func<Task<T>> operation, int maxRetries = 3, string operationName = "Operation")
-        {
-            var lastException = new Exception("Unknown error");
-            
-            for (int attempt = 1; attempt <= maxRetries; attempt++)
-            {
-                try
-                {
-                    var result = await operation();
-                    if (attempt > 1)
+                    var mainWindow = Application.Current.Windows.FirstOrDefault();
+                    var mainPage = mainWindow?.Page;
+                    if (mainPage != null && mainPage is Page pageInstance)
                     {
-                        LogInfo($"{operationName} succeeded after {attempt} attempts");
+                        await pageInstance.DisplayAlert(title, userMessage, "OK");
                     }
-                    return result;
                 }
-                catch (Exception ex)
-                {
-                    lastException = ex;
-                    
-                    if (attempt == maxRetries)
-                    {
-                        LogError($"{operationName} failed after {maxRetries} attempts", ex, "RetryOperation");
-                        throw;
-                    }
-                    
-                    LogWarning($"{operationName} failed on attempt {attempt}, retrying...", "RetryOperation");
-                    
-                    // Exponential backoff
-                    var delay = TimeSpan.FromMilliseconds(Math.Pow(2, attempt - 1) * 1000);
-                    await Task.Delay(delay);
-                }
-            }
 
-            throw lastException;
-        }
-
-        /// <summary>
-        /// Executes an operation with retry logic (void return)
-        /// </summary>
-        public static async Task ExecuteWithRetry(Func<Task> operation, int maxRetries = 3, string operationName = "Operation")
-        {
-            await ExecuteWithRetry(async () =>
-            {
-                await operation();
                 return true;
-            }, maxRetries, operationName);
-        }
-
-        /// <summary>
-        /// Safely executes an operation and handles exceptions
-        /// </summary>
-        public static async Task<(bool Success, T? Result, string ErrorMessage)> SafeExecute<T>(Func<Task<T>> operation, string operationName = "Operation")
-        {
-            try
-            {
-                var result = await operation();
-                return (true, result, string.Empty);
             }
-            catch (Exception ex)
+            catch (Exception handlingException)
             {
-                LogError($"{operationName} failed", ex, "SafeExecute");
-                return (false, default(T), ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Safely executes an operation and handles exceptions (void return)
-        /// </summary>
-        public static async Task<(bool Success, string ErrorMessage)> SafeExecute(Func<Task> operation, string operationName = "Operation")
-        {
-            try
-            {
-                await operation();
-                return (true, string.Empty);
-            }
-            catch (Exception ex)
-            {
-                LogError($"{operationName} failed", ex, "SafeExecute");
-                return (false, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Gets formatted error message for user display
-        /// </summary>
-        public static string GetUserFriendlyErrorMessage(Exception ex)
-        {
-            return ex switch
-            {
-                ArgumentNullException => "Required data is missing. Please check your input.",
-                ArgumentException => "Invalid input provided. Please check your data.",
-                InvalidOperationException => "Operation cannot be performed at this time. Please try again.",
-                UnauthorizedAccessException => "You don't have permission to perform this action.",
-                TimeoutException => "The operation timed out. Please check your connection and try again.",
-                DirectoryNotFoundException or FileNotFoundException => "Required data could not be found. Please contact support.",
-                _ => "An unexpected error occurred. Please try again or contact support if the problem persists."
-            };
-        }
-
-        /// <summary>
-        /// Clears old log entries to prevent excessive disk usage
-        /// </summary>
-        public static void ClearOldLogs()
-        {
-            try
-            {
-                if (File.Exists(LogFilePath))
-                {
-                    var fileInfo = new FileInfo(LogFilePath);
-                    if (fileInfo.Length > MaxLogFileSize)
-                    {
-                        // Create backup and clear main log
-                        var backupPath = LogFilePath + ".backup";
-                        if (File.Exists(backupPath))
-                        {
-                            File.Delete(backupPath);
-                        }
-                        File.Move(LogFilePath, backupPath);
-                        
-                        LogInfo("Log file cleared due to size limit", "LogMaintenance");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Failed to clear old logs: {ex.Message}");
-            }
-        }
-
-        /// <summary>
-        /// Gets recent log entries for debugging
-        /// </summary>
-        public static List<ErrorLogEntry> GetRecentLogs(int maxEntries = 50)
-        {
-            try
-            {
-                if (!File.Exists(LogFilePath))
-                    return new List<ErrorLogEntry>();
-
-                var lines = File.ReadAllLines(LogFilePath);
-                var logs = new List<ErrorLogEntry>();
-
-                foreach (var line in lines.TakeLast(maxEntries))
-                {
-                    try
-                    {
-                        if (!string.IsNullOrWhiteSpace(line))
-                        {
-                            var logEntry = JsonSerializer.Deserialize<ErrorLogEntry>(line);
-                            if (logEntry != null)
-                            {
-                                logs.Add(logEntry);
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        // Skip invalid log entries
-                    }
-                }
-
-                return logs.OrderByDescending(l => l.Timestamp).ToList();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Failed to get recent logs: {ex.Message}");
-                return new List<ErrorLogEntry>();
-            }
-        }
-
-        /// <summary>
-        /// Writes log entry to file
-        /// </summary>
-        private static void WriteToLogFile(ErrorLogEntry logEntry)
-        {
-            try
-            {
-                var jsonString = JsonSerializer.Serialize(logEntry);
-                File.AppendAllText(LogFilePath, jsonString + Environment.NewLine);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Failed to write to log file: {ex.Message}");
-            }
-        }
-
-        /// <summary>
-        /// Validates database connection and logs status
-        /// </summary>
-        public static async Task<bool> ValidateSystemHealth()
-        {
-            var healthChecks = new List<(string Name, Func<Task<bool>> Check)>
-            {
-                ("Database Connection", async () => await DatabaseService.TestDatabaseConnection()),
-                ("File System Access", () => Task.FromResult(Directory.Exists(FileSystem.AppDataDirectory))),
-                ("Preferences Access", () => Task.FromResult(TestPreferencesAccess()))
-            };
-
-            var results = new List<string>();
-            bool allHealthy = true;
-
-            foreach (var (name, check) in healthChecks)
-            {
-                try
-                {
-                    var result = await check();
-                    results.Add($"{name}: {(result ? "✓ Healthy" : "✗ Failed")}");
-                    if (!result) allHealthy = false;
-                }
-                catch (Exception ex)
-                {
-                    results.Add($"{name}: ✗ Error - {ex.Message}");
-                    allHealthy = false;
-                }
-            }
-
-            var healthReport = string.Join("\n", results);
-            
-            if (allHealthy)
-            {
-                LogInfo($"System health check passed:\n{healthReport}", "HealthCheck");
-            }
-            else
-            {
-                LogWarning($"System health check failed:\n{healthReport}", "HealthCheck");
-            }
-
-            return allHealthy;
-        }
-
-        /// <summary>
-        /// Tests preferences access
-        /// </summary>
-        private static bool TestPreferencesAccess()
-        {
-            try
-            {
-                var testKey = "health_check_test";
-                var testValue = DateTime.Now.ToString();
-                
-                Preferences.Set(testKey, testValue);
-                var retrieved = Preferences.Get(testKey, "");
-                Preferences.Remove(testKey);
-                
-                return retrieved == testValue;
-            }
-            catch
-            {
+                // Fallback error handling
+                _logger?.LogCritical(handlingException, "Error occurred while handling original error in context: {Context}", context);
+                System.Diagnostics.Debug.WriteLine($"Critical error in error handling: {handlingException.Message}");
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Handles exceptions and returns user-friendly error information
+        /// </summary>
+        public ErrorInfo ProcessError(Exception exception, string context = "")
+        {
+            try
+            {
+                // Log the error
+                _logger?.LogError(exception, "Error in context: {Context}", context);
+
+                return new ErrorInfo
+                {
+                    Title = GetErrorTitle(exception),
+                    Message = GetUserFriendlyMessage(exception),
+                    Context = context,
+                    Severity = GetErrorSeverity(exception),
+                    ShowToUser = ShouldShowToUser(exception),
+                    Exception = exception
+                };
+            }
+            catch (Exception handlingException)
+            {
+                _logger?.LogCritical(handlingException, "Error occurred while processing error in context: {Context}", context);
+                
+                return new ErrorInfo
+                {
+                    Title = "System Error",
+                    Message = "An unexpected error occurred. Please try again or contact support if the problem persists.",
+                    Context = context,
+                    Severity = ErrorSeverity.High,
+                    ShowToUser = true,
+                    Exception = exception
+                };
+            }
+        }
+
+        /// <summary>
+        /// Shows a toast-style error message (if supported by the platform)
+        /// </summary>
+        public async Task ShowToastErrorAsync(string message, int durationMs = 3000)
+        {
+            try
+            {
+                // Implementation would depend on available toast libraries
+                // For now, we'll use a simple approach
+                _logger?.LogInformation("Toast error message: {Message}", message);
+                
+                // Could integrate with CommunityToolkit.Maui.Alerts here
+                // await Toast.Make(message).Show();
+                
+                await Task.Delay(100); // Placeholder
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Failed to show toast error message");
+            }
+        }
+
+        /// <summary>
+        /// Logs an error without showing it to the user
+        /// </summary>
+        public void LogError(Exception exception, string context = "", object? additionalData = null)
+        {
+            try
+            {
+                if (additionalData != null)
+                {
+                    _logger?.LogError(exception, "Error in context: {Context}, Additional Data: {@AdditionalData}", context, additionalData);
+                }
+                else
+                {
+                    _logger?.LogError(exception, "Error in context: {Context}", context);
+                }
+            }
+            catch (Exception loggingException)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to log error: {loggingException.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Gets user-friendly error message based on exception type
+        /// </summary>
+        private string GetUserFriendlyMessage(Exception exception)
+        {
+            // Check if we have a specific message for this exception type
+            var exceptionType = exception.GetType();
+            if (_errorMessages.TryGetValue(exceptionType, out var message))
+            {
+                return message;
+            }
+
+            // Check base types
+            foreach (var kvp in _errorMessages)
+            {
+                if (kvp.Key.IsAssignableFrom(exceptionType))
+                {
+                    return kvp.Value;
+                }
+            }
+
+            // Check for specific error patterns in the message
+            var exceptionMessage = exception.Message?.ToLower() ?? "";
+            
+            if (exceptionMessage.Contains("network") || exceptionMessage.Contains("connection"))
+                return "Network connection error. Please check your internet connection and try again.";
+            
+            if (exceptionMessage.Contains("timeout"))
+                return "The operation took too long to complete. Please try again.";
+            
+            if (exceptionMessage.Contains("permission") || exceptionMessage.Contains("unauthorized"))
+                return "You don't have permission to perform this action.";
+            
+            if (exceptionMessage.Contains("not found"))
+                return "The requested item could not be found. It may have been moved or deleted.";
+
+            // Default message
+            return "An unexpected error occurred. Please try again or contact support if the problem persists.";
+        }
+
+        /// <summary>
+        /// Gets appropriate error title based on exception type
+        /// </summary>
+        private string GetErrorTitle(Exception exception)
+        {
+            return exception switch
+            {
+                UnauthorizedAccessException => "Access Denied",
+                HttpRequestException => "Network Error",
+                TimeoutException => "Timeout Error",
+                SQLite.SQLiteException => "Database Error",
+                System.IO.IOException => "File Error",
+                ArgumentNullException => "Invalid Input",
+                ArgumentException => "Invalid Input",
+                InvalidOperationException => "Operation Error",
+                _ => "Error"
+            };
+        }
+
+        /// <summary>
+        /// Gets error severity based on exception type
+        /// </summary>
+        private ErrorSeverity GetErrorSeverity(Exception exception)
+        {
+            return exception switch
+            {
+                UnauthorizedAccessException => ErrorSeverity.Medium,
+                HttpRequestException => ErrorSeverity.Medium,
+                TimeoutException => ErrorSeverity.Low,
+                SQLite.SQLiteException => ErrorSeverity.High,
+                System.IO.IOException => ErrorSeverity.Medium,
+                ArgumentNullException => ErrorSeverity.Low,
+                ArgumentException => ErrorSeverity.Low,
+                InvalidOperationException => ErrorSeverity.Medium,
+                _ => ErrorSeverity.Medium
+            };
+        }
+
+        /// <summary>
+        /// Determines if error should be shown to user
+        /// </summary>
+        private bool ShouldShowToUser(Exception exception)
+        {
+            // Generally show most errors to users, but hide system/internal errors
+            return exception switch
+            {
+                System.Threading.ThreadAbortException => false,
+                System.ObjectDisposedException => false,
+                _ => true
+            };
         }
     }
 
     /// <summary>
-    /// Represents a log entry
+    /// Contains information about a processed error
     /// </summary>
-    public class ErrorLogEntry
+    public class ErrorInfo
     {
-        public DateTime Timestamp { get; set; }
+        public string Title { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
-        public string Exception { get; set; } = string.Empty;
         public string Context { get; set; } = string.Empty;
-        public string LogLevel { get; set; } = "ERROR";
-        public Dictionary<string, object> AdditionalData { get; set; } = new();
+        public ErrorSeverity Severity { get; set; }
+        public bool ShowToUser { get; set; }
+        public Exception? Exception { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.Now;
+    }
+
+    /// <summary>
+    /// Error severity levels
+    /// </summary>
+    public enum ErrorSeverity
+    {
+        Low,      // Minor issues, user can continue
+        Medium,   // Moderate issues, operation failed but app is stable
+        High,     // Serious issues, might affect app stability
+        Critical  // Critical issues, app might need to restart
     }
 }

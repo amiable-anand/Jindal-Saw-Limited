@@ -24,8 +24,10 @@
                    HasShadow="True"
                    Padding="20">
 
-                <Grid RowSpacing="20" ColumnSpacing="14">
+                <Grid RowSpacing="16" ColumnSpacing="20">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -37,53 +39,77 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Room Picker -->
-                    <Picker x:Name="RoomPicker"
-                            Title="Select Room"
-                            Grid.Row="0" Grid.Column="0"
-                            BackgroundColor="#F3F4F6"
-                            TextColor="#374151"
-                            FontSize="14"
-                            HeightRequest="48"
-                            HorizontalTextAlignment="Start" />
+                    <!-- Room Selection -->
+                    <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="4">
+                        <Label Text="Select Room" TextColor="#64748B" FontSize="13" FontAttributes="Bold" />
+                        <Picker x:Name="RoomPicker"
+                                Title="Choose a room"
+                                BackgroundColor="#F3F4F6"
+                                TextColor="#374151"
+                                FontSize="14"
+                                HeightRequest="48"
+                                Margin="0,0,8,0"
+                                HorizontalTextAlignment="Start" />
+                    </VerticalStackLayout>
 
-                    <!-- ID Type Picker -->
-                    <Picker x:Name="IdTypePicker"
-                            Title="Select ID Type"
-                            Grid.Row="0" Grid.Column="1"
-                            BackgroundColor="#F3F4F6"
-                            TextColor="#374151"
-                            FontSize="14"
-                            HeightRequest="48">
-                        <Picker.ItemsSource>
-                            <x:Array Type="{x:Type x:String}">
-                                <x:String>Aadhaar Card</x:String>
-                                <x:String>Driving License</x:String>
-                                <x:String>Passport</x:String>
-                                <x:String>PAN Card</x:String>
-                            </x:Array>
-                        </Picker.ItemsSource>
-                    </Picker>
+                    <!-- ID Type Selection -->
+                    <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="4">
+                        <Label Text="Select ID Type" TextColor="#64748B" FontSize="13" FontAttributes="Bold" />
+                        <Picker x:Name="IdTypePicker"
+                                Title="Choose ID type"
+                                BackgroundColor="#F3F4F6"
+                                TextColor="#374151"
+                                FontSize="14"
+                                HeightRequest="48"
+                                Margin="8,0,0,0">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>Aadhaar Card</x:String>
+                                    <x:String>Driving License</x:String>
+                                    <x:String>Passport</x:String>
+                                    <x:String>PAN Card</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </VerticalStackLayout>
 
                     <!-- Guest Info -->
-                    <Entry x:Name="IdNumberEntry" Placeholder="ID Number" Grid.Row="1" Grid.Column="0"
-                           BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48"/>
+                    <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="4">
+                        <Label Text="ID Number" TextColor="#64748B" FontSize="13" FontAttributes="Bold" />
+                        <Entry x:Name="IdNumberEntry" Placeholder="Enter ID Number"
+                               BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48" Margin="0,0,8,0"/>
+                    </VerticalStackLayout>
 
-                    <Entry x:Name="GuestNameEntry" Placeholder="Guest Name" Grid.Row="1" Grid.Column="1"
-                           BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48"/>
+                    <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="4">
+                        <Label Text="Guest Name" TextColor="#64748B" FontSize="13" FontAttributes="Bold" />
+                        <Entry x:Name="GuestNameEntry" Placeholder="Enter guest name"
+                               BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48" Margin="8,0,0,0"/>
+                    </VerticalStackLayout>
 
-                    <Entry x:Name="CompanyEntry" Placeholder="Company Name" Grid.Row="2" Grid.Column="0"
-                           BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48"/>
+                    <VerticalStackLayout Grid.Row="2" Grid.Column="0" Spacing="4">
+                        <Label Text="Company Name" TextColor="#64748B" FontSize="13" FontAttributes="Bold" />
+                        <Entry x:Name="CompanyEntry" Placeholder="Enter company name"
+                               BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48" Margin="0,0,8,0"/>
+                    </VerticalStackLayout>
 
-                    <Entry x:Name="MobileEntry" Placeholder="Mobile" Grid.Row="2" Grid.Column="1"
-                           BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48"
-                           Keyboard="Telephone" />
+                    <VerticalStackLayout Grid.Row="2" Grid.Column="1" Spacing="4">
+                        <Label Text="Mobile Number" TextColor="#64748B" FontSize="13" FontAttributes="Bold" />
+                        <Entry x:Name="MobileEntry" Placeholder="Enter mobile number"
+                               BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48"
+                               Keyboard="Telephone" Margin="8,0,0,0" />
+                    </VerticalStackLayout>
 
-                    <Entry x:Name="NationalityEntry" Placeholder="Nationality" Grid.Row="3" Grid.Column="0"
-                           BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48"/>
+                    <VerticalStackLayout Grid.Row="3" Grid.Column="0" Spacing="4">
+                        <Label Text="Nationality" TextColor="#64748B" FontSize="13" FontAttributes="Bold" />
+                        <Entry x:Name="NationalityEntry" Placeholder="Enter nationality"
+                               BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48" Margin="0,0,8,0"/>
+                    </VerticalStackLayout>
 
-                    <Entry x:Name="AddressEntry" Placeholder="Address" Grid.Row="3" Grid.Column="1"
-                           BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48"/>
+                    <VerticalStackLayout Grid.Row="3" Grid.Column="1" Spacing="4">
+                        <Label Text="Address" TextColor="#64748B" FontSize="13" FontAttributes="Bold" />
+                        <Entry x:Name="AddressEntry" Placeholder="Enter address"
+                               BackgroundColor="#F3F4F6" TextColor="#374151" FontSize="14" HeightRequest="48" Margin="8,0,0,0"/>
+                    </VerticalStackLayout>
 
                     <!-- Check-In Details -->
                     <VerticalStackLayout Grid.Row="4" Grid.ColumnSpan="2" Spacing="8">
