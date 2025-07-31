@@ -44,7 +44,6 @@
                            TextColor="#64748B"
                            FontSize="14" />
                     <Picker x:Name="LocationPicker"
-                            x:DataType="models:Location"
                             Title="Select Location"
                             BackgroundColor="#F3F4F6"
                             TextColor="#374151"

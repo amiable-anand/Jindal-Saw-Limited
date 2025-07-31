@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Configure JWT Authentication
-var key = builder.Configuration["JWT:SecretKey"];
+var key = builder.Configuration["JWT:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey is not configured");
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -88,16 +88,22 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Jindal Guest House API v1");
-    });
 }
 
-// Use HTTPS Redirection and HSTS
-app.UseHttpsRedirection();
-app.UseHsts();
+// Enable Swagger in both Development and Production for localhost:5177
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Jindal Guest House API v1");
+    c.RoutePrefix = "swagger"; // Available at /swagger
+});
+
+// Use HTTPS Redirection and HSTS only in production
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+    app.UseHsts();
+}
 
 // Use Authentication
 app.UseAuthentication();

@@ -108,7 +108,7 @@ public class RoomsController : ControllerBase
                     RoomNumber = request.RoomNumber,
                     Availability = request.Availability ?? "Available",
                     LocationId = request.LocationId,
-                    Remark = request.Remark,
+                    Remark = request.Remark ?? string.Empty,
                     IsActive = true,
                     CreatedAt = DateTime.Now
                 };
@@ -147,7 +147,7 @@ public class RoomsController : ControllerBase
                 room.RoomNumber = request.RoomNumber;
                 room.Availability = request.Availability ?? room.Availability;
                 room.LocationId = request.LocationId;
-                room.Remark = request.Remark;
+                room.Remark = request.Remark ?? room.Remark;
                 room.IsActive = request.IsActive;
 
                 await _context.SaveChangesAsync();

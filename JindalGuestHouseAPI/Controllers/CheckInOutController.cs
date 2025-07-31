@@ -38,8 +38,8 @@ namespace JindalGuestHouseAPI.Controllers
                     c.CheckOutDate,
                     c.CheckOutTime,
                     Status = c.IsCheckedOut ? "Checked Out" : "Checked In",
-                    c.Room.RoomNumber,
-                    LocationName = c.Room.Location.Name
+                    c.Room!.RoomNumber,
+                    LocationName = c.Room!.Location!.Name
                 })
                 .ToListAsync();
 
@@ -70,8 +70,8 @@ namespace JindalGuestHouseAPI.Controllers
                     c.Department,
                     c.Purpose,
                     Status = c.IsCheckedOut ? "Checked Out" : "Checked In",
-                    c.Room.RoomNumber,
-                    LocationName = c.Room.Location.Name
+                    c.Room!.RoomNumber,
+                    LocationName = c.Room!.Location!.Name
                 })
                 .FirstOrDefaultAsync();
 
@@ -101,14 +101,14 @@ namespace JindalGuestHouseAPI.Controllers
                     GuestName = request.GuestName,
                     GuestIdNumber = request.GuestIdNumber,
                     IdType = request.IdType,
-                    CompanyName = request.CompanyName,
-                    Nationality = request.Nationality,
-                    Address = request.Address,
-                    Mobile = request.Mobile,
+                    CompanyName = request.CompanyName ?? string.Empty,
+                    Nationality = request.Nationality ?? string.Empty,
+                    Address = request.Address ?? string.Empty,
+                    Mobile = request.Mobile ?? string.Empty,
                     CheckInDate = request.CheckInDate,
                     CheckInTime = request.CheckInTime,
-                    Department = request.Department,
-                    Purpose = request.Purpose,
+                    Department = request.Department ?? string.Empty,
+                    Purpose = request.Purpose ?? string.Empty,
                     IsActive = true,
                     CreatedAt = DateTime.Now
                 };

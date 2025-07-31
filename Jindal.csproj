@@ -66,6 +66,14 @@
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
+  <!-- Exclude API project from MAUI build -->
+  <ItemGroup>
+    <Compile Remove="JindalGuestHouseAPI\**" />
+    <Content Remove="JindalGuestHouseAPI\**" />
+    <EmbeddedResource Remove="JindalGuestHouseAPI\**" />
+    <None Remove="JindalGuestHouseAPI\**" />
+  </ItemGroup>
+
   <ItemGroup>
     <!-- Security & Authentication -->
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />

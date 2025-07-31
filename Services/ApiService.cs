@@ -2,6 +2,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using Jindal.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using LocationModel = Jindal.Models.Location;
 
 namespace Jindal.Services
@@ -10,12 +11,16 @@ namespace Jindal.Services
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<ApiService>? _logger;
-        private readonly string _baseUrl = "https://api.jindalguestmanagement.com/api/";
+        private readonly string _baseUrl;
 
-        public ApiService(HttpClient? httpClient = null, ILogger<ApiService>? logger = null)
+        public ApiService(HttpClient? httpClient = null, ILogger<ApiService>? logger = null, IConfiguration? configuration = null)
         {
             _httpClient = httpClient ?? new HttpClient();
             _logger = logger;
+            
+            // Get base URL from configuration, defaulting to production API URL
+            var baseUrl = configuration?["ApiSettings:BaseUrl"] ?? "http://localhost:5177/api/";
+            _baseUrl = baseUrl.EndsWith("/") ? baseUrl : baseUrl + "/";
             
             // Configure basic HttpClient settings
             _httpClient.Timeout = TimeSpan.FromSeconds(30);
